@@ -35,7 +35,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import okio.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,14 +106,6 @@ public final class BybitDataFlow implements FlowableOnSubscribe<String> {
                         LOGGER.debug("Received message: {}", text);
                         emitter.onNext(text);
                     }
-                }
-            }
-
-            @Override
-            public void onMessage(final WebSocket ws, final ByteString bytes) {
-                if (!emitter.isCancelled()) {
-                    LOGGER.debug("Received bytes: {}", bytes.hex());
-                    onMessage(ws, bytes.utf8());
                 }
             }
 
