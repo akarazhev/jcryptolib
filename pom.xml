@@ -7,15 +7,42 @@
     <groupId>com.github.akarazhev.jcryptolib</groupId>
     <artifactId>jcryptolib</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>jcryptolib</name>
+    <description>Java cryptocurrency utility library with reactive and HTTP support.</description>
+    <url>https://github.com/akarazhev/jcryptolib</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>akarazhev</id>
+            <name>Andrey Karazhev</name>
+            <email>karazhev@gmail.com</email>
+            <url>https://github.com/akarazhev</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/akarazhev/jcryptolib</url>
+        <connection>scm:git:git://github.com/akarazhev/jcryptolib.git</connection>
+        <developerConnection>scm:git:ssh://github.com:akarazhev/jcryptolib.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
         <maven.compiler.release>23</maven.compiler.release>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
-        <maven.surefire.plugin>3.5.3</maven.surefire.plugin>
-        <maven.jar.plugin>3.4.2</maven.jar.plugin>
+        <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
+        <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
         <rxjava.version>3.1.10</rxjava.version>
         <okhttp.version>4.12.0</okhttp.version>
         <jackson-databind.version>2.18.3</jackson-databind.version>
@@ -75,23 +102,20 @@
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <!-- Maven surefire plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.plugin}</version>
+                <version>${maven.surefire.plugin.version}</version>
             </plugin>
             <!-- Maven jar plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.plugin}</version>
+                <version>${maven.jar.plugin.version}</version>
                 <configuration>
-                    <!-- Optionally customize the manifest -->
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -100,7 +124,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            <!-- Add other plugins as needed -->
         </plugins>
     </build>
 </project>
