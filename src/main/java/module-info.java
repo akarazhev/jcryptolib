@@ -28,4 +28,6 @@ module com.github.akarazhev.jcryptolib {
     requires io.reactivex.rxjava3;
     requires okhttp3;
     requires org.slf4j;
+
+    opens com.github.akarazhev.jcryptolib.bybit.stream to com.fasterxml.jackson.databind;
 }
