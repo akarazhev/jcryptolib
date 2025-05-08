@@ -25,21 +25,21 @@
 package com.github.akarazhev.jcryptolib;
 
 import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
-import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataFlow;
+import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataStream;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class DataFlows {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataFlows.class);
+public final class DataStreams {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataStreams.class);
 
-    private DataFlows() {
+    private DataStreams() {
         throw new UnsupportedOperationException();
     }
 
     public static Flowable<String> ofBybit(final String url, final String[] topics) {
         LOGGER.info(BybitConfig.print());
-        return Flowable.create(e -> BybitDataFlow.create(url, topics).subscribe(e), BackpressureStrategy.BUFFER);
+        return Flowable.create(e -> BybitDataStream.create(url, topics).subscribe(e), BackpressureStrategy.BUFFER);
     }
 }

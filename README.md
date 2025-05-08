@@ -45,8 +45,8 @@ Add the dependency to your Maven project:
 ### Example: Subscribing to Bybit Data Stream
 
 ```java
-BybitDataFlow dataFlow = new BybitDataFlow(new BybitConfig(...));
-dataFlow.subscribe(...); // Implement your logic here
+BybitDataStream dataStream = new BybitDataStream(new BybitConfig(...));
+dataStream.subscribe(...); // Implement your logic here
 ```
 
 ### Configuration

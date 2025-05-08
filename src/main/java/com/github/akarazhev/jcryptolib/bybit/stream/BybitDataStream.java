@@ -44,14 +44,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
 
-public final class BybitDataFlow implements FlowableOnSubscribe<String> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataFlow.class);
+public final class BybitDataStream implements FlowableOnSubscribe<String> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStream.class);
     private final OkHttpClient client;
     private final Request request;
     private final String[] topics;
     private WebSocket webSocket;
 
-    private BybitDataFlow(final String url, final String[] topics) {
+    private BybitDataStream(final String url, final String[] topics) {
         this.client = new OkHttpClient.Builder()
                 .readTimeout(0, TimeUnit.MILLISECONDS)
                 .build();
@@ -59,8 +59,8 @@ public final class BybitDataFlow implements FlowableOnSubscribe<String> {
         this.topics = topics;
     }
 
-    public static BybitDataFlow create(final String url, final String[] topics) {
-        return new BybitDataFlow(url, topics);
+    public static BybitDataStream create(final String url, final String[] topics) {
+        return new BybitDataStream(url, topics);
     }
 
     @Override
@@ -69,11 +69,11 @@ public final class BybitDataFlow implements FlowableOnSubscribe<String> {
     }
 
     private void connect(final FlowableEmitter<String> emitter) {
-        final class DataFlowListener extends WebSocketListener {
+        final class DataStreamListener extends WebSocketListener {
             private final AtomicBoolean isAwaitingPong;
             private Disposable ping;
 
-            public DataFlowListener() {
+            public DataStreamListener() {
                 this.isAwaitingPong = new AtomicBoolean(false);
             }
 
@@ -161,7 +161,7 @@ public final class BybitDataFlow implements FlowableOnSubscribe<String> {
             }
         }
 
-        webSocket = client.newWebSocket(request, new DataFlowListener());
+        webSocket = client.newWebSocket(request, new DataStreamListener());
         emitter.setCancellable(() -> {
             if (emitter.isCancelled()) {
                 if (webSocket != null) {

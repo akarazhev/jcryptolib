@@ -50,8 +50,8 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class BybitDataFlowTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataFlowTest.class);
+class BybitDataStreamTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStreamTest.class);
     private Disposable subscription;
 
     @AfterEach
@@ -70,7 +70,7 @@ class BybitDataFlowTest {
         final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
         try {
             // Act
-            subscription = DataFlows.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     .subscribe(
@@ -104,7 +104,7 @@ class BybitDataFlowTest {
         final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
         try {
             // Act
-            subscription = DataFlows.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     .subscribe(
@@ -132,7 +132,7 @@ class BybitDataFlowTest {
         // Testing private constructor for code coverage
         try {
             // Use reflection to access the private constructor
-            var constructor = DataFlows.class.getDeclaredConstructor();
+            var constructor = DataStreams.class.getDeclaredConstructor();
             constructor.setAccessible(true);
             constructor.newInstance();
             fail("Constructor should have thrown an exception");
@@ -156,7 +156,7 @@ class BybitDataFlowTest {
             // Act - use an invalid URL that will cause connection issues
             final var invalidUrl = "wss://invalid.url.that.does.not.exist";
             // Set a shorter timeout for the test
-            subscription = DataFlows.ofBybit(invalidUrl, getPublicSubscribeTopics())
+            subscription = DataStreams.ofBybit(invalidUrl, getPublicSubscribeTopics())
                     // Add timeout to force error after 5 seconds
                     .timeout(5, TimeUnit.SECONDS)
                     .map(BybitMapper.ofMap())
@@ -198,7 +198,7 @@ class BybitDataFlowTest {
         final var hasError = new AtomicBoolean(false);
         try {
             // Create a slow consumer
-            subscription = DataFlows.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     // Introduce artificial delay to test backpressure
@@ -246,7 +246,7 @@ class BybitDataFlowTest {
         final var hasError = new AtomicBoolean(false);
         try {
             // Create the flowable
-            var flowable = DataFlows.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+            var flowable = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     .publish()  // Make it multicasting
