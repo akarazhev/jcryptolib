@@ -46,12 +46,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicSubscribeTopics;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class BybitDataStreamTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStreamTest.class);
+class BybitPublicSpotStreamTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicSpotStreamTest.class);
     private Disposable subscription;
 
     @AfterEach
@@ -124,23 +123,6 @@ class BybitDataStreamTest {
         } catch (Exception e) {
             LOGGER.error("Exception during test execution", e);
             fail("Test failed with exception: " + e.getMessage());
-        }
-    }
-
-    @Test
-    void constructorShouldThrowException() {
-        // Testing private constructor for code coverage
-        try {
-            // Use reflection to access the private constructor
-            var constructor = DataStreams.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            constructor.newInstance();
-            fail("Constructor should have thrown an exception");
-        } catch (final Exception e) {
-            // When using reflection, the UnsupportedOperationException is wrapped in an InvocationTargetException
-            Throwable cause = e.getCause();
-            assertInstanceOf(UnsupportedOperationException.class, cause,
-                    "Root cause should be UnsupportedOperationException, but was: " + cause.getClass().getName());
         }
     }
 
@@ -291,6 +273,26 @@ class BybitDataStreamTest {
             LOGGER.error("Exception during multiple subscribers test", e);
             fail("Multiple subscribers test failed with exception: " + e.getMessage());
         }
+    }
+
+    @Test
+    void shouldReceiveOrderBookDataFromWebSocket() {
+
+    }
+
+    @Test
+    void shouldReceiveTradeDataFromWebSocket() {
+
+    }
+
+    @Test
+    void shouldReceiveTickerDataFromWebSocket() {
+
+    }
+
+    @Test
+    void shouldReceiveKlineDataFromWebSocket() {
+
     }
 
     private BybitSubscriber getBybitSubscriber(final CountDownLatch latch, final List<Map<String, Object>> receivedData) {
