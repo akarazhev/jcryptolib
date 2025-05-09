@@ -24,6 +24,7 @@
 
 package com.github.akarazhev.jcryptolib;
 
+import com.github.akarazhev.jcryptolib.bybit.BybitTestConfig;
 import com.github.akarazhev.jcryptolib.bybit.stream.BybitFilter;
 import com.github.akarazhev.jcryptolib.bybit.stream.BybitMapper;
 import com.github.akarazhev.jcryptolib.bybit.stream.BybitSubscriber;
@@ -45,6 +46,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicSubscribeTopics;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -275,9 +277,47 @@ class BybitPublicSpotStreamTest {
         }
     }
 
+    /**
+     * Tests that the stream can receive order book data from the WebSocket.
+     * The test subscribes to the order book stream for the first level of the order book
+     * for the BTC/USDT pair and verifies that data is received within the timeout period.
+     * The test also verifies that the data has the correct topic and that the data structure
+     * is correct.
+     */
     @Test
     void shouldReceiveOrderBookDataFromWebSocket() {
-
+        final var latch = new CountDownLatch(1);
+        final var receivedData = new ArrayList<Map<String, Object>>();
+        final var hasError = new AtomicBoolean(false);
+        final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
+        try {
+            // Act
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), BybitTestConfig.getPublicOrderBook1BtcUsdt())
+                    .map(BybitMapper.ofMap())
+                    .filter(BybitFilter.ofFilter())
+                    .subscribe(
+                            bybitSubscriber.onNext(),
+                            t -> {
+                                LOGGER.error("Error in test subscription", t);
+                                hasError.set(true);
+                                latch.countDown();
+                            },
+                            bybitSubscriber.onComplete()
+                    );
+            // Assert
+            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertFalse(hasError.get(), "Should not encounter errors during subscription");
+            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
+            // Verify data structure
+            final var firstData = receivedData.getFirst();
+            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
+            assertEquals(BybitTestConfig.getPublicOrderBook1BtcUsdt()[0], firstData.get("topic"),
+                    "Data should contain 'orderbook.1.BTCUSDT' topic");
+            LOGGER.info("Integration test received valid data: {}", firstData);
+        } catch (final Exception e) {
+            LOGGER.error("Exception during test execution", e);
+            fail("Test failed with exception: " + e.getMessage());
+        }
     }
 
     @Test
