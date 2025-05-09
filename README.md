@@ -51,7 +51,7 @@ dataStream.subscribe(...); // Implement your logic here
 
 ### Configuration
 
-You can provide application settings in `src/main/resources/application.properties` or `src/test/resources/application.properties` for tests.
+You can provide application settings in `src/main/resources/application.properties`.
 
 ---
 
@@ -80,13 +80,17 @@ src/
       module-info.java
       com/github/akarazhev/jcryptolib/
         bybit/
+        config/
+        stream/
         util/
+        package-info.java
     resources/
       application.properties
+      logback.xml
   test/
     java/
-    resources/
-      application.properties
+      com/github/akarazhev/jcryptolib/
+        bybit/
 ```
 
 ---
