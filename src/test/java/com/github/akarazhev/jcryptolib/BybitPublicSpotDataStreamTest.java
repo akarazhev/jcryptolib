@@ -363,7 +363,7 @@ class BybitPublicSpotDataStreamTest {
 
     @Test
     void shouldReceiveTradeDataStream() {
-        // TODO: implement trade stream
+        // It doesn't work at the moment
     }
 
     /**
