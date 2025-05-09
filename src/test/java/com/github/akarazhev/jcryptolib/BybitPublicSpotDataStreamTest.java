@@ -51,10 +51,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class BybitPublicSpotStreamTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicSpotStreamTest.class);
+class BybitPublicSpotDataStreamTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicSpotDataStreamTest.class);
     private Disposable subscription;
 
+    /**
+     * Cleanup after each test.
+     * <p>
+     * Disposes the test subscription if it is not disposed yet.
+     */
     @AfterEach
     void cleanup() {
         if (subscription != null && !subscription.isDisposed()) {
@@ -63,10 +68,17 @@ class BybitPublicSpotStreamTest {
         }
     }
 
+    /**
+     * Tests that the data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public spot data stream and verifies that at least one data item is received
+     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
     @Test
-    void shouldReceiveDataFromWebSocket() {
+    void shouldReceiveDataStream() {
         final var latch = new CountDownLatch(1);
-        final List<Map<String, Object>> receivedData = new ArrayList<>();
+        final var receivedData = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
         final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
         try {
@@ -88,20 +100,27 @@ class BybitPublicSpotStreamTest {
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure
-            Map<String, Object> firstData = receivedData.getFirst();
+            final var firstData = receivedData.getFirst();
             assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
             LOGGER.info("Integration test received valid data: {}", firstData);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.error("Exception during test execution", e);
             fail("Test failed with exception: " + e.getMessage());
         }
     }
 
+    /**
+     * Tests that the data stream is received properly for multiple messages.
+     * <p>
+     * Subscribes to the Bybit public spot data stream and verifies that at least 3 data items are received
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
     @Test
     void shouldHandleMultipleMessages() {
         final var expectedMessageCount = 3;
         final var latch = new CountDownLatch(expectedMessageCount);
-        final List<Map<String, Object>> receivedData = new ArrayList<>();
+        final var receivedData = new ArrayList<Map<String, Object>>();
         final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
         try {
             // Act
@@ -122,19 +141,26 @@ class BybitPublicSpotStreamTest {
             assertTrue(receivedData.size() >= expectedMessageCount,
                     "Should receive at least " + expectedMessageCount + " messages");
             LOGGER.info("Successfully received {} messages", receivedData.size());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.error("Exception during test execution", e);
             fail("Test failed with exception: " + e.getMessage());
         }
     }
 
+    /**
+     * Tests that the data stream is not received when given an invalid URL.
+     * <p>
+     * Subscribes to the Bybit public spot data stream with an invalid URL that will cause connection issues,
+     * and verifies that an error is encountered within a 10 second timeout period. No data should be received
+     * during the subscription.
+     */
     @Test
     void shouldHandleInvalidUrl() {
         // Arrange
         final var latch = new CountDownLatch(1);
         final var hasError = new AtomicBoolean(false);
         final var errorMessage = new StringBuilder();
-        final List<Map<String, Object>> receivedData = new ArrayList<>();
+        final var receivedData = new ArrayList<Map<String, Object>>();
         final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
         try {
             // Act - use an invalid URL that will cause connection issues
@@ -173,6 +199,13 @@ class BybitPublicSpotStreamTest {
         }
     }
 
+    /**
+     * Tests that the data stream is received properly even when the consumer is slow, which may cause backpressure.
+     * <p>
+     * Subscribes to the Bybit public spot data stream and introduces an artificial delay to simulate slow processing,
+     * then verifies that the required number of messages are processed within a 2 minute timeout period. No errors should
+     * be encountered during the subscription. The received data should contain a "topic" field.
+     */
     @Test
     void shouldHandleBackpressure() {
         // This test verifies that the BUFFER backpressure strategy works correctly
@@ -191,12 +224,12 @@ class BybitPublicSpotStreamTest {
                         // Simulate slow processing
                         try {
                             Thread.sleep(100);
-                            int count = receivedCount.incrementAndGet();
+                            final var count = receivedCount.incrementAndGet();
                             LOGGER.info("Processed message {}", count);
                             if (count >= messageCount) {
                                 latch.countDown();
                             }
-                        } catch (InterruptedException e) {
+                        } catch (final InterruptedException e) {
                             Thread.currentThread().interrupt();
                         }
                     })
@@ -221,23 +254,31 @@ class BybitPublicSpotStreamTest {
         }
     }
 
+    /**
+     * Tests that the data stream can be subscribed to by multiple subscribers.
+     * <p>
+     * Creates a flowable that is multicasting and subscribes to it twice with a slight delay.
+     * Verifies that both subscribers receive data and no errors are encountered.
+     * <p>
+     * This test ensures that the data stream can be safely subscribed to by multiple components.
+     */
     @Test
     void shouldSupportMultipleSubscribers() {
         final var latch1 = new CountDownLatch(1);
         final var latch2 = new CountDownLatch(1);
-        final List<Map<String, Object>> receivedData1 = new ArrayList<>();
-        final List<Map<String, Object>> receivedData2 = new ArrayList<>();
+        final var receivedData1 = new ArrayList<Map<String, Object>>();
+        final var receivedData2 = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
         try {
             // Create the flowable
-            var flowable = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+            final var flowable = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     .publish()  // Make it multicasting
                     .refCount();
             // First subscriber
-            var subscriber1 = getBybitSubscriber(latch1, receivedData1);
-            var sub1 = flowable.subscribe(
+            final var subscriber1 = getBybitSubscriber(latch1, receivedData1);
+            final var sub1 = flowable.subscribe(
                     subscriber1.onNext(),
                     throwable -> {
                         LOGGER.error("Error in subscriber 1", throwable);
@@ -248,8 +289,8 @@ class BybitPublicSpotStreamTest {
             );
             // Second subscriber with slight delay
             Thread.sleep(500);
-            var subscriber2 = getBybitSubscriber(latch2, receivedData2);
-            var sub2 = flowable.subscribe(
+            final var subscriber2 = getBybitSubscriber(latch2, receivedData2);
+            final var sub2 = flowable.subscribe(
                     subscriber2.onNext(),
                     throwable -> {
                         LOGGER.error("Error in subscriber 2", throwable);
@@ -278,14 +319,14 @@ class BybitPublicSpotStreamTest {
     }
 
     /**
-     * Tests that the stream can receive order book data from the WebSocket.
-     * The test subscribes to the order book stream for the first level of the order book
-     * for the BTC/USDT pair and verifies that data is received within the timeout period.
-     * The test also verifies that the data has the correct topic and that the data structure
-     * is correct.
+     * Tests that the order book data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public order book data stream and verifies that at least one data item is received
+     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
      */
     @Test
-    void shouldReceiveOrderBookDataFromWebSocket() {
+    void shouldReceiveOrderBookDataStream() {
         final var latch = new CountDownLatch(1);
         final var receivedData = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
@@ -321,25 +362,101 @@ class BybitPublicSpotStreamTest {
     }
 
     @Test
-    void shouldReceiveTradeDataFromWebSocket() {
-
+    void shouldReceiveTradeDataStream() {
+        // TODO: implement trade stream
     }
 
+    /**
+     * Tests that the ticker data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public ticker data stream and verifies that at least one data item is received
+     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
     @Test
-    void shouldReceiveTickerDataFromWebSocket() {
-
+    void shouldReceiveTickerDataStream() {
+        final var latch = new CountDownLatch(1);
+        final var receivedData = new ArrayList<Map<String, Object>>();
+        final var hasError = new AtomicBoolean(false);
+        final var topic = BybitTestConfig.getPublicTickersBtcUsdt()[0];
+        final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
+        try {
+            // Act
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), BybitTestConfig.getPublicTickersBtcUsdt())
+                    .map(BybitMapper.ofMap())
+                    .filter(BybitFilter.ofFilter())
+                    .subscribe(
+                            bybitSubscriber.onNext(),
+                            t -> {
+                                LOGGER.error("Error in test subscription", t);
+                                hasError.set(true);
+                                latch.countDown();
+                            },
+                            bybitSubscriber.onComplete()
+                    );
+            // Assert
+            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertFalse(hasError.get(), "Should not encounter errors during subscription");
+            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
+            // Verify data structure
+            final var firstData = receivedData.getFirst();
+            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
+            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
+            LOGGER.info("Integration test received valid data: {}", firstData);
+        } catch (final Exception e) {
+            LOGGER.error("Exception during test execution", e);
+            fail("Test failed with exception: " + e.getMessage());
+        }
     }
 
+    /**
+     * Tests that the kline data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public kline data stream and verifies that at least one data item is received
+     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
     @Test
-    void shouldReceiveKlineDataFromWebSocket() {
-
+    void shouldReceiveKlineDataStream() {
+        final var latch = new CountDownLatch(1);
+        final var receivedData = new ArrayList<Map<String, Object>>();
+        final var hasError = new AtomicBoolean(false);
+        final var topic = BybitTestConfig.getPublicKlineBtcUsdt()[0];
+        final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
+        try {
+            // Act
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), BybitTestConfig.getPublicKlineBtcUsdt())
+                    .map(BybitMapper.ofMap())
+                    .filter(BybitFilter.ofFilter())
+                    .subscribe(
+                            bybitSubscriber.onNext(),
+                            t -> {
+                                LOGGER.error("Error in test subscription", t);
+                                hasError.set(true);
+                                latch.countDown();
+                            },
+                            bybitSubscriber.onComplete()
+                    );
+            // Assert
+            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertFalse(hasError.get(), "Should not encounter errors during subscription");
+            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
+            // Verify data structure
+            final var firstData = receivedData.getFirst();
+            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
+            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
+            LOGGER.info("Integration test received valid data: {}", firstData);
+        } catch (final Exception e) {
+            LOGGER.error("Exception during test execution", e);
+            fail("Test failed with exception: " + e.getMessage());
+        }
     }
 
     private BybitSubscriber getBybitSubscriber(final CountDownLatch latch, final List<Map<String, Object>> receivedData) {
         return BybitSubscriber.create(new StreamHandler() {
             @Override
             public void handle(final String topic, final Map<String, Object> data) {
-                LOGGER.info("Received topic: {}, message count: {}", topic, receivedData.size() + 1);
+                LOGGER.info("Received topic: '{}', message count: {}", topic, receivedData.size() + 1);
                 receivedData.add(data);
                 latch.countDown();
             }
