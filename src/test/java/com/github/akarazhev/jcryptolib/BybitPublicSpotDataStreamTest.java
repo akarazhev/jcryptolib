@@ -330,6 +330,7 @@ class BybitPublicSpotDataStreamTest {
         final var latch = new CountDownLatch(1);
         final var receivedData = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
+        final var topic = BybitTestConfig.getPublicOrderBook1BtcUsdt()[0];
         final var bybitSubscriber = getBybitSubscriber(latch, receivedData);
         try {
             // Act
@@ -352,8 +353,7 @@ class BybitPublicSpotDataStreamTest {
             // Verify data structure
             final var firstData = receivedData.getFirst();
             assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
-            assertEquals(BybitTestConfig.getPublicOrderBook1BtcUsdt()[0], firstData.get("topic"),
-                    "Data should contain 'orderbook.1.BTCUSDT' topic");
+            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
             LOGGER.info("Integration test received valid data: {}", firstData);
         } catch (final Exception e) {
             LOGGER.error("Exception during test execution", e);
