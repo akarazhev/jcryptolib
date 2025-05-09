@@ -31,18 +31,25 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class DataStreamsTest {
 
+    /**
+     * Testing private constructor for code coverage.
+     * <p>
+     * Use reflection to access the private constructor, and assert that it throws an exception.
+     * <p>
+     * When using reflection, the UnsupportedOperationException is wrapped in an InvocationTargetException.
+     */
     @Test
     void constructorShouldThrowException() {
         // Testing private constructor for code coverage
         try {
             // Use reflection to access the private constructor
-            var constructor = DataStreams.class.getDeclaredConstructor();
+            final var constructor = DataStreams.class.getDeclaredConstructor();
             constructor.setAccessible(true);
             constructor.newInstance();
             fail("Constructor should have thrown an exception");
         } catch (final Exception e) {
             // When using reflection, the UnsupportedOperationException is wrapped in an InvocationTargetException
-            Throwable cause = e.getCause();
+            final var cause = e.getCause();
             assertInstanceOf(UnsupportedOperationException.class, cause,
                     "Root cause should be UnsupportedOperationException, but was: " + cause.getClass().getName());
         }
