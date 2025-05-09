@@ -25,7 +25,6 @@
 package com.github.akarazhev.jcryptolib.bybit;
 
 public final class BybitTestConfig {
-
     private static final String[] PUBLIC_ORDER_BOOK_1_BTC_USDT = new String[]{"orderbook.1.BTCUSDT"};
     private static final String[] PUBLIC_TICKERS_BTC_USDT = new String[]{"tickers.BTCUSDT"};
     private static final String[] PUBLIC_KLINE_BTC_USDT = new String[]{"kline.1.BTCUSDT"};
