@@ -220,7 +220,7 @@ class BybitPublicSpotDataStreamTest {
                     .filter(BybitFilter.ofFilter())
                     // Introduce artificial delay to test backpressure
                     .observeOn(Schedulers.io(), false, 2) // Small buffer size
-                    .doOnNext(data -> {
+                    .doOnNext(_ -> {
                         // Simulate slow processing
                         try {
                             Thread.sleep(100);
@@ -234,7 +234,7 @@ class BybitPublicSpotDataStreamTest {
                         }
                     })
                     .subscribe(
-                            data -> { /* Already handled in doOnNext */ },
+                            _ -> { /* Already handled in doOnNext */ },
                             throwable -> {
                                 LOGGER.error("Error in backpressure test", throwable);
                                 hasError.set(true);
