@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib;
+package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.DataStreams;
 import com.github.akarazhev.jcryptolib.bybit.BybitTestConfig;
-import com.github.akarazhev.jcryptolib.bybit.stream.BybitFilter;
-import com.github.akarazhev.jcryptolib.bybit.stream.BybitMapper;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

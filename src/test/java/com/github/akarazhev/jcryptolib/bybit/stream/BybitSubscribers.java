@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-public final class BybitSubscribers {
+final class BybitSubscribers {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitSubscribers.class);
 
     /**
