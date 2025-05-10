@@ -25,6 +25,7 @@
 package com.github.akarazhev.jcryptolib.bybit;
 
 public final class BybitTestConfig {
+    private static final String[] PUBLIC_TRADE_BTC_USDT = new String[]{"publicTrade.BTCUSDT"};
     private static final String[] PUBLIC_ORDER_BOOK_1_BTC_USDT = new String[]{"orderbook.1.BTCUSDT"};
     private static final String[] PUBLIC_TICKERS_BTC_USDT = new String[]{"tickers.BTCUSDT"};
     private static final String[] PUBLIC_KLINE_BTC_USDT = new String[]{"kline.1.BTCUSDT"};
@@ -54,5 +55,14 @@ public final class BybitTestConfig {
      */
     public static String[] getPublicKlineBtcUsdt() {
         return PUBLIC_KLINE_BTC_USDT;
+    }
+
+    /**
+     * Returns a list of public trade topics for the BTCUSDT pair.
+     *
+     * @return a list of public trade topics for the BTCUSDT pair.
+     */
+    public static String[] getPublicTradeBtcUsdt() {
+        return PUBLIC_TRADE_BTC_USDT;
     }
 }
