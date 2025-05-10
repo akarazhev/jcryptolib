@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 final class BybitDataStreamTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicSpotDataStreamTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStreamTest.class);
     private Disposable subscription;
 
     /**

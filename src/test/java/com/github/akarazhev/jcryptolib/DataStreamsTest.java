@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DataStreamsTest {
+final class DataStreamsTest {
 
     /**
      * Testing private constructor for code coverage.
