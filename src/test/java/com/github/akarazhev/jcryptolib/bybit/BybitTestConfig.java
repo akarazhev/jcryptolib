@@ -25,10 +25,14 @@
 package com.github.akarazhev.jcryptolib.bybit;
 
 public final class BybitTestConfig {
-    private static final String[] PUBLIC_TRADE_BTC_USDT = new String[]{"publicTrade.BTCUSDT"};
     private static final String[] PUBLIC_ORDER_BOOK_1_BTC_USDT = new String[]{"orderbook.1.BTCUSDT"};
+    private static final String[] PUBLIC_TRADE_BTC_USDT = new String[]{"publicTrade.BTCUSDT"};
     private static final String[] PUBLIC_TICKERS_BTC_USDT = new String[]{"tickers.BTCUSDT"};
     private static final String[] PUBLIC_KLINE_BTC_USDT = new String[]{"kline.1.BTCUSDT"};
+    private static final String[] PUBLIC_ALL_LIQUIDATION_BTC_USDT = new String[]{"allLiquidation.BTCUSDT"};
+    private static final String[] PUBLIC_LT_KLINE_BTC_3S_USDT = new String[]{"kline_lt.1.BTC3SUSDT"};
+    private static final String[] PUBLIC_LT_TICKER_BTC_3S_USDT = new String[]{"ticker_lt.BTC3SUSDT"};
+    private static final String[] PUBLIC_LT_BTC_3S_USDT = new String[]{"lt.BTC3SUSDT"};
 
     /**
      * Returns a list of public order book level 1 topics for the BTCUSDT pair.
@@ -37,6 +41,15 @@ public final class BybitTestConfig {
      */
     public static String[] getPublicOrderBook1BtcUsdt() {
         return PUBLIC_ORDER_BOOK_1_BTC_USDT;
+    }
+
+    /**
+     * Returns a list of public trade topics for the BTCUSDT pair.
+     *
+     * @return a list of public trade topics for the BTCUSDT pair.
+     */
+    public static String[] getPublicTradeBtcUsdt() {
+        return PUBLIC_TRADE_BTC_USDT;
     }
 
     /**
@@ -58,11 +71,38 @@ public final class BybitTestConfig {
     }
 
     /**
-     * Returns a list of public trade topics for the BTCUSDT pair.
+     * Returns a list of public all liquidation topics for the BTCUSDT pair.
      *
-     * @return a list of public trade topics for the BTCUSDT pair.
+     * @return a list of public all liquidation topics for the BTCUSDT pair.
      */
-    public static String[] getPublicTradeBtcUsdt() {
-        return PUBLIC_TRADE_BTC_USDT;
+    public static String[] getPublicAllLiquidationBtcUsdt() {
+        return PUBLIC_ALL_LIQUIDATION_BTC_USDT;
+    }
+
+    /**
+     * Returns a list of public kline topics for the BTCUSDT pair.
+     *
+     * @return a list of public kline topics for the BTCUSDT pair.
+     */
+    public static String[] getPublicLtKlineBtc3sUsdt() {
+        return PUBLIC_LT_KLINE_BTC_3S_USDT;
+    }
+
+    /**
+     * Returns a list of public ticker topics for the BTCUSDT pair.
+     *
+     * @return a list of public ticker topics for the BTCUSDT pair.
+     */
+    public static String[] getPublicLtTickerBtc3sUsdt() {
+        return PUBLIC_LT_TICKER_BTC_3S_USDT;
+    }
+
+    /**
+     * Returns a list of public ticker topics for the BTCUSDT pair.
+     *
+     * @return a list of public ticker topics for the BTCUSDT pair.
+     */
+    public static String[] getPublicLtBtc3sUsdt() {
+        return PUBLIC_LT_BTC_3S_USDT;
     }
 }
