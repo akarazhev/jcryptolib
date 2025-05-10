@@ -67,7 +67,7 @@ final class BybitDataStreamTest {
      * Tests that the data stream is received properly.
      * <p>
      * Subscribes to the Bybit public spot data stream and verifies that at least one data item is received
-     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test

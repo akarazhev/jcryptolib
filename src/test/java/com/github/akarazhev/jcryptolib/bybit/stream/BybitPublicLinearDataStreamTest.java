@@ -25,7 +25,6 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.DataStreams;
-import com.github.akarazhev.jcryptolib.bybit.BybitTestConfig;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -39,13 +38,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetLinear;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.stream.BybitSubscribers.getSubscriber;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-final class BybitPublicLinearDataStreamTest {
+final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicLinearDataStreamTest.class);
     private Disposable subscription;
 
@@ -66,148 +69,114 @@ final class BybitPublicLinearDataStreamTest {
      * Tests that the order book data stream is received properly.
      * <p>
      * Subscribes to the Bybit public order book data stream and verifies that at least one data item is received
-     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test
-    void shouldReceiveOrderBookDataStream() {
-        final var latch = new CountDownLatch(1);
-        final var receivedData = new ArrayList<Map<String, Object>>();
-        final var hasError = new AtomicBoolean(false);
-        final var topic = BybitTestConfig.getPublicOrderBook1BtcUsdt()[0];
-        final var subscriber = getSubscriber(latch, receivedData);
-        try {
-            // Act
-            subscription = DataStreams.ofBybit(getPublicTestnetLinear(), BybitTestConfig.getPublicOrderBook1BtcUsdt())
-                    .map(BybitMapper.ofMap())
-                    .filter(BybitFilter.ofFilter())
-                    .subscribe(
-                            subscriber.onNext(),
-                            t -> {
-                                LOGGER.error("Error in test subscription", t);
-                                hasError.set(true);
-                                latch.countDown();
-                            },
-                            subscriber.onComplete()
-                    );
-            // Assert
-            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
-            assertFalse(hasError.get(), "Should not encounter errors during subscription");
-            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
-            // Verify data structure
-            final var firstData = receivedData.getFirst();
-            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
-            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
-            LOGGER.info("Integration test received valid data: {}", firstData);
-        } catch (final Exception e) {
-            LOGGER.error("Exception during test execution", e);
-            fail("Test failed with exception: " + e.getMessage());
-        }
+    @Override
+    public void shouldReceiveOrderBookDataStream() {
+        assertTest(getPublicTestnetLinear(), getPublicOrderBook1BtcUsdt());
     }
 
     /**
      * Tests that the trade data stream is received properly.
      * <p>
      * Subscribes to the Bybit public trade data stream and verifies that at least one data item is received
-     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test
-    void shouldReceiveTradeDataStream() {
-        final var latch = new CountDownLatch(1);
-        final var receivedData = new ArrayList<Map<String, Object>>();
-        final var hasError = new AtomicBoolean(false);
-        final var topic = BybitTestConfig.getPublicTradeBtcUsdt()[0];
-        final var subscriber = getSubscriber(latch, receivedData);
-        try {
-            // Act
-            subscription = DataStreams.ofBybit(getPublicTestnetLinear(), BybitTestConfig.getPublicTradeBtcUsdt())
-                    .map(BybitMapper.ofMap())
-                    .filter(BybitFilter.ofFilter())
-                    .subscribe(
-                            subscriber.onNext(),
-                            t -> {
-                                LOGGER.error("Error in test subscription", t);
-                                hasError.set(true);
-                                latch.countDown();
-                            },
-                            subscriber.onComplete()
-                    );
-            // Assert
-            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
-            assertFalse(hasError.get(), "Should not encounter errors during subscription");
-            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
-            // Verify data structure
-            final var firstData = receivedData.getFirst();
-            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
-            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
-            LOGGER.info("Integration test received valid data: {}", firstData);
-        } catch (final Exception e) {
-            LOGGER.error("Exception during test execution", e);
-            fail("Test failed with exception: " + e.getMessage());
-        }
+    @Override
+    public void shouldReceiveTradeDataStream() {
+        assertTest(getPublicTestnetLinear(), getPublicTradeBtcUsdt());
     }
 
     /**
      * Tests that the ticker data stream is received properly.
      * <p>
      * Subscribes to the Bybit public ticker data stream and verifies that at least one data item is received
-     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test
-    void shouldReceiveTickerDataStream() {
-        final var latch = new CountDownLatch(1);
-        final var receivedData = new ArrayList<Map<String, Object>>();
-        final var hasError = new AtomicBoolean(false);
-        final var topic = BybitTestConfig.getPublicTickersBtcUsdt()[0];
-        final var subscriber = getSubscriber(latch, receivedData);
-        try {
-            // Act
-            subscription = DataStreams.ofBybit(getPublicTestnetLinear(), BybitTestConfig.getPublicTickersBtcUsdt())
-                    .map(BybitMapper.ofMap())
-                    .filter(BybitFilter.ofFilter())
-                    .subscribe(
-                            subscriber.onNext(),
-                            t -> {
-                                LOGGER.error("Error in test subscription", t);
-                                hasError.set(true);
-                                latch.countDown();
-                            },
-                            subscriber.onComplete()
-                    );
-            // Assert
-            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
-            assertFalse(hasError.get(), "Should not encounter errors during subscription");
-            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
-            // Verify data structure
-            final var firstData = receivedData.getFirst();
-            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
-            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
-            LOGGER.info("Integration test received valid data: {}", firstData);
-        } catch (final Exception e) {
-            LOGGER.error("Exception during test execution", e);
-            fail("Test failed with exception: " + e.getMessage());
-        }
+    @Override
+    public void shouldReceiveTickerDataStream() {
+        assertTest(getPublicTestnetLinear(), getPublicTickersBtcUsdt());
     }
 
     /**
      * Tests that the kline data stream is received properly.
      * <p>
      * Subscribes to the Bybit public kline data stream and verifies that at least one data item is received
-     * within a 30 second timeout period. No errors should be encountered during the subscription.
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test
-    void shouldReceiveKlineDataStream() {
+    @Override
+    public void shouldReceiveKlineDataStream() {
+        assertTest(getPublicTestnetLinear(), getPublicKlineBtcUsdt());
+    }
+
+    /**
+     * Tests that the all liquidation data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public all liquidation data stream and verifies that at least one data item is received
+     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
+    @Test
+    @Override
+    public void shouldReceiveAllLiquidationDataStream() {
+        // TODO: Implement it
+    }
+
+    /**
+     * Tests that the leveraged token kline data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public leveraged token kline data stream and verifies that at least one data item is
+     * received within a 60 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
+    @Test
+    @Override
+    public void shouldReceiveLtKlineDataStream() {
+        // TODO: Implement it
+    }
+
+    /**
+     * Tests that the leveraged token ticker data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public leveraged token ticker data stream and verifies that at least one data item is
+     * received within a 60 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
+    @Test
+    @Override
+    public void shouldReceiveLtTickerDataStream() {
+        // TODO: Implement it
+    }
+
+    /**
+     * Tests that the leveraged token navigation data stream is received properly.
+     * <p>
+     * Subscribes to the Bybit public leveraged token navigation data stream and verifies that at least one data item is
+     * received within a 60 second timeout period. No errors should be encountered during the subscription.
+     * The received data should contain a "topic" field.
+     */
+    @Test
+    @Override
+    public void shouldReceiveLtNavDataStream() {
+        // TODO: Implement it
+    }
+
+    private void assertTest(final String url, final String[] topics) {
         final var latch = new CountDownLatch(1);
         final var receivedData = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
-        final var topic = BybitTestConfig.getPublicKlineBtcUsdt()[0];
         final var subscriber = getSubscriber(latch, receivedData);
         try {
             // Act
-            subscription = DataStreams.ofBybit(getPublicTestnetLinear(), BybitTestConfig.getPublicKlineBtcUsdt())
+            subscription = DataStreams.ofBybit(url, topics)
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     .subscribe(
@@ -226,7 +195,7 @@ final class BybitPublicLinearDataStreamTest {
             // Verify data structure
             final var firstData = receivedData.getFirst();
             assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
-            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
+            assertEquals(topics[0], firstData.get("topic"), "Data should contain '" + topics[0] + "' topic");
             LOGGER.info("Integration test received valid data: {}", firstData);
         } catch (final Exception e) {
             LOGGER.error("Exception during test execution", e);
