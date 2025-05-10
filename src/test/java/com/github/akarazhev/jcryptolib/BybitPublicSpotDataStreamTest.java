@@ -92,7 +92,7 @@ final class BybitPublicSpotDataStreamTest {
                             subscriber.onComplete()
                     );
             // Assert
-            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure
@@ -106,6 +106,42 @@ final class BybitPublicSpotDataStreamTest {
         }
     }
 
+    @Test
+    void shouldReceiveTradeDataStream() {
+        final var latch = new CountDownLatch(1);
+        final var receivedData = new ArrayList<Map<String, Object>>();
+        final var hasError = new AtomicBoolean(false);
+        final var topic = BybitTestConfig.getPublicTradeBtcUsdt()[0];
+        final var subscriber = getSubscriber(latch, receivedData);
+        try {
+            // Act
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), BybitTestConfig.getPublicTradeBtcUsdt())
+                    .map(BybitMapper.ofMap())
+                    .filter(BybitFilter.ofFilter())
+                    .subscribe(
+                            subscriber.onNext(),
+                            t -> {
+                                LOGGER.error("Error in test subscription", t);
+                                hasError.set(true);
+                                latch.countDown();
+                            },
+                            subscriber.onComplete()
+                    );
+            // Assert
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertFalse(hasError.get(), "Should not encounter errors during subscription");
+            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
+            // Verify data structure
+            final var firstData = receivedData.getFirst();
+            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
+            assertEquals(topic, firstData.get("topic"), "Data should contain '" + topic + "' topic");
+            LOGGER.info("Integration test received valid data: {}", firstData);
+        } catch (final Exception e) {
+            LOGGER.error("Exception during test execution", e);
+            fail("Test failed with exception: " + e.getMessage());
+        }
+    }
+    
     /**
      * Tests that the ticker data stream is received properly.
      * <p>
@@ -135,7 +171,7 @@ final class BybitPublicSpotDataStreamTest {
                             subscriber.onComplete()
                     );
             // Assert
-            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure
@@ -178,7 +214,7 @@ final class BybitPublicSpotDataStreamTest {
                             subscriber.onComplete()
                     );
             // Assert
-            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure

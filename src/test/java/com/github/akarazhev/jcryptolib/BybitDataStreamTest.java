@@ -92,7 +92,7 @@ final class BybitDataStreamTest {
                             subscriber.onComplete()
                     );
             // Assert
-            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure
@@ -301,8 +301,8 @@ final class BybitDataStreamTest {
                 sub2.dispose();
             });
             // Assert
-            assertTrue(latch1.await(30, TimeUnit.SECONDS), "First subscriber should receive data");
-            assertTrue(latch2.await(30, TimeUnit.SECONDS), "Second subscriber should receive data");
+            assertTrue(latch1.await(60, TimeUnit.SECONDS), "First subscriber should receive data");
+            assertTrue(latch2.await(60, TimeUnit.SECONDS), "Second subscriber should receive data");
             assertFalse(hasError.get(), "Should not encounter errors");
             assertFalse(receivedData1.isEmpty(), "First subscriber should receive data");
             assertFalse(receivedData2.isEmpty(), "Second subscriber should receive data");
