@@ -135,7 +135,7 @@ final class BybitPublicLinearDataStreamTest {
                             subscriber.onComplete()
                     );
             // Assert
-            assertTrue(latch.await(30, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertTrue(latch.await(45, TimeUnit.SECONDS), "Should receive data within timeout period");
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure
