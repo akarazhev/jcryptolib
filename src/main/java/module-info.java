@@ -26,8 +26,8 @@ module com.github.akarazhev.jcryptolib {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
     requires io.reactivex.rxjava3;
-    requires okhttp3;
     requires org.slf4j;
+    requires java.net.http;
 
     opens com.github.akarazhev.jcryptolib.bybit.stream to com.fasterxml.jackson.databind;
 }

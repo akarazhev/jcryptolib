@@ -44,7 +44,6 @@
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
         <rxjava.version>3.1.10</rxjava.version>
-        <okhttp.version>4.12.0</okhttp.version>
         <jackson-databind.version>2.18.3</jackson-databind.version>
         <slf4j-api.version>2.0.17</slf4j-api.version>
         <logback-classic.version>1.5.18</logback-classic.version>
@@ -57,12 +56,6 @@
             <groupId>io.reactivex.rxjava3</groupId>
             <artifactId>rxjava</artifactId>
             <version>${rxjava.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${okhttp.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>

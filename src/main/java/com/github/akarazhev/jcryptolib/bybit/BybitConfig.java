@@ -36,13 +36,14 @@ public final class BybitConfig {
     private static final String PUBLIC_TESTNET_OPTION = AppConfig.getAsString("bybit.public.testnet.option");
     private static final String PUBLIC_TESTNET_SPREAD = AppConfig.getAsString("bybit.public.testnet.spread");
     // Public topics are defined in application.properties
-    private static final String[] PUBLIC_SUBSCRIBE_TOPICS = AppConfig.getAsString("bybit.public.subscribe.topics").split(",");
+    private static final String[] PUBLIC_SUBSCRIBE_TOPICS = AppConfig.getAsArray("bybit.public.subscribe.topics");
     // Private topics are defined in application.properties
-    private static final String[] PRIVATE_SUBSCRIBE_TOPICS = AppConfig.getAsString("bybit.private.subscribe.topics").split(",");
-    // Ping interval is defined in application.properties
-    private static final long PING_INTERVAL = AppConfig.getAsLong("bybit.ping.interval");
-    // Reconnect interval are defined in application.properties
-    private static final long RECONNECT_INTERVAL = AppConfig.getAsLong("bybit.reconnect.interval");
+    private static final String[] PRIVATE_SUBSCRIBE_TOPICS = AppConfig.getAsArray("bybit.private.subscribe.topics");
+    private static final int PING_INTERVAL = AppConfig.getAsInt("bybit.ping.interval");
+    private static final int MAX_RECONNECT_ATTEMPTS = AppConfig.getAsInt("bybit.max.reconnect.attempts");
+    private static final float BACKOFF_MULTIPLIER = AppConfig.getAsFloat("bybit.backoff.multiplier");
+    private static final int INITIAL_RECONNECT_INTERVAL_MS = AppConfig.getAsInt("bybit.initial.reconnect.interval.ms");
+    private static final int MAX_RECONNECT_INTERVAL_MS = AppConfig.getAsInt("bybit.max.reconnect.interval.ms");
 
     private BybitConfig() {
         throw new UnsupportedOperationException();
@@ -80,8 +81,20 @@ public final class BybitConfig {
         return PING_INTERVAL;
     }
 
-    public static long getReconnectInterval() {
-        return RECONNECT_INTERVAL;
+    public static long getMaxReconnectAttempts() {
+        return MAX_RECONNECT_ATTEMPTS;
+    }
+
+    public static float getBackoffMultiplier() {
+        return BACKOFF_MULTIPLIER;
+    }
+
+    public static int getInitialReconnectIntervalMs() {
+        return INITIAL_RECONNECT_INTERVAL_MS;
+    }
+
+    public static int getMaxReconnectIntervalMs() {
+        return MAX_RECONNECT_INTERVAL_MS;
     }
 
     public static String print() {
@@ -94,7 +107,10 @@ public final class BybitConfig {
                 ", publicSubscribeTopics=" + Arrays.toString(getPublicSubscribeTopics()) +
                 ", privateSubscribeTopics=" + Arrays.toString(getPrivateSubscribeTopics()) +
                 ", pingInterval=" + getPingInterval() +
-                ", reconnectInterval=" + getReconnectInterval() +
+                ", maxReconnectAttempts=" + getMaxReconnectAttempts() +
+                ", backoffMultiplier=" + getBackoffMultiplier() +
+                ", initialReconnectIntervalMs=" + getInitialReconnectIntervalMs() +
+                ", maxReconnectIntervalMs=" + getMaxReconnectIntervalMs() +
                 '}';
     }
 }

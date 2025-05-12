@@ -46,20 +46,20 @@ public final class AppConfig {
         throw new UnsupportedOperationException();
     }
 
-    public static String getAsString(final String key) {
-        return get(key);
+    public static String[] getAsArray(final String key) {
+        return get(key).split(",");
     }
 
-    public static boolean getAsBoolean(final String key) {
-        return Boolean.parseBoolean(get(key));
+    public static String getAsString(final String key) {
+        return get(key);
     }
 
     public static int getAsInt(final String key) {
         return Integer.parseInt(get(key));
     }
 
-    public static long getAsLong(final String key) {
-        return Long.parseLong(get(key));
+    public static float getAsFloat(final String key) {
+        return Float.parseFloat(get(key));
     }
 
     private static String get(final String key) {
