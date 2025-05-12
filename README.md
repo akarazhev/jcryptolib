@@ -34,7 +34,7 @@ Add the dependency to your Maven project:
 <dependency>
     <groupId>com.github.akarazhev.jcryptolib</groupId>
     <artifactId>jcryptolib</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
 </dependency>
 ```
 
