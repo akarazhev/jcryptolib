@@ -35,72 +35,72 @@ public final class BybitTestConfig {
     private static final String[] PUBLIC_LT_BTC_3S_USDT = new String[]{"lt.BTC3SUSDT"};
 
     /**
-     * Returns a list of public order book level 1 topics for the BTCUSDT pair.
+     * Returns an array of public order book level 1 topics for the BTCUSDT pair.
      *
-     * @return a list of public order book level 1 topics for the BTCUSDT pair.
+     * @return an array of public order book level 1 topics for the BTCUSDT pair.
      */
     public static String[] getPublicOrderBook1BtcUsdt() {
         return PUBLIC_ORDER_BOOK_1_BTC_USDT;
     }
 
     /**
-     * Returns a list of public trade topics for the BTCUSDT pair.
+     * Returns an array of public trade topics for the BTCUSDT pair.
      *
-     * @return a list of public trade topics for the BTCUSDT pair.
+     * @return an array of public trade topics for the BTCUSDT pair.
      */
     public static String[] getPublicTradeBtcUsdt() {
         return PUBLIC_TRADE_BTC_USDT;
     }
 
     /**
-     * Returns a list of public ticker topics for the BTCUSDT pair.
+     * Returns an array of public ticker topics for the BTCUSDT pair.
      *
-     * @return a list of public ticker topics for the BTCUSDT pair.
+     * @return an array of public ticker topics for the BTCUSDT pair.
      */
     public static String[] getPublicTickersBtcUsdt() {
         return PUBLIC_TICKERS_BTC_USDT;
     }
 
     /**
-     * Returns a list of public kline topics for the BTCUSDT pair.
+     * Returns an array of public kline topics for the BTCUSDT pair.
      *
-     * @return a list of public kline topics for the BTCUSDT pair.
+     * @return an array of public kline topics for the BTCUSDT pair.
      */
     public static String[] getPublicKlineBtcUsdt() {
         return PUBLIC_KLINE_BTC_USDT;
     }
 
     /**
-     * Returns a list of public all liquidation topics for the BTCUSDT pair.
+     * Returns an array of public all liquidation topics for the BTCUSDT pair.
      *
-     * @return a list of public all liquidation topics for the BTCUSDT pair.
+     * @return an array of public all liquidation topics for the BTCUSDT pair.
      */
     public static String[] getPublicAllLiquidationBtcUsdt() {
         return PUBLIC_ALL_LIQUIDATION_BTC_USDT;
     }
 
     /**
-     * Returns a list of public kline topics for the BTCUSDT pair.
+     * Returns an array of public kline topics for the BTCUSDT pair.
      *
-     * @return a list of public kline topics for the BTCUSDT pair.
+     * @return an array of public kline topics for the BTCUSDT pair.
      */
     public static String[] getPublicLtKlineBtc3sUsdt() {
         return PUBLIC_LT_KLINE_BTC_3S_USDT;
     }
 
     /**
-     * Returns a list of public ticker topics for the BTCUSDT pair.
+     * Returns an array of public ticker topics for the BTCUSDT pair.
      *
-     * @return a list of public ticker topics for the BTCUSDT pair.
+     * @return an array of public ticker topics for the BTCUSDT pair.
      */
     public static String[] getPublicLtTickerBtc3sUsdt() {
         return PUBLIC_LT_TICKER_BTC_3S_USDT;
     }
 
     /**
-     * Returns a list of public ticker topics for the BTCUSDT pair.
+     * Returns an array of public ticker topics for the BTCUSDT pair.
      *
-     * @return a list of public ticker topics for the BTCUSDT pair.
+     * @return an array of public ticker topics for the BTCUSDT pair.
      */
     public static String[] getPublicLtBtc3sUsdt() {
         return PUBLIC_LT_BTC_3S_USDT;
