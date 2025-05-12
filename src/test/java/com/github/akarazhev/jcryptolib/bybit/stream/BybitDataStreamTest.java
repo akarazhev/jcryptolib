@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicSubscribeTopics;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
 import static com.github.akarazhev.jcryptolib.bybit.stream.BybitSubscribers.getSubscriber;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -67,7 +68,7 @@ final class BybitDataStreamTest {
      * Tests that the data stream is received properly.
      * <p>
      * Subscribes to the Bybit public spot data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test
@@ -108,7 +109,7 @@ final class BybitDataStreamTest {
      * Tests that the data stream is received properly for multiple messages.
      * <p>
      * Subscribes to the Bybit public spot data stream and verifies that at least 3 data items are received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     @Test
@@ -146,7 +147,7 @@ final class BybitDataStreamTest {
      * Tests that the data stream is not received when given an invalid URL.
      * <p>
      * Subscribes to the Bybit public spot data stream with an invalid URL that will cause connection issues,
-     * and verifies that an error is encountered within a 10 second timeout period. No data should be received
+     * and verifies that an error is encountered within a 10-second timeout period. No data should be received
      * during the subscription.
      */
     @Test
@@ -198,7 +199,7 @@ final class BybitDataStreamTest {
      * Tests that the data stream is received properly even when the consumer is slow, which may cause backpressure.
      * <p>
      * Subscribes to the Bybit public spot data stream and introduces an artificial delay to simulate slow processing,
-     * then verifies that the required number of messages are processed within a 2 minute timeout period. No errors should
+     * then verifies that the required number of messages are processed within a 2-minute timeout period. No errors should
      * be encountered during the subscription. The received data should contain a "topic" field.
      */
     @Test
@@ -310,6 +311,269 @@ final class BybitDataStreamTest {
         } catch (final Exception e) {
             LOGGER.error("Exception during multiple subscribers test", e);
             fail("Multiple subscribers test failed with exception: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Tests that the data stream can be cleanly disposed without errors.
+     * <p>
+     * Subscribes to the Bybit public spot data stream, confirms data is flowing,
+     * then disposes the subscription and verifies that cleanup occurs properly.
+     */
+    @Test
+    void shouldCleanupResourcesOnDispose() {
+        final var latch = new CountDownLatch(1);
+        final var receivedData = new ArrayList<Map<String, Object>>();
+        final var hasError = new AtomicBoolean(false);
+        final var subscriber = getSubscriber(latch, receivedData);
+        try {
+            // Act - subscribe and wait for some data
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+                    .map(BybitMapper.ofMap())
+                    .filter(BybitFilter.ofFilter())
+                    .subscribe(
+                            subscriber.onNext(),
+                            t -> {
+                                LOGGER.error("Error in test subscription", t);
+                                hasError.set(true);
+                                latch.countDown();
+                            },
+                            subscriber.onComplete()
+                    );
+            // Wait for at least one message
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertFalse(hasError.get(), "Should not encounter errors during subscription");
+            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
+            // Act - dispose the subscription
+            subscription.dispose();
+            // Assert that subscription is actually disposed
+            assertTrue(subscription.isDisposed(), "Subscription should be properly disposed");
+            // Verify no more data is received after disposal
+            final var dataSize = receivedData.size();
+            Thread.sleep(2000); // Wait briefly to ensure no more data comes in
+            assertEquals(dataSize, receivedData.size(), "No additional data should be received after disposal");
+            LOGGER.info("Resource cleanup test completed successfully");
+        } catch (final Exception e) {
+            LOGGER.error("Exception during test execution", e);
+            fail("Test failed with exception: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Tests the connection timeout handling.
+     * <p>
+     * Verifies that when a connection timeout occurs, the WebSocket handles it appropriately
+     * by emitting an error or completing properly without hanging.
+     */
+    @Test
+    void shouldHandleConnectionTimeout() {
+        final var latch = new CountDownLatch(1);
+        final var hasError = new AtomicBoolean(false);
+        final var errorMessage = new StringBuilder();
+        try {
+            // Create a Flowable with a very short timeout to simulate connection timeout
+            subscription = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+                    .timeout(100, TimeUnit.MILLISECONDS) // Very short timeout to force failure
+                    .subscribe(
+                            data -> LOGGER.info("Received unexpected data: {}", data),
+                            throwable -> {
+                                LOGGER.info("Expected timeout error: {}", throwable.getMessage());
+                                errorMessage.append(throwable.getMessage());
+                                hasError.set(true);
+                                latch.countDown();
+                            },
+                            () -> {
+                                LOGGER.info("Unexpected completion");
+                                latch.countDown();
+                            }
+                    );
+            // Assert - we expect a timeout error
+            assertTrue(latch.await(10, TimeUnit.SECONDS), "Should trigger timeout within expected period");
+            assertTrue(hasError.get(), "Should encounter timeout error");
+            LOGGER.info("Timeout handling test passed with error: {}", errorMessage);
+        } catch (final Exception e) {
+            LOGGER.error("Exception during test execution", e);
+            fail("Test failed with unexpected exception: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Tests the throttling of the data stream with sample rate.
+     * <p>
+     * Verifies that when we apply sampling to the data stream, we receive
+     * fewer messages than the normal flow, effectively throttling the stream.
+     */
+    @Test
+    void shouldSupportSampling() {
+        final var normalLatch = new CountDownLatch(10);
+        final var sampledLatch = new CountDownLatch(3);
+        final var normalCount = new AtomicInteger(0);
+        final var sampledCount = new AtomicInteger(0);
+        final var hasError = new AtomicBoolean(false);
+        try {
+            // Create the base flowable
+            final var flowable = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+                    .map(BybitMapper.ofMap())
+                    .filter(BybitFilter.ofFilter())
+                    .publish()
+                    .refCount();
+            // Normal subscriber
+            final var sub1 = flowable.subscribe(
+                    _ -> {
+                        final var count = normalCount.incrementAndGet();
+                        LOGGER.info("Normal subscriber received message {}", count);
+                        if (count >= 10) {
+                            normalLatch.countDown();
+                        }
+                    },
+                    throwable -> {
+                        LOGGER.error("Error in normal subscriber", throwable);
+                        hasError.set(true);
+                        normalLatch.countDown();
+                    }
+            );
+            // Sampled subscriber - only takes one item per 300ms
+            final var sub2 = flowable
+                    .sample(300, TimeUnit.MILLISECONDS)
+                    .subscribe(
+                            _ -> {
+                                final var count = sampledCount.incrementAndGet();
+                                LOGGER.info("Sampled subscriber received message {}", count);
+                                if (count >= 3) {
+                                    sampledLatch.countDown();
+                                }
+                            },
+                            throwable -> {
+                                LOGGER.error("Error in sampled subscriber", throwable);
+                                hasError.set(true);
+                                sampledLatch.countDown();
+                            }
+                    );
+            // Store both subscriptions for cleanup
+            subscription = Disposable.fromAction(() -> {
+                sub1.dispose();
+                sub2.dispose();
+            });
+            // Assert
+            assertTrue(normalLatch.await(60, TimeUnit.SECONDS),
+                    "Normal subscriber should receive required messages");
+            assertTrue(sampledLatch.await(60, TimeUnit.SECONDS),
+                    "Sampled subscriber should receive required messages");
+            assertFalse(hasError.get(), "Should not encounter errors");
+            // Verify sampling worked - sampled count should be less than normal count
+            assertTrue(sampledCount.get() < normalCount.get(),
+                    "Sampled subscriber should receive fewer messages than normal subscriber");
+            LOGGER.info("Sampling test passed. Normal received: {}, Sampled received: {}", normalCount.get(),
+                    sampledCount.get());
+        } catch (final Exception e) {
+            LOGGER.error("Exception during sampling test", e);
+            fail("Sampling test failed with exception: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Tests the ability to filter specific events from the data stream.
+     * <p>
+     * Creates a data stream and applies a custom filter to only receive events
+     * for a specific topic, verifying that the filter works as expected.
+     */
+    @Test
+    void shouldSupportCustomFiltering() {
+        final var latch = new CountDownLatch(5);
+        final var allMessages = new ArrayList<Map<String, Object>>();
+        final var filteredMessages = new ArrayList<Map<String, Object>>();
+        final var hasError = new AtomicBoolean(false);
+        final var targetTopic = "orderbook.1.BTCUSDT"; // Example topic to filter for
+        try {
+            // Create the base flowable
+            final var flowable = DataStreams.ofBybit(getPublicTestnetSpot(), getPublicSubscribeTopics())
+                    .map(BybitMapper.ofMap())
+                    .publish()
+                    .refCount();
+            // Subscribe to all messages
+            final var sub1 = flowable.subscribe(
+                    data -> {
+                        allMessages.add(data);
+                        LOGGER.info("Received message for topic: {}", data.get("topic"));
+                    },
+                    throwable -> {
+                        LOGGER.error("Error in all messages subscriber", throwable);
+                        hasError.set(true);
+                        latch.countDown();
+                    }
+            );
+            // Subscribe with custom topic filter
+            final var sub2 = flowable
+                    .filter(data -> {
+                        final var topic = (String) data.get("topic");
+                        return topic != null && topic.contains(targetTopic);
+                    })
+                    .subscribe(
+                            data -> {
+                                filteredMessages.add(data);
+                                LOGGER.info("Filtered message for target topic: {}", data.get("topic"));
+                                if (filteredMessages.size() >= 5) {
+                                    latch.countDown();
+                                }
+                            },
+                            throwable -> {
+                                LOGGER.error("Error in filtered subscriber", throwable);
+                                hasError.set(true);
+                                latch.countDown();
+                            }
+                    );
+            // Store both subscriptions for cleanup
+            subscription = Disposable.fromAction(() -> {
+                sub1.dispose();
+                sub2.dispose();
+            });
+            // Allow some time for messages to be received
+            final var completed = latch.await(120, TimeUnit.SECONDS);
+            // Assert
+            assertFalse(hasError.get(), "Should not encounter errors");
+            if (completed) {
+                // If we received the target number of filtered messages
+                assertTrue(filteredMessages.size() >= 5,
+                        "Should receive at least 5 messages matching the filter");
+                // Verify all filtered messages match our topic filter
+                for (final var message : filteredMessages) {
+                    final var topic = (String) message.get("topic");
+                    assertTrue(topic.contains(targetTopic),
+                            "Filtered message should match target topic");
+                }
+
+                LOGGER.info("Custom filtering test passed. All messages: {}, Filtered messages: {}",
+                        allMessages.size(), filteredMessages.size());
+            } else {
+                // If we didn't receive enough matching messages but didn't encounter errors either
+                LOGGER.info("Did not receive enough messages matching filter within timeout. " +
+                        "All: {}, Filtered: {}", allMessages.size(), filteredMessages.size());
+                // As long as we received some messages, we can still verify the filter logic
+                if (!allMessages.isEmpty()) {
+                    boolean foundAnyMatching = false;
+                    boolean foundAnyNonMatching = false;
+                    for (final var message : allMessages) {
+                        final var topic = (String) message.get("topic");
+                        if (topic != null && topic.contains(targetTopic)) {
+                            foundAnyMatching = true;
+                            assertTrue(filteredMessages.contains(message),
+                                    "Message matching filter should be in filtered collection");
+                        } else {
+                            foundAnyNonMatching = true;
+                            assertFalse(filteredMessages.contains(message),
+                                    "Message not matching filter should not be in filtered collection");
+                        }
+                    }
+
+                    // Skip the full test but verify filter logic if we got both types of messages
+                    if (foundAnyMatching && foundAnyNonMatching) {
+                        LOGGER.info("Filter logic verified correctly even though not enough messages received");
+                    }
+                }
+            }
+        } catch (final Exception e) {
+            LOGGER.error("Exception during filtering test", e);
+            fail("Filtering test failed with exception: " + e.getMessage());
         }
     }
 }

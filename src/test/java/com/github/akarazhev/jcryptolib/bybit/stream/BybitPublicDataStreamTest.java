@@ -30,7 +30,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the order book data stream is received properly.
      * <p>
      * Subscribes to the Bybit public order book data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveOrderBookDataStream();
@@ -39,7 +39,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the trade data stream is received properly.
      * <p>
      * Subscribes to the Bybit public trade data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveTradeDataStream();
@@ -48,7 +48,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the ticker data stream is received properly.
      * <p>
      * Subscribes to the Bybit public ticker data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveTickerDataStream();
@@ -57,7 +57,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the kline data stream is received properly.
      * <p>
      * Subscribes to the Bybit public kline data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveKlineDataStream();
@@ -66,7 +66,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the all liquidation data stream is received properly.
      * <p>
      * Subscribes to the Bybit public all liquidation data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveAllLiquidationDataStream();
@@ -75,7 +75,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the leveraged token kline data stream is received properly.
      * <p>
      * Subscribes to the Bybit public leveraged token kline data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveLtKlineDataStream();
@@ -84,7 +84,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the leveraged token ticker data stream is received properly.
      * <p>
      * Subscribes to the Bybit public leveraged token ticker data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveLtTickerDataStream();
@@ -93,7 +93,7 @@ interface BybitPublicDataStreamTest {
      * Tests that the leveraged token navigation data stream is received properly.
      * <p>
      * Subscribes to the Bybit public leveraged token navigation data stream and verifies that at least one data item is received
-     * within a 60 second timeout period. No errors should be encountered during the subscription.
+     * within a 60-second timeout period. No errors should be encountered during the subscription.
      * The received data should contain a "topic" field.
      */
     void shouldReceiveLtNavDataStream();
