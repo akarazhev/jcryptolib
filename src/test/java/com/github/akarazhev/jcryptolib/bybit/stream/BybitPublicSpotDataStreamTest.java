@@ -38,7 +38,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
+//import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicAllLiquidationBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
+//import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicLtBtc3sUsdt;
+//import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicLtKlineBtc3sUsdt;
+//import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicLtTickerBtc3sUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
@@ -127,7 +131,7 @@ final class BybitPublicSpotDataStreamTest implements BybitPublicDataStreamTest {
     @Test
     @Override
     public void shouldReceiveAllLiquidationDataStream() {
-        // TODO: Implement it
+//        assertTest(getPublicTestnetSpot(), getPublicAllLiquidationBtcUsdt());
     }
 
 
@@ -141,7 +145,7 @@ final class BybitPublicSpotDataStreamTest implements BybitPublicDataStreamTest {
     @Test
     @Override
     public void shouldReceiveLtKlineDataStream() {
-        // TODO: Implement it
+//        assertTest(getPublicTestnetSpot(), getPublicLtKlineBtc3sUsdt());
     }
 
     /**
@@ -154,7 +158,7 @@ final class BybitPublicSpotDataStreamTest implements BybitPublicDataStreamTest {
     @Test
     @Override
     public void shouldReceiveLtTickerDataStream() {
-        // TODO: Implement it
+//        assertTest(getPublicTestnetSpot(), getPublicLtTickerBtc3sUsdt());
     }
 
     /**
@@ -167,7 +171,7 @@ final class BybitPublicSpotDataStreamTest implements BybitPublicDataStreamTest {
     @Test
     @Override
     public void shouldReceiveLtNavDataStream() {
-        // TODO: Implement it
+//        assertTest(getPublicTestnetSpot(), getPublicLtBtc3sUsdt());
     }
 
     private void assertTest(final String url, final String[] topics) {
