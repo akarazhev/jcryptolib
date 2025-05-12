@@ -24,7 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
@@ -74,7 +73,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
     }
 
     @Override
-    public void subscribe(@NonNull final FlowableEmitter<String> emitter) throws Throwable {
+    public void subscribe(final FlowableEmitter<String> emitter) throws Throwable {
         reconnectAttempts.set(0);
         connect(emitter);
     }
@@ -83,7 +82,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         final class DataStreamListener implements WebSocket.Listener {
             private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
             private Disposable ping;
-            private final StringBuilder messageBuffer = new StringBuilder();
+            private final StringBuilder buffer = new StringBuilder();
 
             @Override
             public void onOpen(final WebSocket webSocket) {
@@ -97,10 +96,10 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
 
             @Override
             public CompletionStage<?> onText(final WebSocket webSocket, final CharSequence data, final boolean last) {
-                messageBuffer.append(data);
+                buffer.append(data);
                 if (last) {
-                    String text = messageBuffer.toString();
-                    messageBuffer.setLength(0);
+                    final var text = buffer.toString();
+                    buffer.setLength(0);
                     if (isSubscription(text)) {
                         LOGGER.debug("Received subscription message: {}", text);
                         ping = Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
