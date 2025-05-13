@@ -25,57 +25,54 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-final class BybitPublicInverseDataStreamTest implements BybitPublicDataStreamTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicInverseDataStreamTest.class);
+final class BybitPublicInverseDataStreamTest extends BybitPublicDataStreamTest {
 
     @Test
     @Override
     public void shouldReceiveOrderBookDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveTradeDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveTickerDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveKlineDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveAllLiquidationDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveLtKlineDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveLtTickerDataStream() {
-
+        // Implement the test here
     }
 
     @Test
     @Override
     public void shouldReceiveLtNavDataStream() {
-
+        // Implement the test here
     }
 }

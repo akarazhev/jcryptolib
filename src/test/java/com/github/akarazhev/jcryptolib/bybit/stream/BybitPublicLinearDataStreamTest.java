@@ -24,33 +24,16 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.DataStreams;
-import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetLinear;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.stream.BybitSubscribers.getSubscriber;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicLinearDataStreamTest.class);
-    private Disposable subscription;
+final class BybitPublicLinearDataStreamTest extends BybitPublicDataStreamTest {
 
     /**
      * Cleanup after each test.
@@ -59,10 +42,7 @@ final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest
      */
     @AfterEach
     void cleanup() {
-        if (subscription != null && !subscription.isDisposed()) {
-            subscription.dispose();
-            LOGGER.info("Test subscription disposed");
-        }
+        super.cleanup();
     }
 
     /**
@@ -127,7 +107,7 @@ final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest
     @Test
     @Override
     public void shouldReceiveAllLiquidationDataStream() {
-        // TODO: Implement it
+        // Implement the test here
     }
 
     /**
@@ -140,7 +120,7 @@ final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest
     @Test
     @Override
     public void shouldReceiveLtKlineDataStream() {
-        // TODO: Implement it
+        // Implement the test here
     }
 
     /**
@@ -153,7 +133,7 @@ final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest
     @Test
     @Override
     public void shouldReceiveLtTickerDataStream() {
-        // TODO: Implement it
+        // Implement the test here
     }
 
     /**
@@ -166,40 +146,6 @@ final class BybitPublicLinearDataStreamTest implements BybitPublicDataStreamTest
     @Test
     @Override
     public void shouldReceiveLtNavDataStream() {
-        // TODO: Implement it
-    }
-
-    private void assertTest(final String url, final String[] topics) {
-        final var latch = new CountDownLatch(1);
-        final var receivedData = new ArrayList<Map<String, Object>>();
-        final var hasError = new AtomicBoolean(false);
-        final var subscriber = getSubscriber(latch, receivedData);
-        try {
-            // Act
-            subscription = DataStreams.ofBybit(url, topics)
-                    .map(BybitMapper.ofMap())
-                    .filter(BybitFilter.ofFilter())
-                    .subscribe(
-                            subscriber.onNext(),
-                            t -> {
-                                LOGGER.error("Error in test subscription", t);
-                                hasError.set(true);
-                                latch.countDown();
-                            },
-                            subscriber.onComplete()
-                    );
-            // Assert
-            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
-            assertFalse(hasError.get(), "Should not encounter errors during subscription");
-            assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
-            // Verify data structure
-            final var firstData = receivedData.getFirst();
-            assertTrue(firstData.containsKey("topic"), "Data should contain 'topic' field");
-            assertEquals(topics[0], firstData.get("topic"), "Data should contain '" + topics[0] + "' topic");
-            LOGGER.info("Integration test received valid data: {}", firstData);
-        } catch (final Exception e) {
-            LOGGER.error("Exception during test execution", e);
-            fail("Test failed with exception: " + e.getMessage());
-        }
+        // Implement the test here
     }
 }
