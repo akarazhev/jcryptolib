@@ -35,6 +35,8 @@ public final class BybitConfig {
     private static final String PUBLIC_TESTNET_INVERSE = AppConfig.getAsString("bybit.public.testnet.inverse");
     private static final String PUBLIC_TESTNET_OPTION = AppConfig.getAsString("bybit.public.testnet.option");
     private static final String PUBLIC_TESTNET_SPREAD = AppConfig.getAsString("bybit.public.testnet.spread");
+    private static final String PRIVATE_TESTNET = AppConfig.getAsString("bybit.private.testnet");
+    private static final String ORDER_TESTNET = AppConfig.getAsString("bybit.order.testnet");
     // Public topics are defined in application.properties
     private static final String[] PUBLIC_SUBSCRIBE_TOPICS = AppConfig.getAsArray("bybit.public.subscribe.topics");
     // Private topics are defined in application.properties
@@ -67,6 +69,14 @@ public final class BybitConfig {
 
     public static String getPublicTestnetSpread() {
         return PUBLIC_TESTNET_SPREAD;
+    }
+
+    public static String getPrivateTestnet() {
+        return PRIVATE_TESTNET;
+    }
+
+    public static String getOrderTestnet() {
+        return ORDER_TESTNET;
     }
 
     public static String[] getPublicSubscribeTopics() {
@@ -104,6 +114,8 @@ public final class BybitConfig {
                 ", publicTestnetInverse=" + getPublicTestnetInverse() +
                 ", publicTestnetOption=" + getPublicTestnetOption() +
                 ", publicTestnetSpread=" + getPublicTestnetSpread() +
+                ", privateTestnet=" + getPrivateTestnet() +
+                ", orderTestnet=" + getOrderTestnet() +
                 ", publicSubscribeTopics=" + Arrays.toString(getPublicSubscribeTopics()) +
                 ", privateSubscribeTopics=" + Arrays.toString(getPrivateSubscribeTopics()) +
                 ", pingInterval=" + getPingInterval() +
