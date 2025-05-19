@@ -35,7 +35,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
-import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -118,21 +117,6 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         }
 
         @Override
-        public CompletionStage<?> onPing(final WebSocket webSocket, final ByteBuffer message) {
-            LOGGER.debug("Received ping");
-            webSocket.sendPong(message);
-            webSocket.request(1);
-            return CompletableFuture.completedFuture(null);
-        }
-
-        @Override
-        public CompletionStage<?> onPong(final WebSocket webSocket, final ByteBuffer message) {
-            LOGGER.debug("Received pong");
-            webSocket.request(1);
-            return CompletableFuture.completedFuture(null);
-        }
-
-        @Override
         public CompletionStage<?> onClose(final WebSocket webSocket, final int statusCode, final String reason) {
             LOGGER.warn("WebSocket closed with code: {}, reason: {}", statusCode, reason);
             stopPing();
@@ -176,7 +160,6 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         }
 
         private void scheduleReconnect() {
-            stopPing();
             reconnectAttempts++;
             if (reconnectAttempts > getMaxReconnectAttempts()) {
                 LOGGER.error("Maximum reconnection attempts ({}) reached", getMaxReconnectAttempts());
@@ -190,6 +173,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             CompletableFuture.delayedExecutor((long) delay, TimeUnit.MILLISECONDS)
                     .execute(() -> {
                         if (!emitter.isCancelled()) {
+                            closeWebSocket();
                             connect();
                         }
                     });
@@ -202,6 +186,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                     .exceptionally(ex -> {
                         if (!emitter.isCancelled()) {
                             LOGGER.error("Failed to connect: {}", ex.getMessage());
+                            stopPing();
                             scheduleReconnect();
                         }
 
@@ -211,11 +196,15 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
 
         private void cancel() {
             if (emitter.isCancelled()) {
-                if (webSocket != null) {
-                    LOGGER.info("WebSocket closing...");
-                    stopPing();
-                    webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "Connection closed");
-                }
+                closeWebSocket();
+            }
+        }
+
+        private void closeWebSocket() {
+            if (webSocket != null) {
+                LOGGER.info("WebSocket closing...");
+                stopPing();
+                webSocket.abort();
             }
         }
     }
