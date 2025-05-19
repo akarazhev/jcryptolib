@@ -24,25 +24,22 @@
 
 package com.github.akarazhev.jcryptolib;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
-import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataStream;
-import io.reactivex.rxjava3.core.BackpressureStrategy;
-import io.reactivex.rxjava3.core.Flowable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpClient;
+import java.time.Duration;
 
-public final class DataStreams {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataStreams.class);
+public final class Clients {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Clients.class);
 
-    private DataStreams() {
+    private Clients() {
         throw new UnsupportedOperationException();
     }
 
-    public static Flowable<String> ofBybit(final HttpClient client, final String url, final String[] topics) {
-        LOGGER.info(BybitConfig.print());
-        return Flowable.create(e -> BybitDataStream.create(client, url, topics).subscribe(e),
-                BackpressureStrategy.BUFFER);
+    public static HttpClient newHttpClient() {
+        return HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
     }
 }

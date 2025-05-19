@@ -34,14 +34,12 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
+import java.net.http.WebSocket.Listener;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getBackoffMultiplier;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getInitialReconnectIntervalMs;
@@ -56,197 +54,169 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
     private final HttpClient client;
     private final URI uri;
     private final String[] topics;
-    private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
-    private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
-    private final AtomicBoolean isReconnecting = new AtomicBoolean(false);
 
-    private BybitDataStream(final String url, final String[] topics) {
-        this.client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
+    private BybitDataStream(final HttpClient client, final String url, final String[] topics) {
+        this.client = client;
         this.uri = URI.create(url);
         this.topics = topics;
     }
 
-    public static BybitDataStream create(final String url, final String[] topics) {
-        return new BybitDataStream(url, topics);
+    public static BybitDataStream create(final HttpClient client, final String url, final String[] topics) {
+        return new BybitDataStream(client, url, topics);
     }
 
     @Override
     public void subscribe(final FlowableEmitter<String> emitter) throws Throwable {
-        reconnectAttempts.set(0);
-        connect(emitter);
+        final var listener = new BybitDataStreamListener(emitter);
+        listener.connect();
+        emitter.setCancellable(listener::cancel);
     }
 
-    private void connect(final FlowableEmitter<String> emitter) {
-        final class DataStreamListener implements WebSocket.Listener {
-            private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
-            private Disposable ping;
-            private final StringBuilder buffer = new StringBuilder();
+    final class BybitDataStreamListener implements Listener {
+        private final FlowableEmitter<String> emitter;
+        private final StringBuilder buffer;
+        private WebSocket webSocket;
+        private int reconnectAttempts;
+        private Disposable ping;
 
-            @Override
-            public void onOpen(final WebSocket webSocket) {
-                LOGGER.debug("WebSocket opened");
-                webSocketRef.set(webSocket);
-                reconnectAttempts.set(0);
-                isReconnecting.set(false);
-                webSocket.sendText(Requests.ofSubscription(topics), true);
-                webSocket.request(1);
-            }
-
-            @Override
-            public CompletionStage<?> onText(final WebSocket webSocket, final CharSequence data, final boolean last) {
-                buffer.append(data);
-                if (last) {
-                    final var text = buffer.toString();
-                    buffer.setLength(0);
-                    if (isSubscription(text)) {
-                        LOGGER.debug("Received subscription message: {}", text);
-                        ping = Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
-                                .subscribe($ -> {
-                                    if (isAwaitingPong.get()) {
-                                        LOGGER.warn("Previous ping didn't receive a pong.");
-                                        closeWsStopPing(webSocket, "Ping timeout");
-                                        reconnectImmediate(emitter);
-                                    } else {
-                                        LOGGER.debug("Sending ping");
-                                        webSocket.sendText(Requests.ofPing(), true);
-                                        isAwaitingPong.set(true);
-                                    }
-                                }, t -> LOGGER.error("Heartbeat error", t));
-                    } else if (isPong(text)) {
-                        LOGGER.debug("Received pong message: {}", text);
-                        isAwaitingPong.set(false);
-                    } else {
-                        if (!emitter.isCancelled()) {
-                            LOGGER.debug("Received message: {}", text);
-                            emitter.onNext(text);
-                        }
-                    }
-                }
-
-                webSocket.request(1);
-                return CompletableFuture.completedFuture(null);
-            }
-
-            @Override
-            public CompletionStage<?> onClose(final WebSocket webSocket, final int statusCode, final String reason) {
-                closeWsStopPing(webSocket, "Connection closed");
-                LOGGER.warn("WebSocket closed with code: {}, reason: {}", statusCode, reason);
-                if (emitter.isCancelled()) {
-                    emitter.onComplete();
-                } else {
-                    LOGGER.warn("Connection closed, attempting to reconnect");
-                    reconnectWithBackoff(emitter);
-                }
-
-                return CompletableFuture.completedFuture(null);
-            }
-
-            @Override
-            public void onError(final WebSocket webSocket, final Throwable error) {
-                closeWsStopPing(webSocket, "Connection failed");
-                if (emitter.isCancelled()) {
-                    LOGGER.error("Connection failed: {}", error.getMessage());
-                    emitter.onError(error);
-                } else {
-                    LOGGER.warn("Connection error: {}, attempting to reconnect", error.getMessage());
-                    reconnectWithBackoff(emitter);
-                }
-            }
-
-            @Override
-            public CompletionStage<?> onPing(final WebSocket webSocket, final ByteBuffer message) {
-                LOGGER.debug("Received ping");
-                webSocket.request(1);
-                return CompletableFuture.completedFuture(null);
-            }
-
-            @Override
-            public CompletionStage<?> onPong(final WebSocket webSocket, final ByteBuffer message) {
-                LOGGER.debug("Received pong");
-                isAwaitingPong.set(false);
-                webSocket.request(1);
-                return CompletableFuture.completedFuture(null);
-            }
-
-            private void closeWsStopPing(final WebSocket ws, final String reason) {
-                try {
-                    ws.sendClose(WebSocket.NORMAL_CLOSURE, reason).join();
-                } catch (final Exception e) {
-                    LOGGER.warn("Error closing WebSocket: {}", e.getMessage());
-                }
-
-                if (ping != null && !ping.isDisposed()) {
-                    LOGGER.warn("Stop pinging...");
-                    ping.dispose();
-                    isAwaitingPong.set(false);
-                }
-            }
+        public BybitDataStreamListener(final FlowableEmitter<String> emitter) {
+            this.emitter = emitter;
+            this.buffer = new StringBuilder();
+            this.reconnectAttempts = 0;
         }
 
-        final var webSocketBuilder = client.newWebSocketBuilder();
-        webSocketBuilder.buildAsync(uri, new DataStreamListener())
-                .exceptionally(throwable -> {
-                    LOGGER.error("Failed to create WebSocket: {}", throwable.getMessage());
+        @Override
+        public void onOpen(final WebSocket webSocket) {
+            LOGGER.debug("WebSocket opened");
+            this.webSocket = webSocket;
+            reconnectAttempts = 0;
+            webSocket.sendText(Requests.ofSubscription(topics), true);
+            webSocket.request(1);
+        }
+
+        @Override
+        public CompletionStage<?> onText(final WebSocket webSocket, final CharSequence data, final boolean last) {
+            buffer.append(data);
+            if (last) {
+                final var text = buffer.toString();
+                buffer.setLength(0);
+                if (isSubscription(text)) {
+                    LOGGER.debug("Received subscription message: {}", text);
+                    startPing();
+                } else if (isPong(text)) {
+                    LOGGER.debug("Received pong message: {}", text);
+                } else {
                     if (!emitter.isCancelled()) {
-                        if (isInitialConnection()) {
-                            emitter.onError(throwable);
-                        } else {
-                            reconnectWithBackoff(emitter);
-                        }
+                        LOGGER.debug("Received message: {}", text);
+                        emitter.onNext(text);
                     }
-
-                    return null;
-                });
-
-        emitter.setCancellable(() -> {
-            if (emitter.isCancelled()) {
-                final var webSocket = webSocketRef.get();
-                if (webSocket != null) {
-                    LOGGER.info("WebSocket closing...");
-                    webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "Connection closed");
                 }
-
-                client.close();
             }
-        });
-    }
 
-    private boolean isInitialConnection() {
-        return reconnectAttempts.get() == 0;
-    }
-
-    private void reconnectImmediate(final FlowableEmitter<String> emitter) {
-        if (isReconnecting.compareAndSet(false, true)) {
-            LOGGER.info("Attempting immediate reconnection");
-            connect(emitter);
+            webSocket.request(1);
+            return CompletableFuture.completedFuture(null);
         }
-    }
 
-    private void reconnectWithBackoff(final FlowableEmitter<String> emitter) {
-        if (isReconnecting.compareAndSet(false, true)) {
-            final var attempts = reconnectAttempts.incrementAndGet();
-            if (attempts > getMaxReconnectAttempts()) {
-                LOGGER.error("Maximum reconnection attempts ({}) reached", getMaxReconnectAttempts());
-                if (!emitter.isCancelled()) {
-                    emitter.onError(new RuntimeException("Maximum reconnection attempts reached"));
-                }
+        @Override
+        public CompletionStage<?> onPing(final WebSocket webSocket, final ByteBuffer message) {
+            LOGGER.debug("Received ping");
+            webSocket.sendPong(message);
+            webSocket.request(1);
+            return CompletableFuture.completedFuture(null);
+        }
 
-                return;
+        @Override
+        public CompletionStage<?> onPong(final WebSocket webSocket, final ByteBuffer message) {
+            LOGGER.debug("Received pong");
+            webSocket.request(1);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletionStage<?> onClose(final WebSocket webSocket, final int statusCode, final String reason) {
+            LOGGER.warn("WebSocket closed with code: {}, reason: {}", statusCode, reason);
+            stopPing();
+            if (!emitter.isCancelled()) {
+                scheduleReconnect();
+            } else {
+                emitter.onComplete();
             }
 
-            final var delay = Math.min(getInitialReconnectIntervalMs() * Math.pow(getBackoffMultiplier(), attempts - 1),
-                    getMaxReconnectIntervalMs());
-            LOGGER.info("Reconnection attempt {} of {}. Waiting for {} ms", attempts, getMaxReconnectAttempts(), delay);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public void onError(final WebSocket webSocket, final Throwable error) {
+            LOGGER.error("WebSocket error", error);
+            stopPing();
+            if (!emitter.isCancelled()) {
+                scheduleReconnect();
+            } else {
+                emitter.onError(error);
+            }
+        }
+
+        private void startPing() {
+            stopPing();
+            LOGGER.debug("Starting ping");
+            ping = Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
+                    .subscribe($ -> {
+                        if (webSocket != null) {
+                            webSocket.sendText(Requests.ofPing(), true);
+                            LOGGER.debug("Ping sent: {}", Requests.ofPing());
+                        }
+                    }, t -> LOGGER.error("Ping error", t));
+        }
+
+        private void stopPing() {
+            if (ping != null && !ping.isDisposed()) {
+                LOGGER.debug("Stopping ping");
+                ping.dispose();
+            }
+        }
+
+        private void scheduleReconnect() {
+            stopPing();
+            reconnectAttempts++;
+            if (reconnectAttempts > getMaxReconnectAttempts()) {
+                LOGGER.error("Maximum reconnection attempts ({}) reached", getMaxReconnectAttempts());
+                reconnectAttempts = (int) getMaxReconnectAttempts();
+            }
+
+            final var delay = Math.min(getInitialReconnectIntervalMs() * Math.pow(getBackoffMultiplier(),
+                    reconnectAttempts - 1), getMaxReconnectIntervalMs());
+            LOGGER.info("Reconnection attempt {} of {}. Waiting for {} ms", reconnectAttempts, getMaxReconnectAttempts(),
+                    delay);
             CompletableFuture.delayedExecutor((long) delay, TimeUnit.MILLISECONDS)
                     .execute(() -> {
                         if (!emitter.isCancelled()) {
-                            connect(emitter);
-                        } else {
-                            isReconnecting.set(false);
+                            connect();
                         }
                     });
+        }
+
+        private void connect() {
+            client.newWebSocketBuilder()
+                    .connectTimeout(Duration.ofSeconds(10))
+                    .buildAsync(uri, this)
+                    .exceptionally(ex -> {
+                        if (!emitter.isCancelled()) {
+                            LOGGER.error("Failed to connect: {}", ex.getMessage());
+                            scheduleReconnect();
+                        }
+
+                        return null;
+                    });
+        }
+
+        private void cancel() {
+            if (emitter.isCancelled()) {
+                if (webSocket != null) {
+                    LOGGER.info("WebSocket closing...");
+                    stopPing();
+                    webSocket.sendClose(WebSocket.NORMAL_CLOSURE, "Connection closed");
+                }
+            }
         }
     }
 }
