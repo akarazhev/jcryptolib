@@ -41,6 +41,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getBackoffMultiplier;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getInitialReconnectIntervalMs;
@@ -90,7 +91,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         private final StringBuilder buffer = new StringBuilder();
         private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
         private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
-        private WebSocket webSocket;
+        private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
         private Disposable ping;
 
         public BybitDataStreamListener(final FlowableEmitter<String> emitter) {
@@ -170,7 +171,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         private void connect() {
             if (!emitter.isCancelled()) {
                 releaseDataStream();
-                webSocket = client.newWebSocketBuilder()
+                webSocketRef.set(client.newWebSocketBuilder()
                         .connectTimeout(Duration.ofSeconds(10))
                         .buildAsync(uri, this)
                         .exceptionally(ex -> {
@@ -181,7 +182,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
 
                             return null;
                         })
-                        .join();
+                        .join());
             }
         }
 
@@ -205,6 +206,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                 LOGGER.debug("Starting ping");
                 ping = Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
                         .subscribe($ -> {
+                            final var webSocket = webSocketRef.get();
                             if (webSocket != null) {
                                 if (!isAwaitingPong.get()) {
                                     webSocket.sendText(Requests.ofPing(), true);
@@ -236,10 +238,10 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          * Does nothing if the WebSocket is null.
          */
         private void closeWebSocket() {
+            final var webSocket = webSocketRef.getAndSet(null);
             if (webSocket != null) {
                 LOGGER.info("WebSocket closing...");
                 webSocket.abort();
-                webSocket = null;
             }
         }
     }
