@@ -44,21 +44,29 @@ import static org.junit.jupiter.api.Assertions.fail;
 abstract class BybitPublicDataStreamTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicDataStreamTest.class);
 
-    abstract void shouldReceiveOrderBookDataStream();
+    void shouldReceiveOrderBookDataStream() {
+    }
 
-    abstract void shouldReceiveTradeDataStream();
+    void shouldReceiveTradeDataStream() {
+    }
 
-    abstract void shouldReceiveTickerDataStream();
+    void shouldReceiveTickerDataStream() {
+    }
 
-    abstract void shouldReceiveKlineDataStream();
+    void shouldReceiveKlineDataStream() {
+    }
 
-    abstract void shouldReceiveAllLiquidationDataStream();
+    void shouldReceiveAllLiquidationDataStream() {
+    }
 
-    abstract void shouldReceiveLtKlineDataStream();
+    void shouldReceiveLtKlineDataStream() {
+    }
 
-    abstract void shouldReceiveLtTickerDataStream();
+    void shouldReceiveLtTickerDataStream() {
+    }
 
-    abstract void shouldReceiveLtNavDataStream();
+    void shouldReceiveLtNavDataStream() {
+    }
 
     /**
      * Asserts that the given data stream is received properly.
@@ -76,21 +84,13 @@ abstract class BybitPublicDataStreamTest {
         final var latch = new CountDownLatch(1);
         final var receivedData = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
-        final var subscriber = getSubscriber(latch, receivedData);
+        final var subscriber = getSubscriber(latch, receivedData, hasError);
         try (final var client = Clients.newHttpClient()) {
             // Act
             final var subscription = DataStreams.ofBybit(client, url, topics)
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
-                    .subscribe(
-                            subscriber.onNext(),
-                            t -> {
-                                LOGGER.error("Error in test subscription", t);
-                                hasError.set(true);
-                                latch.countDown();
-                            },
-                            subscriber.onComplete()
-                    );
+                    .subscribe(subscriber.onNext(), subscriber.onError(), subscriber.onComplete());
             // Assert
             assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
             subscription.dispose();

@@ -31,19 +31,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 final class BybitSubscribers {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitSubscribers.class);
 
-    /**
-     * Creates a subscriber for the Bybit WebSocket stream that stores received
-     * messages in the given list and counts down the given latch.
-     *
-     * @param latch the latch to count down
-     * @param receivedData the list of received messages
-     * @return a subscriber for the Bybit WebSocket stream
-     */
-    public static BybitSubscriber getSubscriber(final CountDownLatch latch, final List<Map<String, Object>> receivedData) {
+    public static BybitSubscriber getSubscriber(final CountDownLatch latch, final List<Map<String, Object>> receivedData,
+                                                final AtomicBoolean hasError) {
         return BybitSubscriber.create(new StreamHandler() {
             @Override
             public void handle(final String topic, final Map<String, Object> data) {
@@ -55,6 +49,14 @@ final class BybitSubscribers {
             @Override
             public void close() {
                 LOGGER.info("Test handler closed");
+                latch.countDown();
+            }
+
+            @Override
+            public void error(Throwable t) {
+                LOGGER.error("Test handler error", t);
+                hasError.set(true);
+                latch.countDown();
             }
         });
     }
