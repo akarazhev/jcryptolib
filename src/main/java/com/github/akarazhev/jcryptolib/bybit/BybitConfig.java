@@ -108,22 +108,22 @@ public final class BybitConfig {
     }
 
     public static String print() {
-        return "Bybit Config {" +
-                "publicTestnetSpot=" + getPublicTestnetSpot() +
-                ", publicTestnetLinear=" + getPublicTestnetLinear() +
-                ", publicTestnetInverse=" + getPublicTestnetInverse() +
-                ", publicTestnetOption=" + getPublicTestnetOption() +
-                ", publicTestnetSpread=" + getPublicTestnetSpread() +
-                ", privateTestnet=" + getPrivateTestnet() +
-                ", orderTestnet=" + getOrderTestnet() +
-                ", publicSubscribeTopics=" + Arrays.toString(getPublicSubscribeTopics()) +
-                ", privateSubscribeTopics=" + Arrays.toString(getPrivateSubscribeTopics()) +
-                ", pingInterval=" + getPingInterval() +
-                ", maxReconnectAttempts=" + getMaxReconnectAttempts() +
-                ", backoffMultiplier=" + getBackoffMultiplier() +
-                ", initialReconnectIntervalMs=" + getInitialReconnectIntervalMs() +
-                ", maxReconnectIntervalMs=" + getMaxReconnectIntervalMs() +
-                '}';
+        return "\nBybit Config {" +
+                "\n\tpublicTestnetSpot = " + getPublicTestnetSpot() +
+                ", \n\tpublicTestnetLinear = " + getPublicTestnetLinear() +
+                ", \n\tpublicTestnetInverse = " + getPublicTestnetInverse() +
+                ", \n\tpublicTestnetOption = " + getPublicTestnetOption() +
+                ", \n\tpublicTestnetSpread = " + getPublicTestnetSpread() +
+                ", \n\tprivateTestnet = " + getPrivateTestnet() +
+                ", \n\torderTestnet = " + getOrderTestnet() +
+                ", \n\tpublicSubscribeTopics = " + Arrays.toString(getPublicSubscribeTopics()) +
+                ", \n\tprivateSubscribeTopics = " + Arrays.toString(getPrivateSubscribeTopics()) +
+                ", \n\tpingInterval = " + getPingInterval() +
+                ", \n\tmaxReconnectAttempts = " + getMaxReconnectAttempts() +
+                ", \n\tbackoffMultiplier = " + getBackoffMultiplier() +
+                ", \n\tinitialReconnectIntervalMs = " + getInitialReconnectIntervalMs() +
+                ", \n\tmaxReconnectIntervalMs = " + getMaxReconnectIntervalMs() +
+                "\n}";
     }
 }
 
