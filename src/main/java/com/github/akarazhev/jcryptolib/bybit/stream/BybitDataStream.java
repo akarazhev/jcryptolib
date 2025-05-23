@@ -158,6 +158,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                     isAwaitingPong.set(false);
                 } else {
                     if (!emitter.isCancelled()) {
+                        LOGGER.debug("Received message: {}", text);
                         emitter.onNext(text);
                     }
                 }
