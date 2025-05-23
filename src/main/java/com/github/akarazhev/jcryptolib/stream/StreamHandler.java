@@ -31,4 +31,6 @@ public interface StreamHandler {
     void handle(final String topic, final Map<String, Object> data);
 
     void close();
+
+    void error(final Throwable t);
 }
