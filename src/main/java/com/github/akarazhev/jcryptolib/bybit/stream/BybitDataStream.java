@@ -52,8 +52,11 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
 
 /**
- * Reactive Bybit WebSocket data stream.
- * Handles connection, reconnection with exponential backoff, ping/pong, and resource cleanup.
+ * Bybit data stream.
+ * <p>
+ * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
+ * connection, reconnection with exponential backoff, ping/pong, and resource
+ * cleanup.
  */
 public final class BybitDataStream implements FlowableOnSubscribe<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStream.class);
@@ -69,6 +72,10 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
 
     /**
      * Creates a new BybitDataStream.
+     * <p>
+     * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
+     * connection, reconnection with exponential backoff, ping/pong, and resource
+     * cleanup.
      *
      * @param client HttpClient to use
      * @param url    WebSocket endpoint
@@ -79,6 +86,16 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         return new BybitDataStream(client, url, topics);
     }
 
+    /**
+     * Subscribes to Bybit WebSocket data stream.
+     * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
+     * connection, reconnection with exponential backoff, ping/pong, and resource
+     * cleanup.
+     * <p>
+     * When {@link FlowableEmitter#isCancelled()} is true, the subscription is cancelled.
+     * <p>
+     * {@inheritDoc}
+     */
     @Override
     public void subscribe(final FlowableEmitter<String> emitter) throws Throwable {
         final var listener = new BybitDataStreamListener(emitter);
@@ -92,12 +109,20 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
         private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
         private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
-        private Disposable ping;
+        private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
         public BybitDataStreamListener(final FlowableEmitter<String> emitter) {
             this.emitter = emitter;
         }
 
+        /**
+         * Handles WebSocket open events.
+         * <p>
+         * This method resets the reconnection attempts counter, sends a subscription request, and
+         * requests the first message.
+         *
+         * @param webSocket WebSocket instance
+         */
         @Override
         public void onOpen(final WebSocket webSocket) {
             LOGGER.debug("WebSocket opened");
@@ -106,6 +131,19 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             webSocket.request(1);
         }
 
+        /**
+         * Handles WebSocket text messages.
+         * <p>
+         * This method processes the full message when the last fragment is received.
+         * If the message is a subscription response, it starts the ping flow.
+         * If the message is a pong response, it resets the awaiting pong flag.
+         * Otherwise, it emits the message to the subscriber.
+         *
+         * @param webSocket WebSocket instance
+         * @param data      Message data
+         * @param last      Whether this is the last fragment
+         * @return A completion stage that will be completed when the message is processed
+         */
         @Override
         public CompletionStage<?> onText(final WebSocket webSocket, final CharSequence data, final boolean last) {
             buffer.append(data);
@@ -130,6 +168,18 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             return CompletableFuture.completedFuture(null);
         }
 
+        /**
+         * Called when the WebSocket connection is closed.
+         * <p>
+         * If the emitter is not cancelled, the method will schedule a reconnection attempt.
+         * If the emitter is cancelled, the method will stop the ping flow and propagate a
+         * complete event to the emitter.
+         *
+         * @param webSocket  the closed WebSocket
+         * @param statusCode the status code of the close event
+         * @param reason     the reason of the close event
+         * @return a {@link CompletionStage} that completes when the method has finished
+         */
         @Override
         public CompletionStage<?> onClose(final WebSocket webSocket, final int statusCode, final String reason) {
             LOGGER.warn("WebSocket closed with code: {}, reason: {}", statusCode, reason);
@@ -143,6 +193,16 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             return CompletableFuture.completedFuture(null);
         }
 
+        /**
+         * Called when an error occurs during the WebSocket connection.
+         * <p>
+         * If the emitter is not cancelled, the method will schedule a reconnection attempt with an
+         * exponential backoff. If the maximum number of reconnection attempts is reached, the method
+         * will propagate an error to the emitter.
+         * <p>
+         * If the emitter is cancelled, the method will stop the ping flow and propagate the error to
+         * the emitter.
+         */
         @Override
         public void onError(final WebSocket webSocket, final Throwable error) {
             LOGGER.error("WebSocket error", error);
@@ -154,6 +214,12 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             }
         }
 
+        /**
+         * Schedules a reconnection attempt with an exponential backoff.
+         * <p>
+         * If the maximum number of reconnection attempts is reached, the method will propagate an
+         * error to the emitter.
+         */
         private void reconnect() {
             if (reconnectAttempts.incrementAndGet() > getMaxReconnectAttempts()) {
                 LOGGER.error("Max reconnection attempts ({}) reached", getMaxReconnectAttempts());
@@ -168,6 +234,11 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             CompletableFuture.delayedExecutor((long) delay, TimeUnit.MILLISECONDS).execute(this::connect);
         }
 
+        /**
+         * Connects to the WebSocket and starts listening for messages.
+         * <p>
+         * If the connection fails, the method will schedule a reconnection attempt.
+         */
         private void connect() {
             if (!emitter.isCancelled()) {
                 releaseDataStream();
@@ -186,61 +257,77 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             }
         }
 
+        /**
+         * Cancels the data stream.
+         * <p>
+         * This method is called by the emitter when it is cancelled. It releases the data stream resources by stopping the
+         * current ping operation and closing the WebSocket.
+         */
         private void cancel() {
             if (emitter.isCancelled()) {
                 releaseDataStream();
             }
         }
 
+        /**
+         * Releases the data stream resources.
+         * <p>
+         * This method is called when the emitter is cancelled or when the maximum reconnection attempts are reached.
+         * It stops the current ping operation and closes the WebSocket.
+         */
         private void releaseDataStream() {
             stopPing();
             closeWebSocket();
         }
 
         /**
-         * Starts sending ping messages with the configured interval. If the pong response is not received
-         * within the next interval, the data stream is reconnected.
+         * Starts a ping flow.
+         * <p>
+         * This method starts a flow that sends a ping message at a fixed interval.
+         * If the pong is not received, a reconnection is scheduled.
          */
         private void startPing() {
-            if (ping == null) {
-                LOGGER.debug("Starting ping");
-                ping = Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
-                        .subscribe($ -> {
-                            final var webSocket = webSocketRef.get();
-                            if (webSocket != null) {
-                                if (!isAwaitingPong.get()) {
-                                    webSocket.sendText(Requests.ofPing(), true);
-                                    isAwaitingPong.set(true);
-                                    LOGGER.debug("Ping sent: {}", Requests.ofPing());
-                                } else {
-                                    reconnect();
-                                }
+            LOGGER.info("Starting ping");
+            pingRef.set(Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
+                    .subscribe($ -> {
+                        final var webSocket = webSocketRef.get();
+                        if (webSocket != null) {
+                            if (!isAwaitingPong.get()) {
+                                webSocket.sendText(Requests.ofPing(), true);
+                                isAwaitingPong.set(true);
+                                LOGGER.debug("Ping sent: {}", Requests.ofPing());
+                            } else {
+                                reconnect();
                             }
-                        }, t -> LOGGER.error("Ping error", t));
-            }
+                        }
+                    }, t -> LOGGER.error("Ping error", t)));
         }
 
         /**
-         * Stops the ping task and disposes of it. If the task is not running,
-         * this method has no effect.
+         * Stops the current ping operation.
+         * If the operation is null, then no operation is performed.
+         * <p>
+         * This method is thread-safe and can be called from any thread.
          */
         private void stopPing() {
+            final var ping = pingRef.getAndSet(null);
             if (ping != null && !ping.isDisposed()) {
-                LOGGER.debug("Stopping ping");
+                LOGGER.info("Stopping ping");
                 isAwaitingPong.set(false);
                 ping.dispose();
-                ping = null;
             }
         }
 
         /**
-         * Closes the WebSocket, stopping the ping task and disposing of it.
-         * Does nothing if the WebSocket is null.
+         * Closes the current WebSocket connection.
+         * If the connection is null, then no operation is performed.
+         * <p>
+         * This method is thread-safe and can be called from any thread.
          */
         private void closeWebSocket() {
             final var webSocket = webSocketRef.getAndSet(null);
             if (webSocket != null) {
-                LOGGER.info("WebSocket closing...");
+                LOGGER.info("Closing WebSocket");
                 webSocket.abort();
             }
         }
