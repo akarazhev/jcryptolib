@@ -52,19 +52,23 @@ public final class BybitSubscriber implements Subscriber {
         return data -> {
             final String topic = String.join(".", STREAM_TOPIC_PREFIX, data.get(BybitConstants.TOPIC_FIELD).toString());
             handler.handle(topic, data);
+            LOGGER.debug("Received message: {}", data);
         };
     }
 
     @Override
     public Consumer<Throwable> onError() {
-        return t -> LOGGER.error("WebSocket error", t);
+        return t -> {
+            handler.error(t);
+            LOGGER.debug("WebSocket error", t);
+        };
     }
 
     @Override
     public Action onComplete() {
         return () -> {
             handler.close();
-            LOGGER.info("WebSocket closed");
+            LOGGER.debug("WebSocket closed");
         };
     }
 }
