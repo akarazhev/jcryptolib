@@ -24,8 +24,8 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.Clients;
 import com.github.akarazhev.jcryptolib.DataStreams;
-import io.reactivex.rxjava3.disposables.Disposable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,105 +43,43 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 abstract class BybitPublicDataStreamTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitPublicDataStreamTest.class);
-    private Disposable subscription;
 
-    /**
-     * Cleans up the test resources.
-     * <p>
-     * Checks if there is an active subscription and disposes it if it is not disposed yet.
-     * Logs a message to indicate that the subscription has been disposed.
-     */
-    void cleanup() {
-        if (subscription != null && !subscription.isDisposed()) {
-            subscription.dispose();
-            LOGGER.info("Test subscription disposed");
-        }
-    }
-
-    /**
-     * Tests that the order book data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public order book data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveOrderBookDataStream();
 
-    /**
-     * Tests that the trade data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public trade data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveTradeDataStream();
 
-    /**
-     * Tests that the ticker data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public ticker data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveTickerDataStream();
 
-    /**
-     * Tests that the kline data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public kline data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveKlineDataStream();
 
-    /**
-     * Tests that the all liquidation data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public all liquidation data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveAllLiquidationDataStream();
 
-    /**
-     * Tests that the leveraged token kline data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public leveraged token kline data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveLtKlineDataStream();
 
-    /**
-     * Tests that the leveraged token ticker data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public leveraged token ticker data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveLtTickerDataStream();
 
-    /**
-     * Tests that the leveraged token navigation data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public leveraged token navigation data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     abstract void shouldReceiveLtNavDataStream();
 
+    /**
+     * Asserts that the given data stream is received properly.
+     * <p>
+     * Subscribes to the given data stream, verifies that at least one data item is received
+     * within a 60-second timeout period, and that the received data is valid. No errors should
+     * be encountered during the subscription.
+     * <p>
+     * The received data should contain a "topic" field and should have the given topic.
+     *
+     * @param url    the data stream URL
+     * @param topics the topics to subscribe to
+     */
     void assertTest(final String url, final String[] topics) {
-        assertTest(url, topics, 60);
-    }
-
-    void assertTest(final String url, final String[] topics, final long timeout) {
         final var latch = new CountDownLatch(1);
         final var receivedData = new ArrayList<Map<String, Object>>();
         final var hasError = new AtomicBoolean(false);
         final var subscriber = getSubscriber(latch, receivedData);
-        try {
+        try (final var client = Clients.newHttpClient()) {
             // Act
-            subscription = DataStreams.ofBybit(url, topics)
+            final var subscription = DataStreams.ofBybit(client, url, topics)
                     .map(BybitMapper.ofMap())
                     .filter(BybitFilter.ofFilter())
                     .subscribe(
@@ -154,7 +92,8 @@ abstract class BybitPublicDataStreamTest {
                             subscriber.onComplete()
                     );
             // Assert
-            assertTrue(latch.await(timeout, TimeUnit.SECONDS), "Should receive data within timeout period");
+            assertTrue(latch.await(60, TimeUnit.SECONDS), "Should receive data within timeout period");
+            subscription.dispose();
             assertFalse(hasError.get(), "Should not encounter errors during subscription");
             assertFalse(receivedData.isEmpty(), "Should receive at least one data item");
             // Verify data structure

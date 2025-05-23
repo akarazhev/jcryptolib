@@ -24,7 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
@@ -35,114 +34,48 @@ import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTra
 
 final class BybitPublicSpotDataStreamTest extends BybitPublicDataStreamTest {
 
-    /**
-     * Cleanup after each test.
-     * <p>
-     * Disposes the test subscription if it is not disposed yet.
-     */
-    @AfterEach
-    void cleanup() {
-        super.cleanup();
-    }
-
-    /**
-     * Tests that the order book data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public order book data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveOrderBookDataStream() {
         assertTest(getPublicTestnetSpot(), getPublicOrderBook1BtcUsdt());
     }
 
-    /**
-     * Tests that the trade data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public trade data stream and verifies that at least one data item is received
-     * within a 90-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveTradeDataStream() {
-        assertTest(getPublicTestnetSpot(), getPublicTradeBtcUsdt(), 90);
+        assertTest(getPublicTestnetSpot(), getPublicTradeBtcUsdt());
     }
 
-    /**
-     * Tests that the ticker data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public ticker data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveTickerDataStream() {
         assertTest(getPublicTestnetSpot(), getPublicTickersBtcUsdt());
     }
 
-    /**
-     * Tests that the kline data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public kline data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveKlineDataStream() {
         assertTest(getPublicTestnetSpot(), getPublicKlineBtcUsdt());
     }
 
-    /**
-     * Tests that the all liquidation data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public all liquidation data stream and verifies that at least one data item is received
-     * within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveAllLiquidationDataStream() {
         // Implement the test here
     }
 
-    /**
-     * Tests that the leveraged token kline data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public leveraged token kline data stream and verifies that at least one data item is
-     * received within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveLtKlineDataStream() {
         // Implement the test here
     }
 
-    /**
-     * Tests that the leveraged token ticker data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public leveraged token ticker data stream and verifies that at least one data item is
-     * received within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveLtTickerDataStream() {
         // Implement the test here
     }
 
-    /**
-     * Tests that the leveraged token navigation data stream is received properly.
-     * <p>
-     * Subscribes to the Bybit public leveraged token navigation data stream and verifies that at least one data item is
-     * received within a 60-second timeout period. No errors should be encountered during the subscription.
-     * The received data should contain a "topic" field.
-     */
     @Test
     @Override
     public void shouldReceiveLtNavDataStream() {
