@@ -10,7 +10,6 @@ Java cryptocurrency utility library with reactive programming, HTTP support, and
 ## Features
 
 - **Reactive Streams** via RxJava 3
-- **HTTP Client** integration using OkHttp
 - **JSON Serialization/Deserialization** with Jackson
 - **Logging** with SLF4J and Logback
 - **Bybit Exchange Streaming** support
