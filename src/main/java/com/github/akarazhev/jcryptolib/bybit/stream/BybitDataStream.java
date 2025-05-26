@@ -44,10 +44,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getBackoffMultiplier;
+import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getConnectTimeoutMs;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getInitialReconnectIntervalMs;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectAttempts;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectIntervalMs;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPingInterval;
+import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPingIntervalMs;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
 
@@ -106,6 +107,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
     private final class BybitDataStreamListener implements Listener {
         private final FlowableEmitter<String> emitter;
         private final StringBuilder buffer = new StringBuilder();
+        private final AtomicBoolean isConnecting = new AtomicBoolean(false);
         private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
         private final AtomicInteger reconnectAttempts = new AtomicInteger(0);
         private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
@@ -172,8 +174,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          * Called when the WebSocket connection is closed.
          * <p>
          * If the emitter is not cancelled, the method will schedule a reconnection attempt.
-         * If the emitter is cancelled, the method will stop the ping flow and propagate a
-         * complete event to the emitter.
+         * If the emitter is cancelled, the method will stop the ping flow.
          *
          * @param webSocket  the closed WebSocket
          * @param statusCode the status code of the close event
@@ -187,7 +188,6 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                 reconnect();
             } else {
                 stopPing();
-                emitter.onComplete();
             }
 
             return CompletableFuture.completedFuture(null);
@@ -200,8 +200,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          * exponential backoff. If the maximum number of reconnection attempts is reached, the method
          * will propagate an error to the emitter.
          * <p>
-         * If the emitter is cancelled, the method will stop the ping flow and propagate the error to
-         * the emitter.
+         * If the emitter is cancelled, the method will stop the ping flow.
          */
         @Override
         public void onError(final WebSocket webSocket, final Throwable error) {
@@ -210,7 +209,6 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                 reconnect();
             } else {
                 stopPing();
-                emitter.onError(error);
             }
         }
 
@@ -221,17 +219,24 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          * error to the emitter.
          */
         private void reconnect() {
-            if (reconnectAttempts.incrementAndGet() > getMaxReconnectAttempts()) {
-                LOGGER.error("Max reconnection attempts ({}) reached", getMaxReconnectAttempts());
-                emitter.onError(new IllegalStateException("Max reconnection attempts reached"));
-                return;
-            }
+            if (!emitter.isCancelled() && isConnecting.compareAndSet(true, false)) {
+                stopPing();
+                closeWebSocket();
+                if (reconnectAttempts.incrementAndGet() > getMaxReconnectAttempts()) {
+                    LOGGER.error("Max reconnection attempts ({}) reached", getMaxReconnectAttempts());
+                    if (!emitter.isCancelled()) {
+                        emitter.onError(new IllegalStateException("Max reconnection attempts reached"));
+                    }
 
-            final var delay = Math.min(getInitialReconnectIntervalMs() * Math.pow(getBackoffMultiplier(),
-                    reconnectAttempts.get() - 1), getMaxReconnectIntervalMs());
-            LOGGER.info("Reconnection attempt {} of {}. Waiting for {} ms", reconnectAttempts, getMaxReconnectAttempts(),
-                    delay);
-            CompletableFuture.delayedExecutor((long) delay, TimeUnit.MILLISECONDS).execute(this::connect);
+                    return;
+                }
+
+                final var delay = Math.min(getInitialReconnectIntervalMs() * Math.pow(getBackoffMultiplier(),
+                        reconnectAttempts.get() - 1), getMaxReconnectIntervalMs());
+                LOGGER.info("Reconnection attempt {} of {}. Waiting for {} ms", reconnectAttempts, getMaxReconnectAttempts(),
+                        delay);
+                CompletableFuture.delayedExecutor((long) delay, TimeUnit.MILLISECONDS).execute(this::connect);
+            }
         }
 
         /**
@@ -240,20 +245,25 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          * If the connection fails, the method will schedule a reconnection attempt.
          */
         private void connect() {
-            if (!emitter.isCancelled()) {
-                releaseDataStream();
-                webSocketRef.set(client.newWebSocketBuilder()
-                        .connectTimeout(Duration.ofSeconds(10))
-                        .buildAsync(uri, this)
-                        .exceptionally(ex -> {
-                            if (!emitter.isCancelled()) {
-                                LOGGER.error("Failed to connect: {}", ex.getMessage());
-                                reconnect();
-                            }
-
-                            return null;
-                        })
-                        .join());
+            if (!emitter.isCancelled() && isConnecting.compareAndSet(false, true)) {
+                stopPing();
+                closeWebSocket();
+                try {
+                    client.newWebSocketBuilder()
+                            .connectTimeout(Duration.ofMillis(getConnectTimeoutMs()))
+                            .buildAsync(uri, this)
+                            .whenComplete((ws, ex) -> {
+                                if (ex != null) {
+                                    LOGGER.error("Failed to connect: {}", ex.getMessage());
+                                    reconnect();
+                                } else if (ws != null) {
+                                    webSocketRef.set(ws);
+                                }
+                            });
+                } catch (final Exception ex) {
+                    LOGGER.error("Exception during connect: {}", ex.getMessage());
+                    reconnect();
+                }
             }
         }
 
@@ -265,19 +275,9 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          */
         private void cancel() {
             if (emitter.isCancelled()) {
-                releaseDataStream();
+                stopPing();
+                closeWebSocket();
             }
-        }
-
-        /**
-         * Releases the data stream resources.
-         * <p>
-         * This method is called when the emitter is cancelled or when the maximum reconnection attempts are reached.
-         * It stops the current ping operation and closes the WebSocket.
-         */
-        private void releaseDataStream() {
-            stopPing();
-            closeWebSocket();
         }
 
         /**
@@ -287,17 +287,20 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
          * If the pong is not received, a reconnection is scheduled.
          */
         private void startPing() {
-            LOGGER.info("Starting ping");
-            pingRef.set(Flowable.interval(getPingInterval(), TimeUnit.MILLISECONDS)
+            stopPing();
+            LOGGER.debug("Starting ping");
+            pingRef.set(Flowable.interval(getPingIntervalMs(), TimeUnit.MILLISECONDS)
                     .subscribe($ -> {
-                        final var webSocket = webSocketRef.get();
-                        if (webSocket != null) {
-                            if (!isAwaitingPong.get()) {
-                                webSocket.sendText(Requests.ofPing(), true);
-                                isAwaitingPong.set(true);
-                                LOGGER.debug("Ping sent: {}", Requests.ofPing());
-                            } else {
-                                reconnect();
+                        if (!emitter.isCancelled()) {
+                            final var webSocket = webSocketRef.get();
+                            if (webSocket != null) {
+                                if (!isAwaitingPong.get()) {
+                                    webSocket.sendText(Requests.ofPing(), true);
+                                    isAwaitingPong.set(true);
+                                    LOGGER.trace("Ping sent: {}", Requests.ofPing());
+                                } else {
+                                    reconnect();
+                                }
                             }
                         }
                     }, t -> LOGGER.error("Ping error", t)));
@@ -312,7 +315,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         private void stopPing() {
             final var ping = pingRef.getAndSet(null);
             if (ping != null && !ping.isDisposed()) {
-                LOGGER.info("Stopping ping");
+                LOGGER.debug("Stopping ping");
                 isAwaitingPong.set(false);
                 ping.dispose();
             }
@@ -327,7 +330,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         private void closeWebSocket() {
             final var webSocket = webSocketRef.getAndSet(null);
             if (webSocket != null) {
-                LOGGER.info("Closing WebSocket");
+                LOGGER.debug("Closing WebSocket");
                 webSocket.abort();
             }
         }
