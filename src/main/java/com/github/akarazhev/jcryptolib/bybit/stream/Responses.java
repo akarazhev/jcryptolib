@@ -31,7 +31,11 @@ final class Responses {
     }
 
     public static boolean isSubscription(final String text) {
-        return text.contains("\"success\":true") && text.contains("\"op\":\"subscribe\"");
+        return text.contains("\"op\":\"subscribe\"");
+    }
+
+    public static boolean isSuccess(final String text) {
+        return text.contains("\"success\":true");
     }
 
     public static boolean isPong(final String text) {

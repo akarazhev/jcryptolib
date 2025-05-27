@@ -51,6 +51,7 @@ import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectI
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPingIntervalMs;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSuccess;
 
 /**
  * Bybit data stream.
@@ -153,16 +154,17 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                 final var text = buffer.toString();
                 buffer.setLength(0);
                 if (isSubscription(text)) {
-                    LOGGER.debug("Received subscription message: {}", text);
-                    startPing();
-                } else {
-                    closeWebSocket();
-                    isConnecting.set(false);
-                    emitter.onError(new IllegalStateException("Invalid subscription response: " + text));
-                    return CompletableFuture.completedFuture(null);
-                }
-
-                if (isPong(text)) {
+                    if (isSuccess(text)) {
+                        LOGGER.debug("Received subscription message: {}", text);
+                        startPing();
+                    } else {
+                        LOGGER.error("Received subscription error: {}", text);
+                        closeWebSocket();
+                        isConnecting.set(false);
+                        emitter.onError(new IllegalStateException("Invalid subscription response: " + text));
+                        return CompletableFuture.completedFuture(null);
+                    }
+                } else if (isPong(text)) {
                     LOGGER.trace("Received pong message: {}", text);
                     isAwaitingPong.set(false);
                 } else {
@@ -304,7 +306,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             stopPing();
             LOGGER.debug("Starting ping");
             pingRef.set(Flowable.interval(getPingIntervalMs(), TimeUnit.MILLISECONDS)
-                    .subscribe($ -> {
+                    .subscribe(_ -> {
                         if (!emitter.isCancelled()) {
                             final var webSocket = webSocketRef.get();
                             if (webSocket != null) {
