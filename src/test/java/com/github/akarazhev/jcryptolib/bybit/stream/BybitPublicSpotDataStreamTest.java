@@ -59,6 +59,21 @@ final class BybitPublicSpotDataStreamTest {
     }
 
     @Test
+    public void shouldReceiveSpreadOrderBookDataStream() {
+        // Implement the test here
+    }
+
+    @Test
+    public void shouldReceiveSpreadTradeBookDataStream() {
+        // Implement the test here
+    }
+
+    @Test
+    public void shouldReceiveSpreadTickerBookDataStream() {
+        // Implement the test here
+    }
+
+    @Test
     public void shouldReceiveOrderBookDataStream() {
         final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicOrderBook1BtcUsdt());
         final var testSubscriber = new TestSubscriber<String>();
@@ -140,6 +155,16 @@ final class BybitPublicSpotDataStreamTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(getPublicKlineBtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
         }
+    }
+
+    @Test
+    public void shouldReceiveAllLiquidationDataStream() {
+        // Implement the test here
+    }
+
+    @Test
+    public void shouldReceiveInsurancePoolDataStream() {
+        // Implement the test here
     }
 
     @Test
