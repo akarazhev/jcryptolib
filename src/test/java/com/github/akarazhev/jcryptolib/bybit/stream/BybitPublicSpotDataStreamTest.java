@@ -136,19 +136,4 @@ final class BybitPublicSpotDataStreamTest {
             assertEquals(getPublicKlineBtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
         }
     }
-
-    @Test
-    public void shouldReceiveLtKlineDataStream() {
-        // Implement the test here
-    }
-
-    @Test
-    public void shouldReceiveLtTickerDataStream() {
-        // Implement the test here
-    }
-
-    @Test
-    public void shouldReceiveLtNavDataStream() {
-        // Implement the test here
-    }
 }
