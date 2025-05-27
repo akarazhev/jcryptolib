@@ -155,7 +155,14 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                 if (isSubscription(text)) {
                     LOGGER.debug("Received subscription message: {}", text);
                     startPing();
-                } else if (isPong(text)) {
+                } else {
+                    closeWebSocket();
+                    isConnecting.set(false);
+                    emitter.onError(new IllegalStateException("Invalid subscription response: " + text));
+                    return CompletableFuture.completedFuture(null);
+                }
+
+                if (isPong(text)) {
                     LOGGER.trace("Received pong message: {}", text);
                     isAwaitingPong.set(false);
                 } else {
