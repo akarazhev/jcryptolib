@@ -82,7 +82,7 @@ final class BybitPublicSpotDataStreamTest {
         final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTradeBtcUsdt());
         final var testSubscriber = new TestSubscriber<String>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(testSubscriber.await(5, TimeUnit.MINUTES), "Should not receive any messages");
+        assertFalse(testSubscriber.await(3, TimeUnit.MINUTES), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
