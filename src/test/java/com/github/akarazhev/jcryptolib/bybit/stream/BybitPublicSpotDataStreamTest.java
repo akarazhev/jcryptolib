@@ -39,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicLtKlineBtc3sUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
