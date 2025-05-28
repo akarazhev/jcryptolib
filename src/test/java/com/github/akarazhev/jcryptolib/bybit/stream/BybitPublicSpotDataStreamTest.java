@@ -62,21 +62,6 @@ final class BybitPublicSpotDataStreamTest {
     }
 
     @Test
-    public void shouldReceiveSpreadOrderBookDataStream() {
-        // Spread order book data stream is not supported for spot
-    }
-
-    @Test
-    public void shouldReceiveSpreadTradeBookDataStream() {
-        // Spread trade book data stream is not supported for spot
-    }
-
-    @Test
-    public void shouldReceiveSpreadTickerBookDataStream() {
-        // Spread ticker book data stream is not supported for spot
-    }
-
-    @Test
     public void shouldReceiveOrderBookDataStream() {
         final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicOrderBook1BtcUsdt());
         final var testSubscriber = new TestSubscriber<String>();
@@ -158,16 +143,6 @@ final class BybitPublicSpotDataStreamTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(getPublicKlineBtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
         }
-    }
-
-    @Test
-    public void shouldReceiveAllLiquidationDataStream() {
-        // All liquidation data stream is not supported for spot
-    }
-
-    @Test
-    public void shouldReceiveInsurancePoolDataStream() {
-        // Insurance pool data stream is not supported for spot
     }
 
     @Test
