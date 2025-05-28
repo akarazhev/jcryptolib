@@ -25,14 +25,15 @@
 package com.github.akarazhev.jcryptolib.bybit;
 
 public final class BybitTestConfig {
-    private static final String[] PUBLIC_ORDER_BOOK_1_BTC_USDT = new String[]{"orderbook.1.BTCUSDT"};
-    private static final String[] PUBLIC_TRADE_BTC_USDT = new String[]{"publicTrade.BTCUSDT"};
-    private static final String[] PUBLIC_TICKERS_BTC_USDT = new String[]{"tickers.BTCUSDT"};
-    private static final String[] PUBLIC_KLINE_BTC_USDT = new String[]{"kline.1.BTCUSDT"};
-    private static final String[] PUBLIC_ALL_LIQUIDATION_BTC_USDT = new String[]{"allLiquidation.BTCUSDT"};
-    private static final String[] PUBLIC_LT_KLINE_BTC_3S_USDT = new String[]{"kline_lt.1.BTC3SUSDT"};
-    private static final String[] PUBLIC_LT_TICKER_BTC_3S_USDT = new String[]{"ticker_lt.BTC3SUSDT"};
-    private static final String[] PUBLIC_LT_BTC_3S_USDT = new String[]{"lt.BTC3SUSDT"};
+    private static final String[] PUBLIC_ORDER_BOOK_1_BTCUSDT = new String[]{"orderbook.1.BTCUSDT"};
+    private static final String[] PUBLIC_TRADE_BTCUSDT = new String[]{"publicTrade.BTCUSDT"};
+    private static final String[] PUBLIC_TICKERS_BTCUSDT = new String[]{"tickers.BTCUSDT"};
+    private static final String[] PUBLIC_KLINE_BTCUSDT = new String[]{"kline.1.BTCUSDT"};
+    private static final String[] PUBLIC_ALL_LIQUIDATION_BTCUSDT = new String[]{"allLiquidation.BTCUSDT"};
+    private static final String[] PUBLIC_INSURANCE_POOL_USDT = new String[]{"insurance.USDT"};
+    private static final String[] PUBLIC_KLINE_LT_5_EOS3LUSDT = new String[]{"kline_lt.5.EOS3LUSDT"};
+    private static final String[] PUBLIC_TICKERS_LT_EOS3LUSDT = new String[]{"tickers_lt.EOS3LUSDT"};
+    private static final String[] PUBLIC_LT_EOS3LUSDT = new String[]{"lt.EOS3LUSDT"};
 
     /**
      * Returns an array of public order book level 1 topics for the BTCUSDT pair.
@@ -40,7 +41,7 @@ public final class BybitTestConfig {
      * @return an array of public order book level 1 topics for the BTCUSDT pair.
      */
     public static String[] getPublicOrderBook1BtcUsdt() {
-        return PUBLIC_ORDER_BOOK_1_BTC_USDT;
+        return PUBLIC_ORDER_BOOK_1_BTCUSDT;
     }
 
     /**
@@ -49,7 +50,7 @@ public final class BybitTestConfig {
      * @return an array of public trade topics for the BTCUSDT pair.
      */
     public static String[] getPublicTradeBtcUsdt() {
-        return PUBLIC_TRADE_BTC_USDT;
+        return PUBLIC_TRADE_BTCUSDT;
     }
 
     /**
@@ -58,7 +59,7 @@ public final class BybitTestConfig {
      * @return an array of public ticker topics for the BTCUSDT pair.
      */
     public static String[] getPublicTickersBtcUsdt() {
-        return PUBLIC_TICKERS_BTC_USDT;
+        return PUBLIC_TICKERS_BTCUSDT;
     }
 
     /**
@@ -67,7 +68,7 @@ public final class BybitTestConfig {
      * @return an array of public kline topics for the BTCUSDT pair.
      */
     public static String[] getPublicKlineBtcUsdt() {
-        return PUBLIC_KLINE_BTC_USDT;
+        return PUBLIC_KLINE_BTCUSDT;
     }
 
     /**
@@ -76,33 +77,42 @@ public final class BybitTestConfig {
      * @return an array of public all liquidation topics for the BTCUSDT pair.
      */
     public static String[] getPublicAllLiquidationBtcUsdt() {
-        return PUBLIC_ALL_LIQUIDATION_BTC_USDT;
+        return PUBLIC_ALL_LIQUIDATION_BTCUSDT;
     }
 
     /**
-     * Returns an array of public kline topics for the BTCUSDT pair.
+     * Returns an array of public insurance pool topics for the USDT.
      *
-     * @return an array of public kline topics for the BTCUSDT pair.
+     * @return an array of public insurance pool topics for the USDT.
      */
-    public static String[] getPublicLtKlineBtc3sUsdt() {
-        return PUBLIC_LT_KLINE_BTC_3S_USDT;
+    public static String[] getPublicInsurancePoolUsdt() {
+        return PUBLIC_INSURANCE_POOL_USDT;
     }
 
     /**
-     * Returns an array of public ticker topics for the BTCUSDT pair.
+     * Returns an array of public kline topics for the EOS3LUSDT pair.
      *
-     * @return an array of public ticker topics for the BTCUSDT pair.
+     * @return an array of public kline topics for the EOS3LUSDT pair.
      */
-    public static String[] getPublicLtTickerBtc3sUsdt() {
-        return PUBLIC_LT_TICKER_BTC_3S_USDT;
+    public static String[] getPublicKlineLt5Eos3lUsdt() {
+        return PUBLIC_KLINE_LT_5_EOS3LUSDT;
     }
 
     /**
-     * Returns an array of public ticker topics for the BTCUSDT pair.
+     * Returns an array of public ticker topics for the EOS3LUSDT pair.
      *
-     * @return an array of public ticker topics for the BTCUSDT pair.
+     * @return an array of public ticker topics for the EOS3LUSDT pair.
      */
-    public static String[] getPublicLtBtc3sUsdt() {
-        return PUBLIC_LT_BTC_3S_USDT;
+    public static String[] getPublicTickersLtEos3lUsdt() {
+        return PUBLIC_TICKERS_LT_EOS3LUSDT;
+    }
+
+    /**
+     * Returns an array of public ticker topics for the EOS3LUSDT pair.
+     *
+     * @return an array of public ticker topics for the EOS3LUSDT pair.
+     */
+    public static String[] getPublicLtEos3lUsdt() {
+        return PUBLIC_LT_EOS3LUSDT;
     }
 }

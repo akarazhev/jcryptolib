@@ -39,8 +39,11 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineLt5Eos3lUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicLtEos3lUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersLtEos3lUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -60,17 +63,17 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveSpreadOrderBookDataStream() {
-        // Implement the test here
+        // Spread order book data stream is not supported for spot
     }
 
     @Test
     public void shouldReceiveSpreadTradeBookDataStream() {
-        // Implement the test here
+        // Spread trade book data stream is not supported for spot
     }
 
     @Test
     public void shouldReceiveSpreadTickerBookDataStream() {
-        // Implement the test here
+        // Spread ticker book data stream is not supported for spot
     }
 
     @Test
@@ -159,26 +162,74 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveAllLiquidationDataStream() {
-        // Implement the test here
+        // All liquidation data stream is not supported for spot
     }
 
     @Test
     public void shouldReceiveInsurancePoolDataStream() {
-        // Implement the test here
+        // Insurance pool data stream is not supported for spot
     }
 
     @Test
     public void shouldReceiveLTKlineDataStream() {
-        // Implement the test here
+        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicKlineLt5Eos3lUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicKlineLt5Eos3lUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
     public void shouldReceiveLTTickerDataStream() {
-        // Implement the test here
+        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersLtEos3lUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicTickersLtEos3lUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
     public void shouldReceiveLTNavDataStream() {
-        // Implement the test here
+        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicLtEos3lUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicLtEos3lUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 }
