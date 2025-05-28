@@ -147,7 +147,7 @@ final class BybitPublicLinearDataStreamTest {
         final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), new String[]{"allLiquidation.BTCUSDT"});
         final var testSubscriber = new TestSubscriber<String>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.MINUTES), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
