@@ -24,61 +24,163 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.bybit.BybitConstants;
+import com.github.akarazhev.jcryptolib.util.JsonUtils;
+import com.github.akarazhev.jcryptolib.util.TestUtils;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.net.http.HttpClient;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetLinear;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-final class BybitPublicLinearDataStreamTest extends BybitPublicDataStreamTest {
+final class BybitPublicLinearDataStreamTest {
+    private static HttpClient client;
+
+    @BeforeAll
+    static void setup() {
+        client = HttpClient.newHttpClient();
+    }
+
+    @AfterAll
+    static void cleanup() {
+        client.close();
+    }
 
     @Test
-    @Override
     public void shouldReceiveOrderBookDataStream() {
-        assertTest(getPublicTestnetLinear(), getPublicOrderBook1BtcUsdt());
+        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicOrderBook1BtcUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicOrderBook1BtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
-    @Override
     public void shouldReceiveTradeDataStream() {
-        assertTest(getPublicTestnetLinear(), getPublicTradeBtcUsdt());
+        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicTradeBtcUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicTradeBtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
-    @Override
     public void shouldReceiveTickerDataStream() {
-        assertTest(getPublicTestnetLinear(), getPublicTickersBtcUsdt());
+        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicTickersBtcUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicTickersBtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
-    @Override
     public void shouldReceiveKlineDataStream() {
-        assertTest(getPublicTestnetLinear(), getPublicKlineBtcUsdt());
+        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicKlineBtcUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(getPublicKlineBtcUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
-    @Override
     public void shouldReceiveAllLiquidationDataStream() {
-        // Implement the test here
+        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), new String[]{"allLiquidation.BTCUSDT"});
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals("allLiquidation.BTCUSDT", JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 
     @Test
-    @Override
-    public void shouldReceiveLtKlineDataStream() {
-        // Implement the test here
-    }
+    public void shouldReceiveInsurancePoolDataStream() {
+        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), new String[]{"insurance.USDT"});
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
 
-    @Test
-    @Override
-    public void shouldReceiveLtTickerDataStream() {
-        // Implement the test here
-    }
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
 
-    @Test
-    @Override
-    public void shouldReceiveLtNavDataStream() {
-        // Implement the test here
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final int countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals("insurance.USDT", JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+        }
     }
 }
