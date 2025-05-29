@@ -34,6 +34,10 @@ final class Responses {
         return text.contains("\"op\":\"subscribe\"");
     }
 
+    public static boolean isCommandResp(final String text) {
+        return text.contains("\"type\":\"COMMAND_RESP\"");
+    }
+
     public static boolean isSuccess(final String text) {
         return text.contains("\"success\":true");
     }

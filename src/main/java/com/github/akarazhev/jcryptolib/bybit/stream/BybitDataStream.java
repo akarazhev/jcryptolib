@@ -49,6 +49,7 @@ import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getInitialReconn
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectAttempts;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectIntervalMs;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPingIntervalMs;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isCommandResp;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSuccess;
@@ -153,8 +154,8 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             if (last) {
                 final var text = buffer.toString();
                 buffer.setLength(0);
-                if (isSubscription(text)) {
-                    if (isSuccess(text)) {
+                if (isSuccess(text)) {
+                    if (isSubscription(text) || isCommandResp(text)) {
                         LOGGER.debug("Received subscription message: {}", text);
                         startPing();
                     } else {
