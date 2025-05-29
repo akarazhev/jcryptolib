@@ -154,8 +154,8 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
             if (last) {
                 final var text = buffer.toString();
                 buffer.setLength(0);
-                if (isSuccess(text)) {
-                    if (isSubscription(text) || isCommandResp(text)) {
+                if (isSubscription(text) || isCommandResp(text)) {
+                    if (isSuccess(text)) {
                         LOGGER.debug("Received subscription message: {}", text);
                         startPing();
                     } else {

@@ -43,6 +43,6 @@ final class Responses {
     }
 
     public static boolean isPong(final String text) {
-        return text.contains("{\"op\":\"pong\"}") || text.contains("\"ret_msg\":\"pong\"");
+        return text.contains("\"op\":\"pong\"") || text.contains("\"ret_msg\":\"pong\"");
     }
 }
