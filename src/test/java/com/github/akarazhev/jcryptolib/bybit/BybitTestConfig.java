@@ -25,6 +25,9 @@
 package com.github.akarazhev.jcryptolib.bybit;
 
 public final class BybitTestConfig {
+    private static final String[] PUBLIC_ORDER_BOOK_25_SOLUSDT = new String[]{"orderbook.25.SOLUSDT_SOL/USDT"};
+    private static final String[] PUBLIC_TRADE_SOLUSDT = new String[]{"publicTrade.SOLUSDT_SOL/USDT"};
+    private static final String[] PUBLIC_TICKERS_SOLUSDT = new String[]{"tickers.SOLUSDT_SOL/USDT"};
     private static final String[] PUBLIC_ORDER_BOOK_1_BTCUSDT = new String[]{"orderbook.1.BTCUSDT"};
     private static final String[] PUBLIC_TRADE_BTCUSDT = new String[]{"publicTrade.BTCUSDT"};
     private static final String[] PUBLIC_TICKERS_BTCUSDT = new String[]{"tickers.BTCUSDT"};
@@ -34,6 +37,33 @@ public final class BybitTestConfig {
     private static final String[] PUBLIC_KLINE_LT_5_EOS3LUSDT = new String[]{"kline_lt.5.EOS3LUSDT"};
     private static final String[] PUBLIC_TICKERS_LT_EOS3LUSDT = new String[]{"tickers_lt.EOS3LUSDT"};
     private static final String[] PUBLIC_LT_EOS3LUSDT = new String[]{"lt.EOS3LUSDT"};
+
+    /**
+     * Returns an array of public order book level 25 topics for the SOLUSDT pair.
+     *
+     * @return an array of public order book level 25 topics for the SOLUSDT pair.
+     */
+    public static String[] getPublicOrderBook25SolUsdt() {
+        return PUBLIC_ORDER_BOOK_25_SOLUSDT;
+    }
+
+    /**
+     * Returns an array of public trade topics for the SOLUSDT pair.
+     *
+     * @return an array of public trade topics for the SOLUSDT pair.
+     */
+    public static String[] getPublicTradeSolUsdt() {
+        return PUBLIC_TRADE_SOLUSDT;
+    }
+
+    /**
+     * Returns an array of public ticker topics for the SOLUSDT pair.
+     *
+     * @return an array of public ticker topics for the SOLUSDT pair.
+     */
+    public static String[] getPublicTickersSolUsdt() {
+        return PUBLIC_TICKERS_SOLUSDT;
+    }
 
     /**
      * Returns an array of public order book level 1 topics for the BTCUSDT pair.
