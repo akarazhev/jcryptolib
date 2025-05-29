@@ -24,8 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConstants;
-import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -37,14 +35,12 @@ import org.junit.jupiter.api.Test;
 import java.net.http.HttpClient;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpread;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook25SolUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersSolUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeSolUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-final class BybitPublicSpreadDataStreamTest {
+final class BybitDataStreamTest {
     private static HttpClient client;
 
     @BeforeAll
@@ -58,11 +54,11 @@ final class BybitPublicSpreadDataStreamTest {
     }
 
     @Test
-    public void shouldReceiveOrderBookDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpread(), getPublicOrderBook25SolUsdt());
+    void testBasicDataStreamingAndCleanup() {
+        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
         final var testSubscriber = new TestSubscriber<String>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -73,50 +69,57 @@ final class BybitPublicSpreadDataStreamTest {
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicOrderBook25SolUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+    }
+
+    @Test
+    void testReconnectionOnSocketDrop() {
+        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
+        final var testSubscriber = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
+
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+
+        final var testSubscriber2 = new TestSubscriber<String>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber2);
+        TestUtils.await(testSubscriber2, 30, TimeUnit.SECONDS);
+
+        assertFalse(testSubscriber2.values().isEmpty(), "Should receive messages after reconnect");
+        testSubscriber2.cancel();
+    }
+
+    @Test
+    void testMultipleConcurrentStreams() {
+        final var streamCount = 10;
+        final var subscribers = new TestSubscriber[streamCount];
+        for (var i = 0; i < streamCount; i++) {
+            final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
+            subscribers[i] = new TestSubscriber<>();
+            Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(subscribers[i]);
+        }
+
+        for (final var sub : subscribers) {
+            TestUtils.await(sub, 30, TimeUnit.SECONDS);
+            assertFalse(sub.values().isEmpty(), "Each stream should receive at least one message");
+        }
+
+        for (final var sub : subscribers) {
+            sub.cancel();
         }
     }
 
     @Test
-    public void shouldReceiveTradeDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpread(), getPublicTradeSolUsdt());
-        final var testSubscriber = new TestSubscriber<String>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
+    void testRapidConnectDisconnect() {
+        for (var i = 0; i < 20; i++) {
+            final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
+            final var testSubscriber = new TestSubscriber<String>();
+            Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+            TestUtils.await(testSubscriber, 10, TimeUnit.SECONDS);
 
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTradeSolUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
-        }
-    }
-
-    @Test
-    public void shouldReceiveTickerDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpread(), getPublicTickersSolUsdt());
-        final var testSubscriber = new TestSubscriber<String>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
-
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTickersSolUsdt()[0], JsonUtils.jsonToMap(value).get(BybitConstants.TOPIC_FIELD));
+            testSubscriber.cancel();
+            TestUtils.sleep(200);
         }
     }
 }

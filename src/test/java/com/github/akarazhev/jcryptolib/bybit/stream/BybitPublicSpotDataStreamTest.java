@@ -73,7 +73,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
@@ -94,7 +94,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
@@ -115,7 +115,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
@@ -136,7 +136,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
@@ -157,7 +157,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
@@ -178,7 +178,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
@@ -199,7 +199,7 @@ final class BybitPublicSpotDataStreamTest {
 
         testSubscriber.cancel();
         TestUtils.sleep(1000);
-        final int countAfterCancel = testSubscriber.values().size();
+        final var countAfterCancel = testSubscriber.values().size();
         TestUtils.sleep(1000);
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
