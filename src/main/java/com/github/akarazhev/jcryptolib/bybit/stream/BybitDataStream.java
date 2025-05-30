@@ -24,6 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
@@ -36,6 +37,7 @@ import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
 import java.time.Duration;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +63,7 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSuccess;
  * connection, reconnection with exponential backoff, ping/pong, and resource
  * cleanup.
  */
-public final class BybitDataStream implements FlowableOnSubscribe<String> {
+public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStream.class);
     private final HttpClient client;
     private final URI uri;
@@ -100,14 +102,14 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
      * {@inheritDoc}
      */
     @Override
-    public void subscribe(final FlowableEmitter<String> emitter) throws Throwable {
+    public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
         final var listener = new BybitDataStreamListener(emitter);
         emitter.setCancellable(listener::cancel);
         listener.connect();
     }
 
     private final class BybitDataStreamListener implements Listener {
-        private final FlowableEmitter<String> emitter;
+        private final FlowableEmitter<Map<String, Object>> emitter;
         private final StringBuilder buffer = new StringBuilder();
         private final AtomicBoolean isConnecting = new AtomicBoolean(false);
         private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
@@ -115,7 +117,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
         private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
         private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
-        public BybitDataStreamListener(final FlowableEmitter<String> emitter) {
+        public BybitDataStreamListener(final FlowableEmitter<Map<String, Object>> emitter) {
             this.emitter = emitter;
         }
 
@@ -171,7 +173,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<String> {
                 } else {
                     if (!emitter.isCancelled()) {
                         LOGGER.debug("Received message: {}", text);
-                        emitter.onNext(text);
+                        emitter.onNext(JsonUtils.jsonToMap(text));
                     }
                 }
             }

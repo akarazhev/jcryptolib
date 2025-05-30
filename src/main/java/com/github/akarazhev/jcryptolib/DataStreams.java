@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpClient;
+import java.util.Map;
 
 public final class DataStreams {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataStreams.class);
@@ -40,7 +41,7 @@ public final class DataStreams {
         throw new UnsupportedOperationException();
     }
 
-    public static Flowable<String> ofBybit(final HttpClient client, final String url, final String[] topics) {
+    public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String url, final String[] topics) {
         LOGGER.info(BybitConfig.print());
         return Flowable.create(e -> BybitDataStream.create(client, url, topics).subscribe(e),
                 BackpressureStrategy.BUFFER);

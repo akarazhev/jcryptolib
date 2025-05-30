@@ -33,6 +33,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpClient;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
@@ -56,7 +58,7 @@ final class BybitDataStreamTest {
     @Test
     void testBasicDataStreamingAndCleanup() {
         final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
-        final var testSubscriber = new TestSubscriber<String>();
+        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
@@ -74,7 +76,7 @@ final class BybitDataStreamTest {
     @Test
     void testReconnectionOnSocketDrop() {
         final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
-        final var testSubscriber = new TestSubscriber<String>();
+        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
@@ -82,7 +84,7 @@ final class BybitDataStreamTest {
         testSubscriber.cancel();
         TestUtils.sleep(1000);
 
-        final var testSubscriber2 = new TestSubscriber<String>();
+        final var testSubscriber2 = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber2);
         TestUtils.await(testSubscriber2, 30, TimeUnit.SECONDS);
 
@@ -93,11 +95,11 @@ final class BybitDataStreamTest {
     @Test
     void testMultipleConcurrentStreams() {
         final var streamCount = 10;
-        final var subscribers = new TestSubscriber[streamCount];
+        final var subscribers = new ArrayList<TestSubscriber<Map<String, Object>>>(streamCount);
         for (var i = 0; i < streamCount; i++) {
             final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
-            subscribers[i] = new TestSubscriber<>();
-            Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(subscribers[i]);
+            subscribers.set(i, new TestSubscriber<>());
+            Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(subscribers.get(i));
         }
 
         for (final var sub : subscribers) {
@@ -114,7 +116,7 @@ final class BybitDataStreamTest {
     void testRapidConnectDisconnect() {
         for (var i = 0; i < 20; i++) {
             final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
-            final var testSubscriber = new TestSubscriber<String>();
+            final var testSubscriber = new TestSubscriber<Map<String, Object>>();
             Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
             TestUtils.await(testSubscriber, 10, TimeUnit.SECONDS);
 
