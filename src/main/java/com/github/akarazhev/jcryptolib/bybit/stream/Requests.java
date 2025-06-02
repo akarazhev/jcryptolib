@@ -26,6 +26,8 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 
+import java.util.UUID;
+
 final class Requests {
     private static final String SUBSCRIBE = "subscribe";
     private static final String PING = "ping";
@@ -35,7 +37,7 @@ final class Requests {
     }
 
     public static String ofSubscription(final String[] topics) {
-        return JsonUtils.objectToJson(new Subscription(SUBSCRIBE, topics));
+        return JsonUtils.objectToJson(new Subscription(UUID.randomUUID().toString(), SUBSCRIBE, topics));
     }
 
     public static String ofPing() {
