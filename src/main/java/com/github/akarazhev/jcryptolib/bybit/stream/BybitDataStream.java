@@ -66,11 +66,16 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSuccess;
 public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStream.class);
     private final HttpClient client;
+    private final String key;
+    private final String secret;
     private final URI uri;
     private final String[] topics;
 
-    private BybitDataStream(final HttpClient client, final String url, final String[] topics) {
+    private BybitDataStream(final HttpClient client, final String key, final String secret, final String url,
+                            final String[] topics) {
         this.client = client;
+        this.key = key;
+        this.secret = secret;
         this.uri = URI.create(url);
         this.topics = topics;
     }
@@ -88,7 +93,26 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
      * @return BybitDataStream instance
      */
     public static BybitDataStream create(final HttpClient client, final String url, final String[] topics) {
-        return new BybitDataStream(client, url, topics);
+        return new BybitDataStream(client, null, null, url, topics);
+    }
+
+    /**
+     * Creates a new BybitDataStream.
+     * <p>
+     * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
+     * connection, reconnection with exponential backoff, ping/pong, and resource
+     * cleanup.
+     *
+     * @param client HttpClient to use
+     * @param key    API key
+     * @param secret API secret
+     * @param url    WebSocket endpoint
+     * @param topics Subscription topics
+     * @return BybitDataStream instance
+     */
+    public static BybitDataStream create(final HttpClient client, final String key, final String secret, final String url,
+                                         final String[] topics) {
+        return new BybitDataStream(client, url, key, secret, topics);
     }
 
     /**

@@ -46,4 +46,11 @@ public final class DataStreams {
         return Flowable.create(e -> BybitDataStream.create(client, url, topics).subscribe(e),
                 BackpressureStrategy.BUFFER);
     }
+
+    public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String key, final String secret,
+                                                        final String url, final String[] topics) {
+        LOGGER.info(BybitConfig.print());
+        return Flowable.create(e ->
+                        BybitDataStream.create(client, key, secret, url, topics).subscribe(e), BackpressureStrategy.BUFFER);
+    }
 }
