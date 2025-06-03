@@ -48,6 +48,9 @@ public final class BybitConfig {
     private static final int MAX_RECONNECT_ATTEMPTS = AppConfig.getAsInt("bybit.max.reconnect.attempts");
     private static final float BACKOFF_MULTIPLIER = AppConfig.getAsFloat("bybit.backoff.multiplier");
     private static final int PING_INTERVAL_MS = AppConfig.getAsInt("bybit.ping.interval.ms");
+    // Private settings are defined in application.properties
+    private static final String API_KEY = AppConfig.getAsString("bybit.api.key");
+    private static final String API_SECRET = AppConfig.getAsString("bybit.api.secret");
 
     private BybitConfig() {
         throw new UnsupportedOperationException();
@@ -111,6 +114,14 @@ public final class BybitConfig {
 
     public static int getPingIntervalMs() {
         return PING_INTERVAL_MS;
+    }
+
+    public static String getApiKey() {
+        return API_KEY;
+    }
+
+    public static String getApiSecret() {
+        return API_SECRET;
     }
 
     public static String print() {
