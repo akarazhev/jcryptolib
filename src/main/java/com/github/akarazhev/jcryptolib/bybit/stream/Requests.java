@@ -25,7 +25,9 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
+import com.github.akarazhev.jcryptolib.util.SecUtils;
 
+import java.time.Instant;
 import java.util.UUID;
 
 final class Requests {
@@ -45,8 +47,9 @@ final class Requests {
         return JsonUtils.objectToJson(new Ping(PING));
     }
 
-    public static String ofAuth(final String apiKey, final long expires, final String signature) {
-        final var args = new String[]{apiKey, String.valueOf(expires), signature};
+    public static String ofAuth(final String apiKey, final long expires, final String secret) throws Exception {
+        final var expiresAt = Instant.now().toEpochMilli() + expires;
+        final var args = new String[]{apiKey, String.valueOf(expiresAt), SecUtils.getSignature(secret, expiresAt)};
         return JsonUtils.objectToJson(new Request(UUID.randomUUID().toString(), AUTH, args));
     }
 }

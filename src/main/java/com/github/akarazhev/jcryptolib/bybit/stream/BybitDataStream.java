@@ -51,6 +51,7 @@ import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getInitialReconn
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectAttempts;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectIntervalMs;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPingIntervalMs;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isAuth;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isCommandResp;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
@@ -157,6 +158,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         public void onOpen(final WebSocket webSocket) {
             LOGGER.info("WebSocket opened");
             reconnectAttempts.set(0);
+            doAuth(webSocket);
             webSocket.sendText(Requests.ofSubscription(topics), true);
             webSocket.request(1);
         }
@@ -197,7 +199,9 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                 } else {
                     if (!emitter.isCancelled()) {
                         LOGGER.debug("Received message: {}", text);
-                        emitter.onNext(JsonUtils.jsonToMap(text));
+                        if (!isAuth(text)) {
+                            emitter.onNext(JsonUtils.jsonToMap(text));
+                        }
                     }
                 }
             }
@@ -249,6 +253,31 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                 stopPing();
                 closeWebSocket();
                 isConnecting.set(false);
+            }
+        }
+
+        /**
+         * Performs an authentication request.
+         * <p>
+         * If the API key and secret are not null, the method will send an authentication request
+         * to the WebSocket. If an exception occurs during the authentication, the method will
+         * close the WebSocket, set the connecting flag to false, and propagate an error to the
+         * emitter.
+         * <p>
+         * This method is called by the {@link #onOpen(WebSocket)} method.
+         *
+         * @param webSocket the WebSocket instance
+         */
+        private void doAuth(final WebSocket webSocket) {
+            if (key != null && secret != null) {
+                try {
+                    webSocket.sendText(Requests.ofAuth(key, 10000, secret), true);
+                } catch (final Exception e) {
+                    LOGGER.error("Exception during auth: {}", e.getMessage());
+                    closeWebSocket();
+                    isConnecting.set(false);
+                    emitter.onError(e);
+                }
             }
         }
 

@@ -30,6 +30,10 @@ final class Responses {
         throw new UnsupportedOperationException();
     }
 
+    public static boolean isAuth(final String text) {
+        return text.contains("\"op\":\"auth\"");
+    }
+
     public static boolean isSubscription(final String text) {
         return text.contains("\"op\":\"subscribe\"");
     }
