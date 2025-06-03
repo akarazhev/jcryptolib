@@ -31,16 +31,22 @@ import java.util.UUID;
 final class Requests {
     private static final String SUBSCRIBE = "subscribe";
     private static final String PING = "ping";
+    private static final String AUTH = "auth";
 
     private Requests() {
         throw new UnsupportedOperationException();
     }
 
     public static String ofSubscription(final String[] topics) {
-        return JsonUtils.objectToJson(new Subscription(UUID.randomUUID().toString(), SUBSCRIBE, topics));
+        return JsonUtils.objectToJson(new Request(UUID.randomUUID().toString(), SUBSCRIBE, topics));
     }
 
     public static String ofPing() {
         return JsonUtils.objectToJson(new Ping(PING));
+    }
+
+    public static String ofAuth(final String apiKey, final long expires, final String signature) {
+        final var args = new String[]{apiKey, String.valueOf(expires), signature};
+        return JsonUtils.objectToJson(new Request(UUID.randomUUID().toString(), AUTH, args));
     }
 }

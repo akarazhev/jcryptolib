@@ -26,5 +26,5 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-record Subscription(@JsonProperty String req_id, @JsonProperty String op, @JsonProperty String[] args) {
+record Request(@JsonProperty String req_id, @JsonProperty String op, @JsonProperty String[] args) {
 }
