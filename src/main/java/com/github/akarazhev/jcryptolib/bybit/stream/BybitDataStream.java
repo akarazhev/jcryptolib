@@ -112,7 +112,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
      */
     public static BybitDataStream create(final HttpClient client, final String key, final String secret, final String url,
                                          final String[] topics) {
-        return new BybitDataStream(client, url, key, secret, topics);
+        return new BybitDataStream(client, key, secret, url, topics);
     }
 
     /**
