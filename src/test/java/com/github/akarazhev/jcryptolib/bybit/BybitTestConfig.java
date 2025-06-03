@@ -25,6 +25,7 @@
 package com.github.akarazhev.jcryptolib.bybit;
 
 public final class BybitTestConfig {
+    // public topics
     private static final String[] PUBLIC_ORDER_BOOK_25_SOLUSDT = new String[]{"orderbook.25.SOLUSDT_SOL/USDT"};
     private static final String[] PUBLIC_TRADE_SOLUSDT = new String[]{"publicTrade.SOLUSDT_SOL/USDT"};
     private static final String[] PUBLIC_TICKERS_SOLUSDT = new String[]{"tickers.SOLUSDT_SOL/USDT"};
@@ -37,6 +38,8 @@ public final class BybitTestConfig {
     private static final String[] PUBLIC_KLINE_LT_5_EOS3LUSDT = new String[]{"kline_lt.5.EOS3LUSDT"};
     private static final String[] PUBLIC_TICKERS_LT_EOS3LUSDT = new String[]{"tickers_lt.EOS3LUSDT"};
     private static final String[] PUBLIC_LT_EOS3LUSDT = new String[]{"lt.EOS3LUSDT"};
+    // private topics
+    private static final String[] PRIVATE_ORDER = new String[]{"order"};
 
     /**
      * Returns an array of public order book level 25 topics for the SOLUSDT pair.
@@ -144,5 +147,14 @@ public final class BybitTestConfig {
      */
     public static String[] getPublicLtEos3lUsdt() {
         return PUBLIC_LT_EOS3LUSDT;
+    }
+
+    /**
+     * Returns an array of private order topics.
+     *
+     * @return an array of private order topics.
+     */
+    public static String[] getPrivateOrder() {
+        return PRIVATE_ORDER;
     }
 }
