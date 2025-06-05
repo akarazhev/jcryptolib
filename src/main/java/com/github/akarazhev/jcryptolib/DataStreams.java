@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.jcryptolib;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
+import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataConfig;
 import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataStream;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -42,15 +42,25 @@ public final class DataStreams {
     }
 
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String url, final String[] topics) {
-        LOGGER.info(BybitConfig.print());
-        return Flowable.create(e -> BybitDataStream.create(client, url, topics).subscribe(e),
+        final var config = new BybitDataConfig.Builder()
+                .url(url)
+                .topics(topics)
+                .build();
+        LOGGER.info(config.print());
+        return Flowable.create(e -> BybitDataStream.create(client, config).subscribe(e),
                 BackpressureStrategy.BUFFER);
     }
 
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String key, final String secret,
                                                         final String url, final String[] topics) {
-        LOGGER.info(BybitConfig.print());
-        return Flowable.create(e ->
-                        BybitDataStream.create(client, key, secret, url, topics).subscribe(e), BackpressureStrategy.BUFFER);
+        final var config = new BybitDataConfig.Builder()
+                .key(key)
+                .secret(secret)
+                .url(url)
+                .topics(topics)
+                .build();
+        LOGGER.info(config.print());
+        return Flowable.create(e -> BybitDataStream.create(client, config).subscribe(e),
+                BackpressureStrategy.BUFFER);
     }
 }

@@ -63,7 +63,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveOrderBookDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicOrderBook1BtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicOrderBook1BtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -84,7 +88,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveTradeDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTradeBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicTradeBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.MINUTES), "Should not receive any messages");
@@ -105,7 +113,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveTickerDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicTickersBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -126,7 +138,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveKlineDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicKlineBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicKlineBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -147,7 +163,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveLTKlineDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicKlineLt5Eos3lUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicKlineLt5Eos3lUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -168,7 +188,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveLTTickerDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicTickersLtEos3lUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicTickersLtEos3lUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -189,7 +213,11 @@ final class BybitPublicSpotDataStreamTest {
 
     @Test
     public void shouldReceiveLTNavDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpot(), getPublicLtEos3lUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpot())
+                .topics(getPublicLtEos3lUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");

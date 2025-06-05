@@ -29,99 +29,76 @@ import com.github.akarazhev.jcryptolib.config.AppConfig;
 import java.util.Arrays;
 
 public final class BybitConfig {
-    // Public endpoints are defined in application.properties
-    private static final String PUBLIC_TESTNET_SPOT = AppConfig.getAsString("bybit.public.testnet.spot");
-    private static final String PUBLIC_TESTNET_LINEAR = AppConfig.getAsString("bybit.public.testnet.linear");
-    private static final String PUBLIC_TESTNET_INVERSE = AppConfig.getAsString("bybit.public.testnet.inverse");
-    private static final String PUBLIC_TESTNET_OPTION = AppConfig.getAsString("bybit.public.testnet.option");
-    private static final String PUBLIC_TESTNET_SPREAD = AppConfig.getAsString("bybit.public.testnet.spread");
-    private static final String PRIVATE_TESTNET = AppConfig.getAsString("bybit.private.testnet");
-    private static final String ORDER_TESTNET = AppConfig.getAsString("bybit.order.testnet");
-    // Public topics are defined in application.properties
-    private static final String[] PUBLIC_SUBSCRIBE_TOPICS = AppConfig.getAsArray("bybit.public.subscribe.topics");
-    // Private topics are defined in application.properties
-    private static final String[] PRIVATE_SUBSCRIBE_TOPICS = AppConfig.getAsArray("bybit.private.subscribe.topics");
-    // Connection settings are defined in application.properties
-    private static final int CONNECT_TIMEOUT_MS = AppConfig.getAsInt("bybit.connect.timeout.ms");
-    private static final int INITIAL_RECONNECT_INTERVAL_MS = AppConfig.getAsInt("bybit.initial.reconnect.interval.ms");
-    private static final int MAX_RECONNECT_INTERVAL_MS = AppConfig.getAsInt("bybit.max.reconnect.interval.ms");
-    private static final int MAX_RECONNECT_ATTEMPTS = AppConfig.getAsInt("bybit.max.reconnect.attempts");
-    private static final float BACKOFF_MULTIPLIER = AppConfig.getAsFloat("bybit.backoff.multiplier");
-    private static final int PING_INTERVAL_MS = AppConfig.getAsInt("bybit.ping.interval.ms");
-    // Private settings are defined in application.properties
-    private static final String API_KEY = AppConfig.getAsString("bybit.api.key");
-    private static final String API_SECRET = AppConfig.getAsString("bybit.api.secret");
-
     private BybitConfig() {
         throw new UnsupportedOperationException();
     }
 
     public static String getPublicTestnetSpot() {
-        return PUBLIC_TESTNET_SPOT;
+        return AppConfig.getAsString("bybit.public.testnet.spot");
     }
 
     public static String getPublicTestnetLinear() {
-        return PUBLIC_TESTNET_LINEAR;
+        return AppConfig.getAsString("bybit.public.testnet.linear");
     }
 
     public static String getPublicTestnetInverse() {
-        return PUBLIC_TESTNET_INVERSE;
+        return AppConfig.getAsString("bybit.public.testnet.inverse");
     }
 
     public static String getPublicTestnetOption() {
-        return PUBLIC_TESTNET_OPTION;
+        return AppConfig.getAsString("bybit.public.testnet.option");
     }
 
     public static String getPublicTestnetSpread() {
-        return PUBLIC_TESTNET_SPREAD;
+        return AppConfig.getAsString("bybit.public.testnet.spread");
     }
 
     public static String getPrivateTestnet() {
-        return PRIVATE_TESTNET;
+        return AppConfig.getAsString("bybit.private.testnet");
     }
 
     public static String getOrderTestnet() {
-        return ORDER_TESTNET;
+        return AppConfig.getAsString("bybit.order.testnet");
     }
 
     public static String[] getPublicSubscribeTopics() {
-        return PUBLIC_SUBSCRIBE_TOPICS;
+        return AppConfig.getAsArray("bybit.public.subscribe.topics");
     }
 
     public static String[] getPrivateSubscribeTopics() {
-        return PRIVATE_SUBSCRIBE_TOPICS;
+        return AppConfig.getAsArray("bybit.private.subscribe.topics");
     }
 
     public static int getConnectTimeoutMs() {
-        return CONNECT_TIMEOUT_MS;
+        return AppConfig.getAsInt("bybit.connect.timeout.ms");
     }
 
     public static int getInitialReconnectIntervalMs() {
-        return INITIAL_RECONNECT_INTERVAL_MS;
+        return AppConfig.getAsInt("bybit.initial.reconnect.interval.ms");
     }
 
     public static int getMaxReconnectIntervalMs() {
-        return MAX_RECONNECT_INTERVAL_MS;
+        return AppConfig.getAsInt("bybit.max.reconnect.interval.ms");
     }
 
     public static int getMaxReconnectAttempts() {
-        return MAX_RECONNECT_ATTEMPTS;
+        return AppConfig.getAsInt("bybit.max.reconnect.attempts");
     }
 
     public static float getBackoffMultiplier() {
-        return BACKOFF_MULTIPLIER;
+        return AppConfig.getAsFloat("bybit.backoff.multiplier");
     }
 
     public static int getPingIntervalMs() {
-        return PING_INTERVAL_MS;
+        return AppConfig.getAsInt("bybit.ping.interval.ms");
     }
 
     public static String getApiKey() {
-        return API_KEY;
+        return AppConfig.getAsString("bybit.api.key");
     }
 
     public static String getApiSecret() {
-        return API_SECRET;
+        return AppConfig.getAsString("bybit.api.secret");
     }
 
     public static String print() {

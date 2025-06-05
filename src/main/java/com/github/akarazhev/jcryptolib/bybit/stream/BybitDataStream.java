@@ -45,12 +45,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getBackoffMultiplier;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getConnectTimeoutMs;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getInitialReconnectIntervalMs;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectAttempts;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getMaxReconnectIntervalMs;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPingIntervalMs;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isAuth;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isCommandResp;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
@@ -67,64 +61,41 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSuccess;
 public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataStream.class);
     private final HttpClient client;
-    private final String key;
-    private final String secret;
-    private final URI uri;
-    private final String[] topics;
+    private final BybitDataConfig config;
 
-    private BybitDataStream(final HttpClient client, final String key, final String secret, final String url,
-                            final String[] topics) {
+    private BybitDataStream(final HttpClient client, final BybitDataConfig config) {
         this.client = client;
-        this.key = key;
-        this.secret = secret;
-        this.uri = URI.create(url);
-        this.topics = topics;
+        this.config = config;
     }
 
     /**
-     * Creates a new BybitDataStream.
+     * Creates a new Bybit data stream.
      * <p>
-     * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
-     * connection, reconnection with exponential backoff, ping/pong, and resource
-     * cleanup.
-     *
-     * @param client HttpClient to use
-     * @param url    WebSocket endpoint
-     * @param topics Subscription topics
-     * @return BybitDataStream instance
-     */
-    public static BybitDataStream create(final HttpClient client, final String url, final String[] topics) {
-        return new BybitDataStream(client, null, null, url, topics);
-    }
-
-    /**
-     * Creates a new BybitDataStream.
-     * <p>
-     * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
-     * connection, reconnection with exponential backoff, ping/pong, and resource
-     * cleanup.
-     *
-     * @param client HttpClient to use
-     * @param key    API key
-     * @param secret API secret
-     * @param url    WebSocket endpoint
-     * @param topics Subscription topics
-     * @return BybitDataStream instance
-     */
-    public static BybitDataStream create(final HttpClient client, final String key, final String secret, final String url,
-                                         final String[] topics) {
-        return new BybitDataStream(client, key, secret, url, topics);
-    }
-
-    /**
-     * Subscribes to Bybit WebSocket data stream.
      * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
      * connection, reconnection with exponential backoff, ping/pong, and resource
      * cleanup.
      * <p>
      * When {@link FlowableEmitter#isCancelled()} is true, the subscription is cancelled.
+     *
+     * @param client HttpClient to use
+     * @param config Bybit data stream configuration
+     * @return Bybit data stream instance
+     */
+    public static BybitDataStream create(final HttpClient client, final BybitDataConfig config) {
+        return new BybitDataStream(client, config);
+    }
+
+    /**
+     * Subscribes to Bybit WebSocket endpoint.
      * <p>
-     * {@inheritDoc}
+     * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
+     * connection, reconnection with exponential backoff, ping/pong, and resource
+     * cleanup.
+     * <p>
+     * When {@link FlowableEmitter#isCancelled()} is true, the subscription is cancelled.
+     *
+     * @param emitter Flowable emitter
+     * @throws Throwable if an error occurs
      */
     @Override
     public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
@@ -159,7 +130,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
             LOGGER.info("WebSocket opened");
             reconnectAttempts.set(0);
             doAuth(webSocket);
-            webSocket.sendText(Requests.ofSubscription(topics), true);
+            webSocket.sendText(Requests.ofSubscription(config.getTopics()), true);
             webSocket.request(1);
         }
 
@@ -269,9 +240,9 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
          * @param webSocket the WebSocket instance
          */
         private void doAuth(final WebSocket webSocket) {
-            if (key != null && secret != null) {
+            if (config.getKey() != null && config.getSecret() != null) {
                 try {
-                    webSocket.sendText(Requests.ofAuth(key, 10000, secret), true);
+                    webSocket.sendText(Requests.ofAuth(config.getKey(), 10000, config.getSecret()), true); // todo: 10000
                 } catch (final Exception e) {
                     LOGGER.error("Exception during auth: {}", e.getMessage());
                     closeWebSocket();
@@ -291,8 +262,8 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
             stopPing();
             closeWebSocket();
             isConnecting.set(false);
-            if (reconnectAttempts.incrementAndGet() > getMaxReconnectAttempts()) {
-                LOGGER.error("Max reconnection attempts ({}) reached", getMaxReconnectAttempts());
+            if (reconnectAttempts.incrementAndGet() > config.getMaxReconnectAttempts()) {
+                LOGGER.error("Max reconnection attempts ({}) reached", config.getMaxReconnectAttempts());
                 if (!emitter.isCancelled()) {
                     emitter.onError(new IllegalStateException("Max reconnection attempts reached"));
                 }
@@ -300,10 +271,10 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                 return;
             }
 
-            final var delay = Math.min(getInitialReconnectIntervalMs() * Math.pow(getBackoffMultiplier(),
-                    reconnectAttempts.get() - 1), getMaxReconnectIntervalMs());
-            LOGGER.info("Reconnection attempt {} of {}. Waiting for {} ms", reconnectAttempts.get(), getMaxReconnectAttempts(),
-                    delay);
+            final var delay = Math.min(config.getInitialReconnectIntervalMs() * Math.pow(config.getBackoffMultiplier(),
+                    reconnectAttempts.get() - 1), config.getMaxReconnectIntervalMs());
+            LOGGER.info("Reconnection attempt {} of {}. Waiting for {} ms", reconnectAttempts.get(),
+                    config.getMaxReconnectAttempts(), delay);
             CompletableFuture.delayedExecutor((long) delay, TimeUnit.MILLISECONDS).execute(this::connect);
         }
 
@@ -318,8 +289,8 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                 closeWebSocket();
                 try {
                     client.newWebSocketBuilder()
-                            .connectTimeout(Duration.ofMillis(getConnectTimeoutMs()))
-                            .buildAsync(uri, this)
+                            .connectTimeout(Duration.ofMillis(config.getConnectTimeoutMs()))
+                            .buildAsync(URI.create(config.getUrl()), this)
                             .whenComplete((ws, ex) -> {
                                 isConnecting.set(false);
                                 if (ex != null) {
@@ -361,7 +332,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         private void startPing() {
             stopPing();
             LOGGER.debug("Starting ping");
-            pingRef.set(Flowable.interval(getPingIntervalMs(), TimeUnit.MILLISECONDS)
+            pingRef.set(Flowable.interval(config.getPingIntervalMs(), TimeUnit.MILLISECONDS)
                     .subscribe(_ -> {
                         if (!emitter.isCancelled()) {
                             final var webSocket = webSocketRef.get();

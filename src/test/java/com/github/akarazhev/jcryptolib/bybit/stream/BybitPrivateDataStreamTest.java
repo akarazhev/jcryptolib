@@ -59,7 +59,13 @@ final class BybitPrivateDataStreamTest {
 
     @Test
     public void shouldReceiveOrderDataStream() {
-        final var stream = BybitDataStream.create(client, getApiKey(), getApiSecret(), getPrivateTestnet(), getPrivateOrder());
+        final var config = new BybitDataConfig.Builder()
+                .key(getApiKey())
+                .secret(getApiSecret())
+                .url(getPrivateTestnet())
+                .topics(getPrivateOrder())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");

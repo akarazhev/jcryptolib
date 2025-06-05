@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetLinear;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicAllLiquidationBtcUsdt;
+import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicInsurancePoolUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
@@ -61,7 +62,11 @@ final class BybitPublicLinearDataStreamTest {
 
     @Test
     public void shouldReceiveOrderBookDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicOrderBook1BtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetLinear())
+                .topics(getPublicOrderBook1BtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -82,7 +87,11 @@ final class BybitPublicLinearDataStreamTest {
 
     @Test
     public void shouldReceiveTradeDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicTradeBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetLinear())
+                .topics(getPublicTradeBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
@@ -103,7 +112,11 @@ final class BybitPublicLinearDataStreamTest {
 
     @Test
     public void shouldReceiveTickerDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicTickersBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetLinear())
+                .topics(getPublicTickersBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -124,7 +137,11 @@ final class BybitPublicLinearDataStreamTest {
 
     @Test
     public void shouldReceiveKlineDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicKlineBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetLinear())
+                .topics(getPublicKlineBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -145,7 +162,11 @@ final class BybitPublicLinearDataStreamTest {
 
     @Test
     public void shouldReceiveAllLiquidationDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), getPublicAllLiquidationBtcUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetLinear())
+                .topics(getPublicAllLiquidationBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         // Liquidation can happen at any time
@@ -167,7 +188,11 @@ final class BybitPublicLinearDataStreamTest {
 
     @Test
     public void shouldReceiveInsurancePoolDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetLinear(), new String[]{"insurance.USDT"});
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetLinear())
+                .topics(getPublicInsurancePoolUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -182,7 +207,7 @@ final class BybitPublicLinearDataStreamTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals("insurance.USDT", value.get(BybitConstants.TOPIC_FIELD));
+            assertEquals(getPublicInsurancePoolUsdt()[0], value.get(BybitConstants.TOPIC_FIELD));
         }
     }
 }

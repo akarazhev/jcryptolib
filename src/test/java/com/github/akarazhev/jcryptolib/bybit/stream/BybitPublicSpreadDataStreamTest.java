@@ -59,7 +59,11 @@ final class BybitPublicSpreadDataStreamTest {
 
     @Test
     public void shouldReceiveOrderBookDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpread(), getPublicOrderBook25SolUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpread())
+                .topics(getPublicOrderBook25SolUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -80,7 +84,11 @@ final class BybitPublicSpreadDataStreamTest {
 
     @Test
     public void shouldReceiveTradeDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpread(), getPublicTradeSolUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpread())
+                .topics(getPublicTradeSolUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
@@ -101,7 +109,11 @@ final class BybitPublicSpreadDataStreamTest {
 
     @Test
     public void shouldReceiveTickerDataStream() {
-        final var stream = BybitDataStream.create(client, getPublicTestnetSpread(), getPublicTickersSolUsdt());
+        final var config = new BybitDataConfig.Builder()
+                .url(getPublicTestnetSpread())
+                .topics(getPublicTickersSolUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
         Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
