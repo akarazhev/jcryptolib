@@ -26,11 +26,20 @@ package com.github.akarazhev.jcryptolib.bybit;
 
 import com.github.akarazhev.jcryptolib.config.AppConfig;
 
-import java.util.Arrays;
-
 public final class BybitConfig {
     private BybitConfig() {
         throw new UnsupportedOperationException();
+    }
+    public static String getAnnouncementLocale() {
+        return AppConfig.getAsString("bybit.announcement.locale");
+    }
+
+    public static String getAnnouncementTags() {
+        return AppConfig.getAsString("bybit.announcement.tags");
+    }
+
+    public static String getAnnouncementTypes() {
+        return AppConfig.getAsString("bybit.announcement.types");
     }
 
     public static String getPublicTestnetSpot() {
@@ -99,26 +108,6 @@ public final class BybitConfig {
 
     public static String getApiSecret() {
         return AppConfig.getAsString("bybit.api.secret");
-    }
-
-    public static String print() {
-        return "\nBybit Config {" +
-                "\n\tpublicTestnetSpot = " + getPublicTestnetSpot() +
-                ", \n\tpublicTestnetLinear = " + getPublicTestnetLinear() +
-                ", \n\tpublicTestnetInverse = " + getPublicTestnetInverse() +
-                ", \n\tpublicTestnetOption = " + getPublicTestnetOption() +
-                ", \n\tpublicTestnetSpread = " + getPublicTestnetSpread() +
-                ", \n\tprivateTestnet = " + getPrivateTestnet() +
-                ", \n\torderTestnet = " + getOrderTestnet() +
-                ", \n\tpublicSubscribeTopics = " + Arrays.toString(getPublicSubscribeTopics()) +
-                ", \n\tprivateSubscribeTopics = " + Arrays.toString(getPrivateSubscribeTopics()) +
-                ", \n\tconnectTimeoutMs = " + getConnectTimeoutMs() +
-                ", \n\tinitialReconnectIntervalMs = " + getInitialReconnectIntervalMs() +
-                ", \n\tmaxReconnectIntervalMs = " + getMaxReconnectIntervalMs() +
-                ", \n\tmaxReconnectAttempts = " + getMaxReconnectAttempts() +
-                ", \n\tbackoffMultiplier = " + getBackoffMultiplier() +
-                ", \n\tpingIntervalMs = " + getPingIntervalMs() +
-                "\n}";
     }
 }
 

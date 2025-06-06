@@ -42,9 +42,23 @@ public final class BybitDataConfig {
     private final int maxReconnectAttempts;
     private final int maxReconnectIntervalMs;
     private final int pingIntervalMs;
+    private final String announcementLocale;
+    private final String announcementTags;
+    private final String announcementTypes;
 
     public enum Type {
-        WEBSOCKET, REST_API
+        WEBSOCKET("WebSocket"), REST_API("Rest API");
+
+        private final String name;
+
+        Type(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     private BybitDataConfig(final Builder builder) {
@@ -60,6 +74,9 @@ public final class BybitDataConfig {
         this.maxReconnectAttempts = builder.maxReconnectAttempts;
         this.maxReconnectIntervalMs = builder.maxReconnectIntervalMs;
         this.pingIntervalMs = builder.pingIntervalMs;
+        this.announcementLocale = builder.announcementLocale;
+        this.announcementTags = builder.announcementTags;
+        this.announcementTypes = builder.announcementTypes;
     }
 
     public boolean isWebSocket() {
@@ -114,6 +131,18 @@ public final class BybitDataConfig {
         return pingIntervalMs;
     }
 
+    public String getAnnouncementLocale() {
+        return announcementLocale;
+    }
+
+    public String getAnnouncementTags() {
+        return announcementTags;
+    }
+
+    public String getAnnouncementTypes() {
+        return announcementTypes;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -122,8 +151,6 @@ public final class BybitDataConfig {
         return "\nBybit Data Config {" +
                 "\n\ttype=" + type +
                 "\n\tisUseAuth=" + isUseAuth +
-                "\n\tkey='" + key + '\'' +
-                "\n\tsecret='" + secret + '\'' +
                 "\n\turl='" + url + '\'' +
                 "\n\ttopics='" + Arrays.toString(topics) + '\'' +
                 "\n\tbackoffMultiplier=" + backoffMultiplier +
@@ -132,6 +159,9 @@ public final class BybitDataConfig {
                 "\n\tmaxReconnectAttempts=" + maxReconnectAttempts +
                 "\n\tmaxReconnectIntervalMs=" + maxReconnectIntervalMs +
                 "\n\tpingIntervalMs=" + pingIntervalMs +
+                "\n\tannouncementLocale='" + announcementLocale + '\'' +
+                "\n\tannouncementTags='" + announcementTags + '\'' +
+                "\n\tannouncementTypes='" + announcementTypes + '\'' +
                 "\n}";
     }
 
@@ -148,6 +178,9 @@ public final class BybitDataConfig {
         private int maxReconnectAttempts = BybitConfig.getMaxReconnectAttempts();
         private int maxReconnectIntervalMs = BybitConfig.getMaxReconnectIntervalMs();
         private int pingIntervalMs = BybitConfig.getPingIntervalMs();
+        private String announcementLocale = BybitConfig.getAnnouncementLocale();
+        private String announcementTags;
+        private String announcementTypes;
 
         public Builder type(final Type type) {
             this.type = type;
@@ -184,28 +217,43 @@ public final class BybitDataConfig {
             return this;
         }
 
-        public Builder connectTimeoutMs(int connectTimeoutMs) {
+        public Builder connectTimeoutMs(final int connectTimeoutMs) {
             this.connectTimeoutMs = connectTimeoutMs;
             return this;
         }
 
-        public Builder initialReconnectIntervalMs(int initialReconnectIntervalMs) {
+        public Builder initialReconnectIntervalMs(final int initialReconnectIntervalMs) {
             this.initialReconnectIntervalMs = initialReconnectIntervalMs;
             return this;
         }
 
-        public Builder maxReconnectAttempts(int maxReconnectAttempts) {
+        public Builder maxReconnectAttempts(final int maxReconnectAttempts) {
             this.maxReconnectAttempts = maxReconnectAttempts;
             return this;
         }
 
-        public Builder maxReconnectIntervalMs(int maxReconnectIntervalMs) {
+        public Builder maxReconnectIntervalMs(final int maxReconnectIntervalMs) {
             this.maxReconnectIntervalMs = maxReconnectIntervalMs;
             return this;
         }
 
-        public Builder pingIntervalMs(int pingIntervalMs) {
+        public Builder pingIntervalMs(final int pingIntervalMs) {
             this.pingIntervalMs = pingIntervalMs;
+            return this;
+        }
+
+        public Builder announcementLocale(final String announcementLocale) {
+            this.announcementLocale = announcementLocale;
+            return this;
+        }
+
+        public Builder announcementTags(final String announcementTags) {
+            this.announcementTags = announcementTags;
+            return this;
+        }
+
+        public Builder announcementTypes(final String announcementTypes) {
+            this.announcementTypes = announcementTypes;
             return this;
         }
 
