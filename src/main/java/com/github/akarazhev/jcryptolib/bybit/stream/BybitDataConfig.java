@@ -43,8 +43,8 @@ public final class BybitDataConfig {
     private final int maxReconnectIntervalMs;
     private final int pingIntervalMs;
     private final String announcementLocale;
-    private final String announcementTags;
-    private final String announcementTypes;
+    private final String[] announcementTags;
+    private final String[] announcementTypes;
 
     public enum Type {
         WEBSOCKET("WebSocket"), REST_API("Rest API");
@@ -135,11 +135,11 @@ public final class BybitDataConfig {
         return announcementLocale;
     }
 
-    public String getAnnouncementTags() {
+    public String[] getAnnouncementTags() {
         return announcementTags;
     }
 
-    public String getAnnouncementTypes() {
+    public String[] getAnnouncementTypes() {
         return announcementTypes;
     }
 
@@ -160,8 +160,8 @@ public final class BybitDataConfig {
                 "\n\tmaxReconnectIntervalMs=" + maxReconnectIntervalMs +
                 "\n\tpingIntervalMs=" + pingIntervalMs +
                 "\n\tannouncementLocale='" + announcementLocale + '\'' +
-                "\n\tannouncementTags='" + announcementTags + '\'' +
-                "\n\tannouncementTypes='" + announcementTypes + '\'' +
+                "\n\tannouncementTags='" + Arrays.toString(announcementTags) + '\'' +
+                "\n\tannouncementTypes='" + Arrays.toString(announcementTypes) + '\'' +
                 "\n}";
     }
 
@@ -179,8 +179,8 @@ public final class BybitDataConfig {
         private int maxReconnectIntervalMs = BybitConfig.getMaxReconnectIntervalMs();
         private int pingIntervalMs = BybitConfig.getPingIntervalMs();
         private String announcementLocale = BybitConfig.getAnnouncementLocale();
-        private String announcementTags;
-        private String announcementTypes;
+        private String[] announcementTags;
+        private String[] announcementTypes;
 
         public Builder type(final Type type) {
             this.type = type;
@@ -247,12 +247,12 @@ public final class BybitDataConfig {
             return this;
         }
 
-        public Builder announcementTags(final String announcementTags) {
+        public Builder announcementTags(final String[] announcementTags) {
             this.announcementTags = announcementTags;
             return this;
         }
 
-        public Builder announcementTypes(final String announcementTypes) {
+        public Builder announcementTypes(final String[] announcementTypes) {
             this.announcementTypes = announcementTypes;
             return this;
         }

@@ -113,8 +113,9 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         }
     }
 
-    private final class ApiDataFetcher {
+    private static final class ApiDataFetcher {
         private final FlowableEmitter<Map<String, Object>> emitter;
+        private final AtomicReference<Disposable> fetcherRef = new AtomicReference<>();
 
         public ApiDataFetcher(final FlowableEmitter<Map<String, Object>> emitter) {
             this.emitter = emitter;
@@ -122,6 +123,12 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
 
         private void fetch() {
             // todo: implement fetching
+            fetcherRef.set(Flowable.interval(60000, TimeUnit.MILLISECONDS)
+                    .subscribe(_ -> {
+                        if (!emitter.isCancelled()) {
+                            // todo: implement fetching
+                        }
+                    }, t -> LOGGER.error("Fetcher error", t)));
         }
 
         private void cancel() {

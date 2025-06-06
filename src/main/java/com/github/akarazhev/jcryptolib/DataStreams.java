@@ -41,8 +41,8 @@ public final class DataStreams {
         throw new UnsupportedOperationException();
     }
 
-    public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String announcementTags,
-                                                        final String announcementTypes) {
+    public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String[] announcementTags,
+                                                        final String[] announcementTypes) {
         final var config = new BybitDataConfig.Builder()
                 .type(BybitDataConfig.Type.REST_API)
                 .announcementTags(announcementTags)

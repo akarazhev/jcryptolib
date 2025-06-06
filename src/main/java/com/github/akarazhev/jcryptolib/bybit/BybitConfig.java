@@ -34,12 +34,12 @@ public final class BybitConfig {
         return AppConfig.getAsString("bybit.announcement.locale");
     }
 
-    public static String getAnnouncementTags() {
-        return AppConfig.getAsString("bybit.announcement.tags");
+    public static String[] getAnnouncementTags() {
+        return AppConfig.getAsArray("bybit.announcement.tags");
     }
 
-    public static String getAnnouncementTypes() {
-        return AppConfig.getAsString("bybit.announcement.types");
+    public static String[] getAnnouncementTypes() {
+        return AppConfig.getAsArray("bybit.announcement.types");
     }
 
     public static String getPublicTestnetSpot() {
