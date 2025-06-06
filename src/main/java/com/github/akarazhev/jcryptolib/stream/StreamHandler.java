@@ -28,7 +28,7 @@ import java.util.Map;
 
 public interface StreamHandler {
 
-    void handle(final String topic, final Map<String, Object> data);
+    void handle(final Map<String, Object> data);
 
     void close();
 

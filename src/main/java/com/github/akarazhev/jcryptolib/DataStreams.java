@@ -24,6 +24,7 @@
 
 package com.github.akarazhev.jcryptolib;
 
+import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
 import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataConfig;
 import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataStream;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -45,6 +46,7 @@ public final class DataStreams {
                                                         final String[] announcementTypes) {
         final var config = new BybitDataConfig.Builder()
                 .type(BybitDataConfig.Type.REST_API)
+                .url(BybitConfig.getAnnouncementUrl())
                 .announcementTags(announcementTags)
                 .announcementTypes(announcementTypes)
                 .build();

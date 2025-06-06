@@ -34,9 +34,13 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -113,7 +117,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         }
     }
 
-    private static final class ApiDataFetcher {
+    private final class ApiDataFetcher {
         private final FlowableEmitter<Map<String, Object>> emitter;
         private final AtomicReference<Disposable> fetcherRef = new AtomicReference<>();
 
@@ -122,17 +126,83 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         }
 
         private void fetch() {
-            // todo: implement fetching
-            fetcherRef.set(Flowable.interval(60000, TimeUnit.MILLISECONDS)
-                    .subscribe(_ -> {
-                        if (!emitter.isCancelled()) {
-                            // todo: implement fetching
+            fetcherRef.set(Flowable.interval(0, 1, TimeUnit.HOURS) // todo: make period configurable
+                    .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
+        }
+
+        private void fetchData() {
+            fetchByParam("type", config.getAnnouncementTypes());
+            fetchByParam("tag", config.getAnnouncementTags());
+        }
+
+        private void fetchByParam(final String param, final String[] arguments) {
+            if (!emitter.isCancelled()) {
+                Arrays.stream(arguments).forEach(arg -> {
+                    if (!arg.isEmpty()) {
+                        var page = 1;
+                        var limit = 1000;
+                        var isMoreAvailable = true;
+                        while (isMoreAvailable && !emitter.isCancelled()) {
+                            try {
+                                final var request = createRequest(getUri(param, arg, page, limit));
+                                var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                                if (response.statusCode() == 200) {
+                                    var data = getResult(response.body());
+                                    if (data == null || data.isEmpty()) {
+                                        isMoreAvailable = false;
+                                    } else {
+                                        data.forEach(emitter::onNext);
+                                        if (data.size() < limit) {
+                                            isMoreAvailable = false;
+                                        } else {
+                                            page++;
+                                        }
+                                    }
+                                } else {
+                                    LOGGER.error("Failed to fetch data: HTTP {}", response.statusCode());
+                                    isMoreAvailable = false;
+                                }
+                            } catch (final Exception e) {
+                                emitter.onError(e);
+                                isMoreAvailable = false;
+                            }
                         }
-                    }, t -> LOGGER.error("Fetcher error", t)));
+                    }
+                });
+            }
+        }
+
+        private URI getUri(final String param, final String arg, final int page, final int limit) {
+            return URI.create(config.getUrl() + "?locale=" + config.getAnnouncementLocale() + "&" + param + "=" + arg +
+                    "&page=" + page + "&limit=" + limit);
+        }
+
+        private HttpRequest createRequest(final URI uri) {
+            return HttpRequest.newBuilder()
+                    .uri(uri)
+                    .timeout(Duration.ofMillis(config.getConnectTimeoutMs()))
+                    .GET()
+                    .build();
+        }
+
+        @SuppressWarnings("unchecked")
+        private List<Map<String, Object>> getResult(final String json) {
+            var map = JsonUtils.jsonToMap(json);
+            if (map.get("retCode").equals(0) && map.get("retMsg").equals("OK")) {
+                return (List<Map<String, Object>>) ((Map<String, Object>) map.get("result")).get("list");
+            }
+
+            return List.of();
         }
 
         private void cancel() {
-            // todo: implement cancellation
+            if (emitter.isCancelled()) {
+                final var fetcher = fetcherRef.getAndSet(null);
+                if (fetcher != null && !fetcher.isDisposed()) {
+                    LOGGER.debug("Stopping fetcher");
+                    fetcher.dispose();
+                }
+            }
         }
     }
 
@@ -276,7 +346,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                 try {
                     final var apiKey = Objects.requireNonNull(config.getKey(), "API key is null");
                     final var secret = Objects.requireNonNull(config.getSecret(), "Secret is null");
-                    webSocket.sendText(Requests.ofAuth(apiKey, 10000, secret), true); // todo: 10000
+                    webSocket.sendText(Requests.ofAuth(apiKey, 10000, secret), true); // todo: make expires configurable
                 } catch (final Exception e) {
                     LOGGER.error("Exception during auth: {}", e.getMessage());
                     closeWebSocket();

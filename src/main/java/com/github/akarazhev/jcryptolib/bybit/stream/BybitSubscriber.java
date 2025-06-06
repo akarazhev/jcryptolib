@@ -24,7 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConstants;
 import com.github.akarazhev.jcryptolib.stream.StreamHandler;
 import com.github.akarazhev.jcryptolib.stream.Subscriber;
 import io.reactivex.rxjava3.functions.Action;
@@ -50,8 +49,7 @@ public final class BybitSubscriber implements Subscriber {
     @Override
     public Consumer<Map<String, Object>> onNext() {
         return data -> {
-            final String topic = String.join(".", STREAM_TOPIC_PREFIX, data.get(BybitConstants.TOPIC_FIELD).toString());
-            handler.handle(topic, data);
+            handler.handle(data);
             LOGGER.debug("Received message: {}", data);
         };
     }

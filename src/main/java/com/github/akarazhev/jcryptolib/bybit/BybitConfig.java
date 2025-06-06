@@ -30,6 +30,11 @@ public final class BybitConfig {
     private BybitConfig() {
         throw new UnsupportedOperationException();
     }
+
+    public static String getAnnouncementUrl() {
+        return AppConfig.getAsString("bybit.announcement.url");
+    }
+
     public static String getAnnouncementLocale() {
         return AppConfig.getAsString("bybit.announcement.locale");
     }
