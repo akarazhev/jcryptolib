@@ -27,8 +27,10 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public final class BybitDataConfig {
+    private final Type type;
     private final boolean isUseAuth;
     private final String key;
     private final String secret;
@@ -41,7 +43,12 @@ public final class BybitDataConfig {
     private final int maxReconnectIntervalMs;
     private final int pingIntervalMs;
 
+    public enum Type {
+        WEBSOCKET, REST_API
+    }
+
     private BybitDataConfig(final Builder builder) {
+        this.type = Objects.requireNonNull(builder.type, "Type is null");
         this.isUseAuth = builder.isUseAuth;
         this.key = builder.key;
         this.secret = builder.secret;
@@ -55,6 +62,14 @@ public final class BybitDataConfig {
         this.pingIntervalMs = builder.pingIntervalMs;
     }
 
+    public boolean isWebSocket() {
+        return Type.WEBSOCKET == type;
+    }
+
+    public boolean isRestApi() {
+        return Type.REST_API == type;
+    }
+
     public boolean isUseAuth() {
         return isUseAuth;
     }
@@ -62,12 +77,15 @@ public final class BybitDataConfig {
     public String getKey() {
         return key;
     }
+
     public String getSecret() {
         return secret;
     }
+
     public String getUrl() {
         return url;
     }
+
     public String[] getTopics() {
         return topics;
     }
@@ -102,6 +120,7 @@ public final class BybitDataConfig {
 
     public String print() {
         return "\nBybit Data Config {" +
+                "\n\ttype=" + type +
                 "\n\tisUseAuth=" + isUseAuth +
                 "\n\tkey='" + key + '\'' +
                 "\n\tsecret='" + secret + '\'' +
@@ -117,6 +136,7 @@ public final class BybitDataConfig {
     }
 
     public static final class Builder {
+        private Type type;
         private boolean isUseAuth;
         private String key;
         private String secret;
@@ -129,6 +149,11 @@ public final class BybitDataConfig {
         private int maxReconnectIntervalMs = BybitConfig.getMaxReconnectIntervalMs();
         private int pingIntervalMs = BybitConfig.getPingIntervalMs();
 
+        public Builder type(final Type type) {
+            this.type = type;
+            return this;
+        }
+
         public Builder isUseAuth(final boolean isUseAuth) {
             this.isUseAuth = isUseAuth;
             return this;
@@ -138,14 +163,17 @@ public final class BybitDataConfig {
             this.key = key;
             return this;
         }
+
         public Builder secret(final String secret) {
             this.secret = secret;
             return this;
         }
+
         public Builder url(final String url) {
             this.url = url;
             return this;
         }
+
         public Builder topics(final String[] topics) {
             this.topics = topics;
             return this;

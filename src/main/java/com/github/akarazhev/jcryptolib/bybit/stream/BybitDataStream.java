@@ -100,9 +100,33 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
      */
     @Override
     public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
-        final var listener = new WebSocketStreamListener(emitter);
-        emitter.setCancellable(listener::cancel);
-        listener.connect();
+        if (config.isWebSocket()) {
+            final var listener = new WebSocketStreamListener(emitter);
+            emitter.setCancellable(listener::cancel);
+            listener.connect();
+        } else if (config.isRestApi()) {
+            final var fetcher = new ApiDataFetcher(emitter);
+            emitter.setCancellable(fetcher::cancel);
+            fetcher.fetch();
+        } else {
+            throw new IllegalArgumentException("Unsupported data stream type");
+        }
+    }
+
+    private final class ApiDataFetcher {
+        private final FlowableEmitter<Map<String, Object>> emitter;
+
+        public ApiDataFetcher(final FlowableEmitter<Map<String, Object>> emitter) {
+            this.emitter = emitter;
+        }
+
+        private void fetch() {
+            // todo: implement fetching
+        }
+
+        private void cancel() {
+            // todo: implement cancellation
+        }
     }
 
     private final class WebSocketStreamListener implements Listener {
