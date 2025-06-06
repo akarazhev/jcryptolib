@@ -58,6 +58,7 @@ final class BybitDataStreamTest {
     @Test
     void testBasicDataStreamingAndCleanup() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
@@ -80,6 +81,7 @@ final class BybitDataStreamTest {
     @Test
     void testReconnectionOnSocketDrop() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
@@ -104,13 +106,14 @@ final class BybitDataStreamTest {
     void testMultipleConcurrentStreams() {
         final var streamCount = 10;
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
         final var subscribers = new ArrayList<TestSubscriber<Map<String, Object>>>(streamCount);
         for (var i = 0; i < streamCount; i++) {
             final var stream = BybitDataStream.create(client, config);
-            subscribers.set(i, new TestSubscriber<>());
+            subscribers.add(i, new TestSubscriber<>());
             Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(subscribers.get(i));
         }
 
@@ -127,6 +130,7 @@ final class BybitDataStreamTest {
     @Test
     void testRapidConnectDisconnect() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();

@@ -60,6 +60,7 @@ final class BybitPublicSpreadDataStreamTest {
     @Test
     public void shouldReceiveOrderBookDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpread())
                 .topics(getPublicOrderBook25SolUsdt())
                 .build();
@@ -85,6 +86,7 @@ final class BybitPublicSpreadDataStreamTest {
     @Test
     public void shouldReceiveTradeDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpread())
                 .topics(getPublicTradeSolUsdt())
                 .build();
@@ -110,6 +112,7 @@ final class BybitPublicSpreadDataStreamTest {
     @Test
     public void shouldReceiveTickerDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpread())
                 .topics(getPublicTickersSolUsdt())
                 .build();

@@ -63,6 +63,7 @@ final class BybitPublicLinearDataStreamTest {
     @Test
     public void shouldReceiveOrderBookDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetLinear())
                 .topics(getPublicOrderBook1BtcUsdt())
                 .build();
@@ -88,6 +89,7 @@ final class BybitPublicLinearDataStreamTest {
     @Test
     public void shouldReceiveTradeDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetLinear())
                 .topics(getPublicTradeBtcUsdt())
                 .build();
@@ -113,6 +115,7 @@ final class BybitPublicLinearDataStreamTest {
     @Test
     public void shouldReceiveTickerDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetLinear())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
@@ -138,6 +141,7 @@ final class BybitPublicLinearDataStreamTest {
     @Test
     public void shouldReceiveKlineDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetLinear())
                 .topics(getPublicKlineBtcUsdt())
                 .build();
@@ -163,6 +167,7 @@ final class BybitPublicLinearDataStreamTest {
     @Test
     public void shouldReceiveAllLiquidationDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetLinear())
                 .topics(getPublicAllLiquidationBtcUsdt())
                 .build();
@@ -189,6 +194,7 @@ final class BybitPublicLinearDataStreamTest {
     @Test
     public void shouldReceiveInsurancePoolDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetLinear())
                 .topics(getPublicInsurancePoolUsdt())
                 .build();

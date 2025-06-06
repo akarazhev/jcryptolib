@@ -60,6 +60,8 @@ final class BybitPrivateDataStreamTest {
     @Test
     public void shouldReceiveOrderDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
+                .isUseAuth(true)
                 .key(getApiKey())
                 .secret(getApiSecret())
                 .url(getPrivateTestnet())

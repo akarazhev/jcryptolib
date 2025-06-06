@@ -64,6 +64,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveOrderBookDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicOrderBook1BtcUsdt())
                 .build();
@@ -89,6 +90,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveTradeDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTradeBtcUsdt())
                 .build();
@@ -114,6 +116,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveTickerDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
@@ -139,6 +142,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveKlineDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicKlineBtcUsdt())
                 .build();
@@ -164,6 +168,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveLTKlineDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicKlineLt5Eos3lUsdt())
                 .build();
@@ -189,6 +194,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveLTTickerDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersLtEos3lUsdt())
                 .build();
@@ -214,6 +220,7 @@ final class BybitPublicSpotDataStreamTest {
     @Test
     public void shouldReceiveLTNavDataStream() {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicLtEos3lUsdt())
                 .build();

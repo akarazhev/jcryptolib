@@ -43,6 +43,7 @@ public final class DataStreams {
 
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String url, final String[] topics) {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(url)
                 .topics(topics)
                 .build();
@@ -54,6 +55,7 @@ public final class DataStreams {
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String key, final String secret,
                                                         final String url, final String[] topics) {
         final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.WEBSOCKET)
                 .isUseAuth(true)
                 .key(key)
                 .secret(secret)
