@@ -126,7 +126,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         }
 
         private void fetch() {
-            fetcherRef.set(Flowable.interval(0, 1, TimeUnit.HOURS) // todo: make period configurable
+            fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS)
                     .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
         }
 

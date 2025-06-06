@@ -42,6 +42,7 @@ public final class BybitDataConfig {
     private final int maxReconnectAttempts;
     private final int maxReconnectIntervalMs;
     private final int pingIntervalMs;
+    private final int fetchIntervalMs;
     private final String announcementLocale;
     private final String[] announcementTags;
     private final String[] announcementTypes;
@@ -74,6 +75,7 @@ public final class BybitDataConfig {
         this.maxReconnectAttempts = builder.maxReconnectAttempts;
         this.maxReconnectIntervalMs = builder.maxReconnectIntervalMs;
         this.pingIntervalMs = builder.pingIntervalMs;
+        this.fetchIntervalMs = builder.fetchIntervalMs;
         this.announcementLocale = builder.announcementLocale;
         this.announcementTags = builder.announcementTags;
         this.announcementTypes = builder.announcementTypes;
@@ -131,6 +133,10 @@ public final class BybitDataConfig {
         return pingIntervalMs;
     }
 
+    public int getFetchIntervalMs() {
+        return fetchIntervalMs;
+    }
+
     public String getAnnouncementLocale() {
         return announcementLocale;
     }
@@ -159,6 +165,7 @@ public final class BybitDataConfig {
                 "\n\tmaxReconnectAttempts=" + maxReconnectAttempts +
                 "\n\tmaxReconnectIntervalMs=" + maxReconnectIntervalMs +
                 "\n\tpingIntervalMs=" + pingIntervalMs +
+                "\n\tfetchIntervalMs=" + fetchIntervalMs +
                 "\n\tannouncementLocale='" + announcementLocale + '\'' +
                 "\n\tannouncementTags='" + Arrays.toString(announcementTags) + '\'' +
                 "\n\tannouncementTypes='" + Arrays.toString(announcementTypes) + '\'' +
@@ -178,6 +185,7 @@ public final class BybitDataConfig {
         private int maxReconnectAttempts = BybitConfig.getMaxReconnectAttempts();
         private int maxReconnectIntervalMs = BybitConfig.getMaxReconnectIntervalMs();
         private int pingIntervalMs = BybitConfig.getPingIntervalMs();
+        private int fetchIntervalMs = BybitConfig.getFetchIntervalMs();
         private String announcementLocale = BybitConfig.getAnnouncementLocale();
         private String[] announcementTags;
         private String[] announcementTypes;
@@ -239,6 +247,11 @@ public final class BybitDataConfig {
 
         public Builder pingIntervalMs(final int pingIntervalMs) {
             this.pingIntervalMs = pingIntervalMs;
+            return this;
+        }
+
+        public Builder fetchIntervalMs(final int fetchIntervalMs) {
+            this.fetchIntervalMs = fetchIntervalMs;
             return this;
         }
 

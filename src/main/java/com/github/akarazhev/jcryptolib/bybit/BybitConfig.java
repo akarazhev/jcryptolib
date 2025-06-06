@@ -107,6 +107,10 @@ public final class BybitConfig {
         return AppConfig.getAsInt("bybit.ping.interval.ms");
     }
 
+    public static int getFetchIntervalMs() {
+        return AppConfig.getAsInt("bybit.fetch.interval.ms");
+    }
+
     public static String getApiKey() {
         return AppConfig.getAsString("bybit.api.key");
     }
