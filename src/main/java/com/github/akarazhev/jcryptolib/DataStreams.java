@@ -54,6 +54,7 @@ public final class DataStreams {
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String key, final String secret,
                                                         final String url, final String[] topics) {
         final var config = new BybitDataConfig.Builder()
+                .isUseAuth(true)
                 .key(key)
                 .secret(secret)
                 .url(url)

@@ -29,6 +29,7 @@ import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
 import java.util.Arrays;
 
 public final class BybitDataConfig {
+    private final boolean isUseAuth;
     private final String key;
     private final String secret;
     private final String url;
@@ -41,6 +42,7 @@ public final class BybitDataConfig {
     private final int pingIntervalMs;
 
     private BybitDataConfig(final Builder builder) {
+        this.isUseAuth = builder.isUseAuth;
         this.key = builder.key;
         this.secret = builder.secret;
         this.url = builder.url;
@@ -51,6 +53,10 @@ public final class BybitDataConfig {
         this.maxReconnectAttempts = builder.maxReconnectAttempts;
         this.maxReconnectIntervalMs = builder.maxReconnectIntervalMs;
         this.pingIntervalMs = builder.pingIntervalMs;
+    }
+
+    public boolean isUseAuth() {
+        return isUseAuth;
     }
 
     public String getKey() {
@@ -96,6 +102,7 @@ public final class BybitDataConfig {
 
     public String print() {
         return "\nBybit Data Config {" +
+                "\n\tisUseAuth=" + isUseAuth +
                 "\n\tkey='" + key + '\'' +
                 "\n\tsecret='" + secret + '\'' +
                 "\n\turl='" + url + '\'' +
@@ -110,6 +117,7 @@ public final class BybitDataConfig {
     }
 
     public static final class Builder {
+        private boolean isUseAuth;
         private String key;
         private String secret;
         private String url;
@@ -120,6 +128,11 @@ public final class BybitDataConfig {
         private int maxReconnectAttempts = BybitConfig.getMaxReconnectAttempts();
         private int maxReconnectIntervalMs = BybitConfig.getMaxReconnectIntervalMs();
         private int pingIntervalMs = BybitConfig.getPingIntervalMs();
+
+        public Builder isUseAuth(final boolean isUseAuth) {
+            this.isUseAuth = isUseAuth;
+            return this;
+        }
 
         public Builder key(final String key) {
             this.key = key;

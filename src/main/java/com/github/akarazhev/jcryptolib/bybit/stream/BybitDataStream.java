@@ -38,6 +38,7 @@ import java.net.http.WebSocket;
 import java.net.http.WebSocket.Listener;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
@@ -99,12 +100,12 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
      */
     @Override
     public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
-        final var listener = new BybitDataStreamListener(emitter);
+        final var listener = new WebSocketStreamListener(emitter);
         emitter.setCancellable(listener::cancel);
         listener.connect();
     }
 
-    private final class BybitDataStreamListener implements Listener {
+    private final class WebSocketStreamListener implements Listener {
         private final FlowableEmitter<Map<String, Object>> emitter;
         private final StringBuilder buffer = new StringBuilder();
         private final AtomicBoolean isConnecting = new AtomicBoolean(false);
@@ -113,7 +114,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
         private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
-        public BybitDataStreamListener(final FlowableEmitter<Map<String, Object>> emitter) {
+        public WebSocketStreamListener(final FlowableEmitter<Map<String, Object>> emitter) {
             this.emitter = emitter;
         }
 
@@ -240,9 +241,11 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
          * @param webSocket the WebSocket instance
          */
         private void doAuth(final WebSocket webSocket) {
-            if (config.getKey() != null && config.getSecret() != null) {
+            if (config.isUseAuth()) {
                 try {
-                    webSocket.sendText(Requests.ofAuth(config.getKey(), 10000, config.getSecret()), true); // todo: 10000
+                    final var apiKey = Objects.requireNonNull(config.getKey(), "API key is null");
+                    final var secret = Objects.requireNonNull(config.getSecret(), "Secret is null");
+                    webSocket.sendText(Requests.ofAuth(apiKey, 10000, secret), true); // todo: 10000
                 } catch (final Exception e) {
                     LOGGER.error("Exception during auth: {}", e.getMessage());
                     closeWebSocket();
