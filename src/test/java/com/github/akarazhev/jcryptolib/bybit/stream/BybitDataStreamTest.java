@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getAnnouncementTags;
+import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getAnnouncementUrl;
 import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,11 +58,34 @@ final class BybitDataStreamTest {
     }
 
     @Test
-    void testBasicDataStreamingAndCleanup() {
+    void testBasicWebSocketDataStreamingAndCleanup() {
         final var config = new BybitDataConfig.Builder()
                 .type(BybitDataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
+                .build();
+        final var stream = BybitDataStream.create(client, config);
+        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+    }
+
+    @Test
+    void testBasicRestApiDataStreamingAndCleanup() {
+        final var config = new BybitDataConfig.Builder()
+                .type(BybitDataConfig.Type.REST_API)
+                .url(getAnnouncementUrl())
+                .announcementTags(getAnnouncementTags())
                 .build();
         final var stream = BybitDataStream.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();

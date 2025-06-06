@@ -136,7 +136,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
         }
 
         private void fetchByParam(final String param, final String[] arguments) {
-            if (!emitter.isCancelled()) {
+            if (!emitter.isCancelled() && arguments != null) {
                 Arrays.stream(arguments).forEach(arg -> {
                     if (!arg.isEmpty()) {
                         var page = 1;
@@ -147,12 +147,15 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                                 final var request = createRequest(getUri(param, arg, page, limit));
                                 var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                                 if (response.statusCode() == 200) {
-                                    var data = getResult(response.body());
-                                    if (data == null || data.isEmpty()) {
+                                    var result = getResult(response.body());
+                                    if (result == null || result.isEmpty()) {
                                         isMoreAvailable = false;
                                     } else {
-                                        data.forEach(emitter::onNext);
-                                        if (data.size() < limit) {
+                                        result.forEach(value -> {
+                                            LOGGER.debug("Fetched message: {}", value);
+                                            emitter.onNext(value);
+                                        });
+                                        if (result.size() < limit) {
                                             isMoreAvailable = false;
                                         } else {
                                             page++;
@@ -163,6 +166,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
                                     isMoreAvailable = false;
                                 }
                             } catch (final Exception e) {
+                                LOGGER.error("Failed to fetch data", e);
                                 emitter.onError(e);
                                 isMoreAvailable = false;
                             }
