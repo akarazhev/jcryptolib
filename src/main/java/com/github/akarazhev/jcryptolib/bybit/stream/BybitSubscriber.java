@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.stream.StreamHandler;
+import com.github.akarazhev.jcryptolib.stream.DataHandler;
 import com.github.akarazhev.jcryptolib.stream.Subscriber;
 import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -36,13 +36,13 @@ import java.util.Map;
 public final class BybitSubscriber implements Subscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitSubscriber.class);
     private static final String STREAM_TOPIC_PREFIX = "bybit";
-    private final StreamHandler handler;
+    private final DataHandler handler;
 
-    private BybitSubscriber(final StreamHandler handler) {
+    private BybitSubscriber(final DataHandler handler) {
         this.handler = handler;
     }
 
-    public static BybitSubscriber create(final StreamHandler handler) {
+    public static BybitSubscriber create(final DataHandler handler) {
         return new BybitSubscriber(handler);
     }
 

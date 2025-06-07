@@ -26,7 +26,7 @@ package com.github.akarazhev.jcryptolib.stream;
 
 import java.util.Map;
 
-public interface StreamHandler {
+public interface DataHandler {
 
     void handle(final Map<String, Object> data);
 
