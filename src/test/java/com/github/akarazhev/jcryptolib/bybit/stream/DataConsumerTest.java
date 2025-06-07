@@ -128,7 +128,7 @@ final class DataConsumerTest {
     }
 
     @Test
-    void testMultipleConcurrentStreams() {
+    void testMultipleConcurrentConsumers() {
         final var consumerCount = 10;
         final var config = new DataConfig.Builder()
                 .type(DataConfig.Type.WEBSOCKET)

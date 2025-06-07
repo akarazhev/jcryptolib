@@ -35,7 +35,6 @@ import java.util.Map;
 
 public final class BybitSubscriber implements Subscriber {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitSubscriber.class);
-    private static final String STREAM_TOPIC_PREFIX = "bybit";
     private final DataHandler handler;
 
     private BybitSubscriber(final DataHandler handler) {
