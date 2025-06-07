@@ -41,11 +41,18 @@ Add the dependency to your Maven project:
 
 ## Usage
 
-### Example: Subscribing to Bybit Data Stream
+### Example: Subscribing to Data Consumer
 
 ```java
-BybitDataStream dataStream = new BybitDataStream(new BybitConfig(...));
-dataStream.subscribe(...); // Implement your logic here
+final var config = new DataConfig.Builder()
+        .type(DataConfig.Type.WEBSOCKET)
+        .isUseAuth(true)
+        .key(key)
+        .secret(secret)
+        .url(url)
+        .topics(topics)
+        .build();
+return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e), BackpressureStrategy.BUFFER);
 ```
 
 ### Configuration
@@ -79,6 +86,7 @@ src/
       module-info.java
       com/github/akarazhev/jcryptolib/
         bybit/
+          stream/
         config/
         stream/
         util/
@@ -90,6 +98,8 @@ src/
     java/
       com/github/akarazhev/jcryptolib/
         bybit/
+          stream/
+        util/  
 ```
 
 ---
