@@ -53,7 +53,15 @@ public final class JsonUtils {
     public static String objectToJson(final Object object) {
         try {
             return WRITER.writeValueAsString(object);
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String mapToJson(final Map<String, Object> map) {
+        try {
+            return WRITER.writeValueAsString(map);
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -61,7 +69,7 @@ public final class JsonUtils {
     public static Map<String, Object> jsonToMap(final String json) {
         try {
             return READER.forType(Map.class).readValue(json);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -69,7 +77,7 @@ public final class JsonUtils {
     public static <T> byte[] objectToBytes(final T object) {
         try {
             return WRITER.writeValueAsBytes(object);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
