@@ -62,11 +62,16 @@ final class DataConsumerListener implements WebSocket.Listener {
     private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
     private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
-    public DataConsumerListener(final HttpClient client, final DataConfig config,
+    public static DataConsumerListener create(final HttpClient client, final DataConfig config,
+                                             final FlowableEmitter<Map<String, Object>> emitter) {
+        return new DataConsumerListener(client, config, emitter);
+    }
+
+    private DataConsumerListener(final HttpClient client, final DataConfig config,
                                 final FlowableEmitter<Map<String, Object>> emitter) {
-        this.client = client;
-        this.config = config;
-        this.emitter = emitter;
+        this.client = Objects.requireNonNull(client, "Client must be not null");
+        this.config = Objects.requireNonNull(config, "Config must be not null");
+        this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
     }
 
     /**

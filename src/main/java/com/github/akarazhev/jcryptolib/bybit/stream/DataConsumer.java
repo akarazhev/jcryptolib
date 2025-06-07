@@ -78,11 +78,11 @@ public final class DataConsumer implements FlowableOnSubscribe<Map<String, Objec
     @Override
     public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
         if (config.isWebSocket()) {
-            final var listener = new DataConsumerListener(client, config, emitter);
+            final var listener = DataConsumerListener.create(client, config, emitter);
             emitter.setCancellable(listener::cancel);
             listener.connect();
         } else if (config.isRestApi()) {
-            final var fetcher = new ApiDataFetcher(client, config, emitter);
+            final var fetcher = ApiDataFetcher.create(client, config, emitter);
             emitter.setCancellable(fetcher::cancel);
             fetcher.fetch();
         } else {

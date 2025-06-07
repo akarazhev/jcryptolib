@@ -39,6 +39,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -49,11 +50,16 @@ final class ApiDataFetcher {
     private final DataConfig config;
     private final FlowableEmitter<Map<String, Object>> emitter;
 
-    public ApiDataFetcher(final HttpClient client, final DataConfig config,
+    public static ApiDataFetcher create(final HttpClient client, final DataConfig config,
+                                        final FlowableEmitter<Map<String, Object>> emitter) {
+        return new ApiDataFetcher(client, config, emitter);
+    }
+
+    private ApiDataFetcher(final HttpClient client, final DataConfig config,
                           final FlowableEmitter<Map<String, Object>> emitter) {
-        this.client = client;
-        this.config = config;
-        this.emitter = emitter;
+        this.client = Objects.requireNonNull(client, "Client must be not null");
+        this.config = Objects.requireNonNull(config, "Config must be not null");
+        this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
     }
 
     public void fetch() {
