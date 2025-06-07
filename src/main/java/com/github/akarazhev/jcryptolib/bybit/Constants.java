@@ -24,8 +24,8 @@
 
 package com.github.akarazhev.jcryptolib.bybit;
 
-public final class BybitConstants {
-    private BybitConstants() {
+public final class Constants {
+    private Constants() {
         throw new UnsupportedOperationException();
     }
 

@@ -24,12 +24,12 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
+import com.github.akarazhev.jcryptolib.bybit.Config;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class BybitDataConfig {
+public final class DataConfig {
     private final Type type;
     private final boolean isUseAuth;
     private final String key;
@@ -62,7 +62,7 @@ public final class BybitDataConfig {
         }
     }
 
-    private BybitDataConfig(final Builder builder) {
+    private DataConfig(final Builder builder) {
         this.type = Objects.requireNonNull(builder.type, "Type is null");
         this.isUseAuth = builder.isUseAuth;
         this.key = builder.key;
@@ -179,14 +179,14 @@ public final class BybitDataConfig {
         private String secret;
         private String url;
         private String[] topics;
-        private float backoffMultiplier = BybitConfig.getBackoffMultiplier();
-        private int connectTimeoutMs = BybitConfig.getConnectTimeoutMs();
-        private int initialReconnectIntervalMs = BybitConfig.getInitialReconnectIntervalMs();
-        private int maxReconnectAttempts = BybitConfig.getMaxReconnectAttempts();
-        private int maxReconnectIntervalMs = BybitConfig.getMaxReconnectIntervalMs();
-        private int pingIntervalMs = BybitConfig.getPingIntervalMs();
-        private int fetchIntervalMs = BybitConfig.getFetchIntervalMs();
-        private String announcementLocale = BybitConfig.getAnnouncementLocale();
+        private float backoffMultiplier = Config.getBackoffMultiplier();
+        private int connectTimeoutMs = Config.getConnectTimeoutMs();
+        private int initialReconnectIntervalMs = Config.getInitialReconnectIntervalMs();
+        private int maxReconnectAttempts = Config.getMaxReconnectAttempts();
+        private int maxReconnectIntervalMs = Config.getMaxReconnectIntervalMs();
+        private int pingIntervalMs = Config.getPingIntervalMs();
+        private int fetchIntervalMs = Config.getFetchIntervalMs();
+        private String announcementLocale = Config.getAnnouncementLocale();
         private String[] announcementTags;
         private String[] announcementTypes;
 
@@ -270,8 +270,8 @@ public final class BybitDataConfig {
             return this;
         }
 
-        public BybitDataConfig build() {
-            return new BybitDataConfig(this);
+        public DataConfig build() {
+            return new DataConfig(this);
         }
     }
 }

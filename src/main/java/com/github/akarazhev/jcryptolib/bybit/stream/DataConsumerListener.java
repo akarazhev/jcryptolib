@@ -50,10 +50,10 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isPong;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSubscription;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Responses.isSuccess;
 
-final class WebSocketStreamListener implements WebSocket.Listener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketStreamListener.class);
+final class DataConsumerListener implements WebSocket.Listener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataConsumerListener.class);
     private final HttpClient client;
-    private final BybitDataConfig config;
+    private final DataConfig config;
     private final FlowableEmitter<Map<String, Object>> emitter;
     private final StringBuilder buffer = new StringBuilder();
     private final AtomicBoolean isConnecting = new AtomicBoolean(false);
@@ -62,8 +62,8 @@ final class WebSocketStreamListener implements WebSocket.Listener {
     private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
     private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
-    public WebSocketStreamListener(final HttpClient client, final BybitDataConfig config,
-                                   final FlowableEmitter<Map<String, Object>> emitter) {
+    public DataConsumerListener(final HttpClient client, final DataConfig config,
+                                final FlowableEmitter<Map<String, Object>> emitter) {
         this.client = client;
         this.config = config;
         this.emitter = emitter;
@@ -264,9 +264,9 @@ final class WebSocketStreamListener implements WebSocket.Listener {
     }
 
     /**
-     * Cancels the data stream.
+     * Cancels the data consumer.
      * <p>
-     * This method is called by the emitter when it is cancelled. It releases the data stream resources by stopping the
+     * This method is called by the emitter when it is cancelled. It releases the data consumer resources by stopping the
      * current ping operation and closing the WebSocket.
      */
     public void cancel() {

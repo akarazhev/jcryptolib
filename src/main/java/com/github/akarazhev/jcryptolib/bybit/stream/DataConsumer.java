@@ -31,23 +31,23 @@ import java.net.http.HttpClient;
 import java.util.Map;
 
 /**
- * Bybit data stream.
+ * Bybit data consumer.
  * <p>
  * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
  * connection, reconnection with exponential backoff, ping/pong, and resource
  * cleanup.
  */
-public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Object>> {
+public final class DataConsumer implements FlowableOnSubscribe<Map<String, Object>> {
     private final HttpClient client;
-    private final BybitDataConfig config;
+    private final DataConfig config;
 
-    private BybitDataStream(final HttpClient client, final BybitDataConfig config) {
+    private DataConsumer(final HttpClient client, final DataConfig config) {
         this.client = client;
         this.config = config;
     }
 
     /**
-     * Creates a new Bybit data stream.
+     * Creates a new Bybit data consumer.
      * <p>
      * Connects to Bybit WebSocket endpoint, subscribes to topics, and handles
      * connection, reconnection with exponential backoff, ping/pong, and resource
@@ -56,11 +56,11 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
      * When {@link FlowableEmitter#isCancelled()} is true, the subscription is cancelled.
      *
      * @param client HttpClient to use
-     * @param config Bybit data stream configuration
-     * @return Bybit data stream instance
+     * @param config Bybit data consumer configuration
+     * @return Bybit data consumer instance
      */
-    public static BybitDataStream create(final HttpClient client, final BybitDataConfig config) {
-        return new BybitDataStream(client, config);
+    public static DataConsumer create(final HttpClient client, final DataConfig config) {
+        return new DataConsumer(client, config);
     }
 
     /**
@@ -78,7 +78,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
     @Override
     public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
         if (config.isWebSocket()) {
-            final var listener = new WebSocketStreamListener(client, config, emitter);
+            final var listener = new DataConsumerListener(client, config, emitter);
             emitter.setCancellable(listener::cancel);
             listener.connect();
         } else if (config.isRestApi()) {
@@ -86,7 +86,7 @@ public final class BybitDataStream implements FlowableOnSubscribe<Map<String, Ob
             emitter.setCancellable(fetcher::cancel);
             fetcher.fetch();
         } else {
-            throw new IllegalArgumentException("Unsupported data stream type");
+            throw new IllegalArgumentException("Unsupported data config type");
         }
     }
 }

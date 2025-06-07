@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConstants;
+import com.github.akarazhev.jcryptolib.bybit.Constants;
 import com.github.akarazhev.jcryptolib.stream.Filter;
 import io.reactivex.rxjava3.functions.Predicate;
 
@@ -41,6 +41,6 @@ public final class BybitFilter implements Filter {
 
     @Override
     public Predicate<Map<String, Object>> filter() {
-        return o -> o.containsKey(BybitConstants.TOPIC_FIELD);
+        return o -> o.containsKey(Constants.TOPIC_FIELD);
     }
 }

@@ -24,9 +24,9 @@
 
 package com.github.akarazhev.jcryptolib;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConfig;
-import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataConfig;
-import com.github.akarazhev.jcryptolib.bybit.stream.BybitDataStream;
+import com.github.akarazhev.jcryptolib.bybit.Config;
+import com.github.akarazhev.jcryptolib.bybit.stream.DataConfig;
+import com.github.akarazhev.jcryptolib.bybit.stream.DataConsumer;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import org.slf4j.Logger;
@@ -44,32 +44,32 @@ public final class DataStreams {
 
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String[] announcementTags,
                                                         final String[] announcementTypes) {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.REST_API)
-                .url(BybitConfig.getAnnouncementUrl())
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.REST_API)
+                .url(Config.getAnnouncementUrl())
                 .announcementTags(announcementTags)
                 .announcementTypes(announcementTypes)
                 .build();
         LOGGER.info(config.print());
-        return Flowable.create(e -> BybitDataStream.create(client, config).subscribe(e),
+        return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e),
                 BackpressureStrategy.BUFFER);
     }
 
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String url, final String[] topics) {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .url(url)
                 .topics(topics)
                 .build();
         LOGGER.info(config.print());
-        return Flowable.create(e -> BybitDataStream.create(client, config).subscribe(e),
+        return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e),
                 BackpressureStrategy.BUFFER);
     }
 
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String key, final String secret,
                                                         final String url, final String[] topics) {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .isUseAuth(true)
                 .key(key)
                 .secret(secret)
@@ -77,7 +77,7 @@ public final class DataStreams {
                 .topics(topics)
                 .build();
         LOGGER.info(config.print());
-        return Flowable.create(e -> BybitDataStream.create(client, config).subscribe(e),
+        return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e),
                 BackpressureStrategy.BUFFER);
     }
 }

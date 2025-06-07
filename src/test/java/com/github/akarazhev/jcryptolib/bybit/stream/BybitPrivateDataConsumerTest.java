@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.BybitConstants;
+import com.github.akarazhev.jcryptolib.bybit.Constants;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -37,14 +37,14 @@ import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getApiKey;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getApiSecret;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPrivateTestnet;
+import static com.github.akarazhev.jcryptolib.bybit.Config.getApiKey;
+import static com.github.akarazhev.jcryptolib.bybit.Config.getApiSecret;
+import static com.github.akarazhev.jcryptolib.bybit.Config.getPrivateTestnet;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPrivateOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-final class BybitPrivateDataStreamTest {
+final class BybitPrivateDataConsumerTest {
     private static HttpClient client;
 
     @BeforeAll
@@ -58,18 +58,18 @@ final class BybitPrivateDataStreamTest {
     }
 
     @Test
-    public void shouldReceiveOrderDataStream() {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+    public void shouldReceiveOrderDataConsumer() {
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .isUseAuth(true)
                 .key(getApiKey())
                 .secret(getApiSecret())
                 .url(getPrivateTestnet())
                 .topics(getPrivateOrder())
                 .build();
-        final var stream = BybitDataStream.create(client, config);
+        final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
@@ -82,7 +82,7 @@ final class BybitPrivateDataStreamTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPrivateOrder()[0], value.get(BybitConstants.TOPIC_FIELD));
+            assertEquals(getPrivateOrder()[0], value.get(Constants.TOPIC_FIELD));
         }
     }
 }

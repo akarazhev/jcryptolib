@@ -37,14 +37,14 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getAnnouncementTags;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getAnnouncementUrl;
-import static com.github.akarazhev.jcryptolib.bybit.BybitConfig.getPublicTestnetSpot;
+import static com.github.akarazhev.jcryptolib.bybit.Config.getAnnouncementTags;
+import static com.github.akarazhev.jcryptolib.bybit.Config.getAnnouncementUrl;
+import static com.github.akarazhev.jcryptolib.bybit.Config.getPublicTestnetSpot;
 import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-final class BybitDataStreamTest {
+final class DataConsumerTest {
     private static HttpClient client;
 
     @BeforeAll
@@ -58,15 +58,15 @@ final class BybitDataStreamTest {
     }
 
     @Test
-    void testBasicWebSocketDataStreamingAndCleanup() {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+    void testBasicWebSocketDataConsumingAndCleanup() {
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
-        final var stream = BybitDataStream.create(client, config);
+        final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
         testSubscriber.assertNoErrors();
@@ -81,15 +81,15 @@ final class BybitDataStreamTest {
     }
 
     @Test
-    void testBasicRestApiDataStreamingAndCleanup() {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.REST_API)
+    void testBasicRestApiDataConsumingAndCleanup() {
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.REST_API)
                 .url(getAnnouncementUrl())
                 .announcementTags(getAnnouncementTags())
                 .build();
-        final var stream = BybitDataStream.create(client, config);
+        final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
         testSubscriber.assertNoErrors();
@@ -105,14 +105,14 @@ final class BybitDataStreamTest {
 
     @Test
     void testReconnectionOnSocketDrop() {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
-        final var stream = BybitDataStream.create(client, config);
+        final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -120,7 +120,7 @@ final class BybitDataStreamTest {
         TestUtils.sleep(1000);
 
         final var testSubscriber2 = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber2);
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber2);
         TestUtils.await(testSubscriber2, 30, TimeUnit.SECONDS);
 
         assertFalse(testSubscriber2.values().isEmpty(), "Should receive messages after reconnect");
@@ -129,22 +129,22 @@ final class BybitDataStreamTest {
 
     @Test
     void testMultipleConcurrentStreams() {
-        final var streamCount = 10;
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+        final var consumerCount = 10;
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
-        final var subscribers = new ArrayList<TestSubscriber<Map<String, Object>>>(streamCount);
-        for (var i = 0; i < streamCount; i++) {
-            final var stream = BybitDataStream.create(client, config);
+        final var subscribers = new ArrayList<TestSubscriber<Map<String, Object>>>(consumerCount);
+        for (var i = 0; i < consumerCount; i++) {
+            final var consumer = DataConsumer.create(client, config);
             subscribers.add(i, new TestSubscriber<>());
-            Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(subscribers.get(i));
+            Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(subscribers.get(i));
         }
 
         for (final var sub : subscribers) {
             TestUtils.await(sub, 30, TimeUnit.SECONDS);
-            assertFalse(sub.values().isEmpty(), "Each stream should receive at least one message");
+            assertFalse(sub.values().isEmpty(), "Each consumer should receive at least one message");
         }
 
         for (final var sub : subscribers) {
@@ -154,15 +154,15 @@ final class BybitDataStreamTest {
 
     @Test
     void testRapidConnectDisconnect() {
-        final var config = new BybitDataConfig.Builder()
-                .type(BybitDataConfig.Type.WEBSOCKET)
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.WEBSOCKET)
                 .url(getPublicTestnetSpot())
                 .topics(getPublicTickersBtcUsdt())
                 .build();
         for (var i = 0; i < 20; i++) {
-            final var stream = BybitDataStream.create(client, config);
+            final var consumer = DataConsumer.create(client, config);
             final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-            Flowable.create(stream, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+            Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
             TestUtils.await(testSubscriber, 10, TimeUnit.SECONDS);
 
             testSubscriber.cancel();

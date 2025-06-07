@@ -26,8 +26,8 @@ package com.github.akarazhev.jcryptolib.bybit;
 
 import com.github.akarazhev.jcryptolib.config.AppConfig;
 
-public final class BybitConfig {
-    private BybitConfig() {
+public final class Config {
+    private Config() {
         throw new UnsupportedOperationException();
     }
 

@@ -46,10 +46,10 @@ final class ApiDataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiDataFetcher.class);
     private final AtomicReference<Disposable> fetcherRef = new AtomicReference<>();
     private final HttpClient client;
-    private final BybitDataConfig config;
+    private final DataConfig config;
     private final FlowableEmitter<Map<String, Object>> emitter;
 
-    public ApiDataFetcher(final HttpClient client, final BybitDataConfig config,
+    public ApiDataFetcher(final HttpClient client, final DataConfig config,
                           final FlowableEmitter<Map<String, Object>> emitter) {
         this.client = client;
         this.config = config;
@@ -86,9 +86,9 @@ final class ApiDataFetcher {
                     while (isMoreAvailable && !emitter.isCancelled()) {
                         try {
                             final var request = createRequest(getUri(param, arg, page, limit));
-                            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                            final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                             if (response.statusCode() == 200) {
-                                var result = getResult(response.body());
+                                final var result = getResult(response.body());
                                 if (result == null || result.isEmpty()) {
                                     isMoreAvailable = false;
                                 } else {
@@ -132,7 +132,7 @@ final class ApiDataFetcher {
 
     @SuppressWarnings("unchecked")
     private List<Map<String, Object>> getResult(final String json) {
-        var map = JsonUtils.jsonToMap(json);
+        final var map = JsonUtils.jsonToMap(json);
         if (map.get("retCode").equals(0) && map.get("retMsg").equals("OK")) {
             return (List<Map<String, Object>>) ((Map<String, Object>) map.get("result")).get("list");
         }
