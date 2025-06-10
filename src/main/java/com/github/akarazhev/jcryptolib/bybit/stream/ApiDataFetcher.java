@@ -56,7 +56,7 @@ final class ApiDataFetcher {
     }
 
     private ApiDataFetcher(final HttpClient client, final DataConfig config,
-                          final FlowableEmitter<Map<String, Object>> emitter) {
+                           final FlowableEmitter<Map<String, Object>> emitter) {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
@@ -78,12 +78,17 @@ final class ApiDataFetcher {
     }
 
     private void fetchData() {
-        fetchByParam("type", config.getAnnouncementTypes());
-        fetchByParam("tag", config.getAnnouncementTags());
+        if (config.getAnnouncementTypes() != null && config.getAnnouncementTypes().length > 0) {
+            fetchByParam("type", config.getAnnouncementTypes());
+        } else if (config.getAnnouncementTags() != null && config.getAnnouncementTags().length > 0) {
+            fetchByParam("tag", config.getAnnouncementTags());
+        } else {
+            fetchByUri();
+        }
     }
 
     private void fetchByParam(final String param, final String[] arguments) {
-        if (!emitter.isCancelled() && arguments != null) {
+        if (!emitter.isCancelled()) {
             Arrays.stream(arguments).forEach(arg -> {
                 if (!arg.isEmpty()) {
                     var page = 1;
@@ -99,7 +104,7 @@ final class ApiDataFetcher {
                                     isMoreAvailable = false;
                                 } else {
                                     result.forEach(value -> {
-                                        LOGGER.debug("Fetched message: {}", value);
+                                        LOGGER.debug("Fetched message by param: {}", value);
                                         emitter.onNext(value);
                                     });
                                     if (result.size() < limit) {
@@ -109,17 +114,40 @@ final class ApiDataFetcher {
                                     }
                                 }
                             } else {
-                                LOGGER.error("Failed to fetch data: HTTP {}", response.statusCode());
+                                LOGGER.error("Failed to fetch data by param: HTTP {}", response.statusCode());
                                 isMoreAvailable = false;
                             }
                         } catch (final Exception e) {
-                            LOGGER.error("Failed to fetch data", e);
+                            LOGGER.error("Failed to fetch data by param", e);
                             emitter.onError(e);
                             isMoreAvailable = false;
                         }
                     }
                 }
             });
+        }
+    }
+
+    private void fetchByUri() {
+        if (!emitter.isCancelled()) {
+            try {
+                final var request = createRequest(URI.create(config.getUrl()));
+                final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 200) {
+                    final var result = getResult(response.body());
+                    if (result != null && !result.isEmpty()) {
+                        result.forEach(value -> {
+                            LOGGER.debug("Fetched message by uri: {}", value);
+                            emitter.onNext(value);
+                        });
+                    }
+                } else {
+                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                }
+            } catch (final Exception e) {
+                LOGGER.error("Failed to fetch data by uri", e);
+                emitter.onError(e);
+            }
         }
     }
 
@@ -138,11 +166,16 @@ final class ApiDataFetcher {
 
     @SuppressWarnings("unchecked")
     private List<Map<String, Object>> getResult(final String json) {
-        final var map = JsonUtils.jsonToMap(json);
-        if (map.get("retCode").equals(0) && map.get("retMsg").equals("OK")) {
-            return (List<Map<String, Object>>) ((Map<String, Object>) map.get("result")).get("list");
+        final var data = JsonUtils.jsonToMap(json);
+        if (isRetCodeOk(data)) {
+            return (List<Map<String, Object>>) ((Map<String, Object>) data.get("result")).get("list");
         }
 
         return List.of();
+    }
+
+    private boolean isRetCodeOk(final Map<String, Object> data) {
+        return (data.containsKey("retCode") && (int) data.get("retCode") == 0) ||
+                (data.containsKey("ret_code") && (int) data.get("ret_code") == 0);
     }
 }

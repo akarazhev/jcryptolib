@@ -31,6 +31,10 @@ public final class Config {
         throw new UnsupportedOperationException();
     }
 
+    public static String getLaunchPoolUrl() {
+        return AppConfig.getAsString("bybit.launchpool.url");
+    }
+
     public static String getAnnouncementUrl() {
         return AppConfig.getAsString("bybit.announcement.url");
     }

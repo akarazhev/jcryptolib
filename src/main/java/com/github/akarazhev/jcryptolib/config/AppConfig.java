@@ -47,7 +47,14 @@ public final class AppConfig {
     }
 
     public static String[] getAsArray(final String key) {
-        return get(key).split(",");
+        final var value = get(key);
+        if (value.contains(",")) {
+            return value.split(",");
+        } else if (value.isEmpty()) {
+            return new String[0];
+        } else {
+            return new String[]{value};
+        }
     }
 
     public static String getAsString(final String key) {

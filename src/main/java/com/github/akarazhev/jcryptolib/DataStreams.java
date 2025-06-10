@@ -42,6 +42,16 @@ public final class DataStreams {
         throw new UnsupportedOperationException();
     }
 
+    public static Flowable<Map<String, Object>> ofBybit(final HttpClient client) {
+        final var config = new DataConfig.Builder()
+                .type(DataConfig.Type.REST_API)
+                .url(Config.getLaunchPoolUrl())
+                .build();
+        LOGGER.info(config.print());
+        return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e),
+                BackpressureStrategy.BUFFER);
+    }
+
     public static Flowable<Map<String, Object>> ofBybit(final HttpClient client, final String[] announcementTags,
                                                         final String[] announcementTypes) {
         final var config = new DataConfig.Builder()
