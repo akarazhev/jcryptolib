@@ -25,6 +25,10 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.Constants;
+import com.github.akarazhev.jcryptolib.bybit.config.Topic;
+import com.github.akarazhev.jcryptolib.bybit.config.Type;
+import com.github.akarazhev.jcryptolib.bybit.config.Url;
+import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -37,14 +41,6 @@ import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.Config.getPublicTestnetSpot;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineLt5Eos3lUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicLtEos3lUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersLtEos3lUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -64,14 +60,14 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveOrderBookDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicOrderBook1BtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.ORDER_BOOK_1_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -83,21 +79,21 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicOrderBook1BtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.ORDER_BOOK_1_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveTradeDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTradeBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.PUBLIC_TRADE_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.MINUTES), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 10, TimeUnit.MINUTES), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -109,21 +105,21 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTradeBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.PUBLIC_TRADE_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTickersBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -135,21 +131,21 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTickersBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.TICKERS_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveKlineDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicKlineBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.KLINE_1_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -161,21 +157,21 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicKlineBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.KLINE_1_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveLTKlineDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicKlineLt5Eos3lUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.KLINE_LT_5_EOS3L_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -187,21 +183,21 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicKlineLt5Eos3lUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.KLINE_LT_5_EOS3L_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveLTTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTickersLtEos3lUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.TICKERS_LT_EOS3L_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -213,21 +209,21 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTickersLtEos3lUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.TICKERS_LT_EOS3L_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveLTNavDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicLtEos3lUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.LT_EOS3L_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -239,7 +235,7 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicLtEos3lUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.LT_EOS3L_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 }

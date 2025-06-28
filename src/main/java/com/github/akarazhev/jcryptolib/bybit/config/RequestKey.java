@@ -22,13 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.bybit.config;
 
-public interface DataHandler<T> {
+public enum RequestKey {
+    TAG("tag"),
+    TYPE("type"),
+    LOCALE("locale");
 
-    void handle(final Payload<T> data);
+    private final String key;
 
-    void close();
+    RequestKey(final String key) {
+        this.key = key;
+    }
 
-    void error(final Throwable t);
+    @Override
+    public String toString() {
+        return key;
+    }
 }

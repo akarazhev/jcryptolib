@@ -22,13 +22,26 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.bybit.config;
 
-public interface DataHandler<T> {
+public enum Url {
+    ANNOUNCEMENT("https://api.bybit.com/v5/announcements/index"),
+    PUBLIC_TESTNET_SPOT("wss://stream-testnet.bybit.com/v5/public/spot"),
+    PUBLIC_TESTNET_LINEAR("wss://stream-testnet.bybit.com/v5/public/linear"),
+    PUBLIC_TESTNET_INVERSE("wss://stream-testnet.bybit.com/v5/public/inverse"),
+    PUBLIC_TESTNET_OPTION("wss://stream-testnet.bybit.com/v5/public/option"),
+    PUBLIC_TESTNET_SPREAD("wss://stream-testnet.bybit.com/v5/public/spread"),
+    PRIVATE_TESTNET("wss://stream-testnet.bybit.com/v5/private"),
+    TESTNET_ORDER("wss://stream-testnet.bybit.com/v5/trade");
 
-    void handle(final Payload<T> data);
+    private final String url;
 
-    void close();
+    Url(final String url) {
+        this.url = url;
+    }
 
-    void error(final Throwable t);
+    @Override
+    public String toString() {
+        return url;
+    }
 }

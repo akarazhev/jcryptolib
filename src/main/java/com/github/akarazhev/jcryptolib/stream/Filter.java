@@ -26,9 +26,7 @@ package com.github.akarazhev.jcryptolib.stream;
 
 import io.reactivex.rxjava3.functions.Predicate;
 
-import java.util.Map;
+public interface Filter<T> {
 
-public interface Filter {
-
-    Predicate<Map<String, Object>> filter();
+    Predicate<Payload<T>> filter();
 }

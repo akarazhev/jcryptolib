@@ -26,7 +26,6 @@ package com.github.akarazhev.jcryptolib.util;
 
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public final class TestUtils {
@@ -43,7 +42,7 @@ public final class TestUtils {
         }
     }
 
-    public static boolean await(final TestSubscriber<Map<String, Object>> subscriber, final long timeout, final TimeUnit unit) {
+    public static <T> boolean await(final TestSubscriber<T> subscriber, final long timeout, final TimeUnit unit) {
         try {
             return subscriber.await(timeout, unit);
         } catch (final InterruptedException e) {

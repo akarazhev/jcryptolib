@@ -22,13 +22,36 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.bybit.config;
 
-public interface DataHandler<T> {
+public enum Topic {
+    // BTC and USDT
+    ORDER_BOOK_1_BTC_USDT("orderbook.1.BTCUSDT"),
+    PUBLIC_TRADE_BTC_USDT("publicTrade.BTCUSDT"),
+    TICKERS_BTC_USDT("tickers.BTCUSDT"),
+    KLINE_1_BTC_USDT("kline.1.BTCUSDT"),
+    ALL_LIQUIDATION_BTC_USDT("allLiquidation.BTCUSDT"),
+    // USDT
+    INSURANCE_USDT("insurance.USDT"),
+    // Order
+    ORDER("order"),
+    // SOL and USDT
+    ORDER_BOOK_25_SOL_USDT("orderbook.25.SOLUSDT_SOL/USDT"),
+    PUBLIC_TRADE_SOL_USDT("publicTrade.SOLUSDT_SOL/USDT"),
+    TICKERS_SOL_USDT("tickers.SOLUSDT_SOL/USDT"),
+    // EOS and USDT
+    KLINE_LT_5_EOS3L_USDT("kline_lt.5.EOS3LUSDT"),
+    TICKERS_LT_EOS3L_USDT("tickers_lt.EOS3LUSDT"),
+    LT_EOS3L_USDT("lt.EOS3LUSDT");
 
-    void handle(final Payload<T> data);
+    private final String topic;
 
-    void close();
+    Topic(final String topic) {
+        this.topic = topic;
+    }
 
-    void error(final Throwable t);
+    @Override
+    public String toString() {
+        return topic;
+    }
 }

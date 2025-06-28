@@ -24,9 +24,18 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.Config;
+import com.github.akarazhev.jcryptolib.bybit.config.Config;
+import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
+import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
+import com.github.akarazhev.jcryptolib.bybit.config.Topic;
+import com.github.akarazhev.jcryptolib.bybit.config.Type;
+import com.github.akarazhev.jcryptolib.bybit.config.Url;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public final class DataConfig {
@@ -34,8 +43,9 @@ public final class DataConfig {
     private final boolean isUseAuth;
     private final String key;
     private final String secret;
-    private final String url;
+    private final Url url;
     private final String[] topics;
+    private final Map<RequestKey, RequestValue> params;
     private final float backoffMultiplier;
     private final int connectTimeoutMs;
     private final int initialReconnectIntervalMs;
@@ -43,24 +53,6 @@ public final class DataConfig {
     private final int maxReconnectIntervalMs;
     private final int pingIntervalMs;
     private final int fetchIntervalMs;
-    private final String announcementLocale;
-    private final String[] announcementTags;
-    private final String[] announcementTypes;
-
-    public enum Type {
-        WEBSOCKET("WebSocket"), REST_API("Rest API");
-
-        private final String name;
-
-        Type(final String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
 
     private DataConfig(final Builder builder) {
         this.type = Objects.requireNonNull(builder.type, "Type is null");
@@ -68,7 +60,8 @@ public final class DataConfig {
         this.key = builder.key;
         this.secret = builder.secret;
         this.url = builder.url;
-        this.topics = builder.topics;
+        this.topics = builder.getTopics();
+        this.params = builder.params;
         this.backoffMultiplier = builder.backoffMultiplier;
         this.connectTimeoutMs = builder.connectTimeoutMs;
         this.initialReconnectIntervalMs = builder.initialReconnectIntervalMs;
@@ -76,9 +69,6 @@ public final class DataConfig {
         this.maxReconnectIntervalMs = builder.maxReconnectIntervalMs;
         this.pingIntervalMs = builder.pingIntervalMs;
         this.fetchIntervalMs = builder.fetchIntervalMs;
-        this.announcementLocale = builder.announcementLocale;
-        this.announcementTags = builder.announcementTags;
-        this.announcementTypes = builder.announcementTypes;
     }
 
     public boolean isWebSocket() {
@@ -101,12 +91,16 @@ public final class DataConfig {
         return secret;
     }
 
-    public String getUrl() {
+    public Url getUrl() {
         return url;
     }
 
     public String[] getTopics() {
         return topics;
+    }
+
+    public Map<RequestKey, RequestValue> getParams() {
+        return params;
     }
 
     public float getBackoffMultiplier() {
@@ -137,18 +131,6 @@ public final class DataConfig {
         return fetchIntervalMs;
     }
 
-    public String getAnnouncementLocale() {
-        return announcementLocale;
-    }
-
-    public String[] getAnnouncementTags() {
-        return announcementTags;
-    }
-
-    public String[] getAnnouncementTypes() {
-        return announcementTypes;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -159,6 +141,7 @@ public final class DataConfig {
                 "\n\tisUseAuth=" + isUseAuth +
                 "\n\turl='" + url + '\'' +
                 "\n\ttopics='" + Arrays.toString(topics) + '\'' +
+                "\n\tparams=" + params +
                 "\n\tbackoffMultiplier=" + backoffMultiplier +
                 "\n\tconnectTimeoutMs=" + connectTimeoutMs +
                 "\n\tinitialReconnectIntervalMs=" + initialReconnectIntervalMs +
@@ -166,9 +149,6 @@ public final class DataConfig {
                 "\n\tmaxReconnectIntervalMs=" + maxReconnectIntervalMs +
                 "\n\tpingIntervalMs=" + pingIntervalMs +
                 "\n\tfetchIntervalMs=" + fetchIntervalMs +
-                "\n\tannouncementLocale='" + announcementLocale + '\'' +
-                "\n\tannouncementTags='" + Arrays.toString(announcementTags) + '\'' +
-                "\n\tannouncementTypes='" + Arrays.toString(announcementTypes) + '\'' +
                 "\n}";
     }
 
@@ -177,8 +157,9 @@ public final class DataConfig {
         private boolean isUseAuth;
         private String key;
         private String secret;
-        private String url;
-        private String[] topics;
+        private Url url;
+        private final List<Topic> topics = new LinkedList<>();
+        private final Map<RequestKey, RequestValue> params = new HashMap<>();
         private float backoffMultiplier = Config.getBackoffMultiplier();
         private int connectTimeoutMs = Config.getConnectTimeoutMs();
         private int initialReconnectIntervalMs = Config.getInitialReconnectIntervalMs();
@@ -186,9 +167,6 @@ public final class DataConfig {
         private int maxReconnectIntervalMs = Config.getMaxReconnectIntervalMs();
         private int pingIntervalMs = Config.getPingIntervalMs();
         private int fetchIntervalMs = Config.getFetchIntervalMs();
-        private String announcementLocale = Config.getAnnouncementLocale();
-        private String[] announcementTags;
-        private String[] announcementTypes;
 
         public Builder type(final Type type) {
             this.type = type;
@@ -210,13 +188,18 @@ public final class DataConfig {
             return this;
         }
 
-        public Builder url(final String url) {
+        public Builder url(final Url url) {
             this.url = url;
             return this;
         }
 
-        public Builder topics(final String[] topics) {
-            this.topics = topics;
+        public Builder topic(final Topic topic) {
+            this.topics.add(topic);
+            return this;
+        }
+
+        public Builder param(final RequestKey key, RequestValue value) {
+            this.params.put(key, value);
             return this;
         }
 
@@ -255,19 +238,13 @@ public final class DataConfig {
             return this;
         }
 
-        public Builder announcementLocale(final String announcementLocale) {
-            this.announcementLocale = announcementLocale;
-            return this;
-        }
+        private String[] getTopics() {
+            final String[] topics = new String[this.topics.size()];
+            for (int i = 0; i < this.topics.size(); i++) {
+                topics[i] = this.topics.get(i).toString();
+            }
 
-        public Builder announcementTags(final String[] announcementTags) {
-            this.announcementTags = announcementTags;
-            return this;
-        }
-
-        public Builder announcementTypes(final String[] announcementTypes) {
-            this.announcementTypes = announcementTypes;
-            return this;
+            return topics;
         }
 
         public DataConfig build() {

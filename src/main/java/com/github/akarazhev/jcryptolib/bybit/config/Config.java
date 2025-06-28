@@ -22,69 +22,13 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.bybit;
+package com.github.akarazhev.jcryptolib.bybit.config;
 
 import com.github.akarazhev.jcryptolib.config.AppConfig;
 
 public final class Config {
     private Config() {
         throw new UnsupportedOperationException();
-    }
-
-    public static String getLaunchPoolUrl() {
-        return AppConfig.getAsString("bybit.launchpool.url");
-    }
-
-    public static String getAnnouncementUrl() {
-        return AppConfig.getAsString("bybit.announcement.url");
-    }
-
-    public static String getAnnouncementLocale() {
-        return AppConfig.getAsString("bybit.announcement.locale");
-    }
-
-    public static String[] getAnnouncementTags() {
-        return AppConfig.getAsArray("bybit.announcement.tags");
-    }
-
-    public static String[] getAnnouncementTypes() {
-        return AppConfig.getAsArray("bybit.announcement.types");
-    }
-
-    public static String getPublicTestnetSpot() {
-        return AppConfig.getAsString("bybit.public.testnet.spot");
-    }
-
-    public static String getPublicTestnetLinear() {
-        return AppConfig.getAsString("bybit.public.testnet.linear");
-    }
-
-    public static String getPublicTestnetInverse() {
-        return AppConfig.getAsString("bybit.public.testnet.inverse");
-    }
-
-    public static String getPublicTestnetOption() {
-        return AppConfig.getAsString("bybit.public.testnet.option");
-    }
-
-    public static String getPublicTestnetSpread() {
-        return AppConfig.getAsString("bybit.public.testnet.spread");
-    }
-
-    public static String getPrivateTestnet() {
-        return AppConfig.getAsString("bybit.private.testnet");
-    }
-
-    public static String getOrderTestnet() {
-        return AppConfig.getAsString("bybit.order.testnet");
-    }
-
-    public static String[] getPublicSubscribeTopics() {
-        return AppConfig.getAsArray("bybit.public.subscribe.topics");
-    }
-
-    public static String[] getPrivateSubscribeTopics() {
-        return AppConfig.getAsArray("bybit.private.subscribe.topics");
     }
 
     public static int getConnectTimeoutMs() {

@@ -24,11 +24,32 @@
 
 package com.github.akarazhev.jcryptolib.stream;
 
-public interface DataHandler<T> {
+public final class Payload<T> {
+    private final Provider provider;
+    private final T data;
 
-    void handle(final Payload<T> data);
+    public static <T> Payload<T> of(final Provider provider, final T data) {
+        return new Payload<>(provider, data);
+    }
 
-    void close();
+    private Payload(final Provider provider, final T data) {
+        this.provider = provider;
+        this.data = data;
+    }
 
-    void error(final Throwable t);
+    public T getData() {
+        return data;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    @Override
+    public String toString() {
+        return "Payload {" +
+                "provider=" + provider +
+                ", data=" + data +
+                '}';
+    }
 }

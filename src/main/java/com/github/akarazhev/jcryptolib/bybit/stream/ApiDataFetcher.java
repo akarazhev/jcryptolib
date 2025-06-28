@@ -24,6 +24,10 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
+import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
+import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.stream.Provider;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -32,11 +36,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,15 +53,15 @@ final class ApiDataFetcher {
     private final AtomicReference<Disposable> fetcherRef = new AtomicReference<>();
     private final HttpClient client;
     private final DataConfig config;
-    private final FlowableEmitter<Map<String, Object>> emitter;
+    private final FlowableEmitter<Payload<Map<String, Object>>> emitter;
 
     public static ApiDataFetcher create(final HttpClient client, final DataConfig config,
-                                        final FlowableEmitter<Map<String, Object>> emitter) {
+                                        final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         return new ApiDataFetcher(client, config, emitter);
     }
 
     private ApiDataFetcher(final HttpClient client, final DataConfig config,
-                           final FlowableEmitter<Map<String, Object>> emitter) {
+                           final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
@@ -78,67 +83,60 @@ final class ApiDataFetcher {
     }
 
     private void fetchData() {
-        if (config.getAnnouncementTypes() != null && config.getAnnouncementTypes().length > 0) {
-            fetchByParam("type", config.getAnnouncementTypes());
-        } else if (config.getAnnouncementTags() != null && config.getAnnouncementTags().length > 0) {
-            fetchByParam("tag", config.getAnnouncementTags());
+        if (!config.getParams().isEmpty()) {
+            fetch(config.getUrl().toString(), config.getParams());
         } else {
-            fetchByUri();
+            fetch(config.getUrl().toString());
         }
     }
 
-    private void fetchByParam(final String param, final String[] arguments) {
+    private void fetch(final String url, final Map<RequestKey, RequestValue> params) {
         if (!emitter.isCancelled()) {
-            Arrays.stream(arguments).forEach(arg -> {
-                if (!arg.isEmpty()) {
-                    var page = 1;
-                    var limit = 1000;
-                    var isMoreAvailable = true;
-                    while (isMoreAvailable && !emitter.isCancelled()) {
-                        try {
-                            final var request = createRequest(getUri(param, arg, page, limit));
-                            final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                            if (response.statusCode() == 200) {
-                                final var result = getResult(response.body());
-                                if (result == null || result.isEmpty()) {
-                                    isMoreAvailable = false;
-                                } else {
-                                    result.forEach(value -> {
-                                        LOGGER.debug("Fetched message by param: {}", value);
-                                        emitter.onNext(value);
-                                    });
-                                    if (result.size() < limit) {
-                                        isMoreAvailable = false;
-                                    } else {
-                                        page++;
-                                    }
-                                }
-                            } else {
-                                LOGGER.error("Failed to fetch data by param: HTTP {}", response.statusCode());
-                                isMoreAvailable = false;
-                            }
-                        } catch (final Exception e) {
-                            LOGGER.error("Failed to fetch data by param", e);
-                            emitter.onError(e);
+            var page = 1;
+            var limit = 1000;
+            var isMoreAvailable = true;
+            while (isMoreAvailable && !emitter.isCancelled()) {
+                try {
+                    final var request = createRequest(getUri(url, params, page, limit));
+                    final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    if (response.statusCode() == 200) {
+                        final var result = getResult(response.body());
+                        if (result == null || result.isEmpty()) {
                             isMoreAvailable = false;
+                        } else {
+                            result.forEach(value -> {
+                                LOGGER.debug("Fetched message: {}", value);
+                                emitter.onNext(Payload.of(Provider.BYBIT, value));
+                            });
+                            if (result.size() < limit) {
+                                isMoreAvailable = false;
+                            } else {
+                                page++;
+                            }
                         }
+                    } else {
+                        LOGGER.error("Failed to fetch data by param: HTTP {}", response.statusCode());
+                        isMoreAvailable = false;
                     }
+                } catch (final Exception e) {
+                    LOGGER.error("Failed to fetch data by param", e);
+                    emitter.onError(e);
+                    isMoreAvailable = false;
                 }
-            });
+            }
         }
     }
 
-    private void fetchByUri() {
+    private void fetch(final String url) {
         if (!emitter.isCancelled()) {
             try {
-                final var request = createRequest(URI.create(config.getUrl()));
-                final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                final var response = client.send(createRequest(getUri(url)), HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
                     final var result = getResult(response.body());
                     if (result != null && !result.isEmpty()) {
                         result.forEach(value -> {
-                            LOGGER.debug("Fetched message by uri: {}", value);
-                            emitter.onNext(value);
+                            LOGGER.debug("Fetched message: {}", value);
+                            emitter.onNext(Payload.of(Provider.BYBIT, value));
                         });
                     }
                 } else {
@@ -151,9 +149,45 @@ final class ApiDataFetcher {
         }
     }
 
-    private URI getUri(final String param, final String arg, final int page, final int limit) {
-        return URI.create(config.getUrl() + "?locale=" + config.getAnnouncementLocale() + "&" + param + "=" + arg +
-                "&page=" + page + "&limit=" + limit);
+    private URI getUri(final String url) {
+        return URI.create(url);
+    }
+
+    private URI getUri(final String url, final Map<RequestKey, RequestValue> params,
+                       final int page, final int limit) {
+        if (params == null || params.isEmpty()) {
+            return URI.create(url);
+        }
+
+        final var urlString = new StringBuilder(url);
+        if (!url.contains("?")) {
+            urlString.append("?");
+        } else if (!url.endsWith("&") && !url.endsWith("?")) {
+            urlString.append("&");
+        }
+
+        setUrlParams(urlString, params);
+        if (page >= 0) {
+            urlString.append("&page=").append(page);
+        }
+
+        if (limit >= 0) {
+            urlString.append("&limit=").append(limit);
+        }
+
+        return URI.create(urlString.toString());
+    }
+
+    private void setUrlParams(final StringBuilder url, final Map<RequestKey, RequestValue> params) {
+        for (final var iterator = params.entrySet().iterator(); iterator.hasNext(); ) {
+            final var entry = iterator.next();
+            url.append(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8));
+            url.append("=");
+            url.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
+            if (iterator.hasNext()) {
+                url.append("&");
+            }
+        }
     }
 
     private HttpRequest createRequest(final URI uri) {

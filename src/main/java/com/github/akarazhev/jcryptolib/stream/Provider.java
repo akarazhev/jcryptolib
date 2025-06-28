@@ -24,11 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.stream;
 
-public interface DataHandler<T> {
-
-    void handle(final Payload<T> data);
-
-    void close();
-
-    void error(final Throwable t);
+public enum Provider {
+    BYBIT
 }

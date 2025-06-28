@@ -24,6 +24,12 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
+import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
+import com.github.akarazhev.jcryptolib.bybit.config.Topic;
+import com.github.akarazhev.jcryptolib.bybit.config.Type;
+import com.github.akarazhev.jcryptolib.bybit.config.Url;
+import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -37,10 +43,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.Config.getAnnouncementTags;
-import static com.github.akarazhev.jcryptolib.bybit.Config.getAnnouncementUrl;
-import static com.github.akarazhev.jcryptolib.bybit.Config.getPublicTestnetSpot;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -60,12 +62,12 @@ final class DataConsumerTest {
     @Test
     void testBasicWebSocketDataConsumingAndCleanup() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTickersBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
@@ -83,12 +85,13 @@ final class DataConsumerTest {
     @Test
     void testBasicRestApiDataConsumingAndCleanup() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.REST_API)
-                .url(getAnnouncementUrl())
-                .announcementTags(getAnnouncementTags())
+                .type(Type.REST_API)
+                .url(Url.ANNOUNCEMENT)
+                .param(RequestKey.LOCALE, RequestValue.EN_US)
+                .param(RequestKey.TAG, RequestValue.LAUNCH_POOL)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
@@ -106,12 +109,12 @@ final class DataConsumerTest {
     @Test
     void testReconnectionOnSocketDrop() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTickersBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
 
@@ -119,7 +122,7 @@ final class DataConsumerTest {
         testSubscriber.cancel();
         TestUtils.sleep(1000);
 
-        final var testSubscriber2 = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber2 = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber2);
         TestUtils.await(testSubscriber2, 30, TimeUnit.SECONDS);
 
@@ -131,11 +134,11 @@ final class DataConsumerTest {
     void testMultipleConcurrentConsumers() {
         final var consumerCount = 10;
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTickersBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.TICKERS_BTC_USDT)
                 .build();
-        final var subscribers = new ArrayList<TestSubscriber<Map<String, Object>>>(consumerCount);
+        final var subscribers = new ArrayList<TestSubscriber<Payload<Map<String, Object>>>>(consumerCount);
         for (var i = 0; i < consumerCount; i++) {
             final var consumer = DataConsumer.create(client, config);
             subscribers.add(i, new TestSubscriber<>());
@@ -155,13 +158,13 @@ final class DataConsumerTest {
     @Test
     void testRapidConnectDisconnect() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetSpot())
-                .topics(getPublicTickersBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_SPOT)
+                .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         for (var i = 0; i < 20; i++) {
             final var consumer = DataConsumer.create(client, config);
-            final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+            final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
             Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
             TestUtils.await(testSubscriber, 10, TimeUnit.SECONDS);
 

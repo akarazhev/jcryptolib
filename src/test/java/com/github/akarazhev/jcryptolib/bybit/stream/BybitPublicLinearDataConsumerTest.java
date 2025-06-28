@@ -25,6 +25,10 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.Constants;
+import com.github.akarazhev.jcryptolib.bybit.config.Topic;
+import com.github.akarazhev.jcryptolib.bybit.config.Type;
+import com.github.akarazhev.jcryptolib.bybit.config.Url;
+import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -37,13 +41,6 @@ import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.Config.getPublicTestnetLinear;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicAllLiquidationBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicInsurancePoolUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicKlineBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicOrderBook1BtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTickersBtcUsdt;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPublicTradeBtcUsdt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -63,14 +60,14 @@ final class BybitPublicLinearDataConsumerTest {
     @Test
     public void shouldReceiveOrderBookDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetLinear())
-                .topics(getPublicOrderBook1BtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_LINEAR)
+                .topic(Topic.ORDER_BOOK_1_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -82,99 +79,20 @@ final class BybitPublicLinearDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicOrderBook1BtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.ORDER_BOOK_1_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
     public void shouldReceiveTradeDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetLinear())
-                .topics(getPublicTradeBtcUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_LINEAR)
+                .topic(Topic.PUBLIC_TRADE_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
-
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTradeBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
-        }
-    }
-
-    @Test
-    public void shouldReceiveTickerDataConsumer() {
-        final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetLinear())
-                .topics(getPublicTickersBtcUsdt())
-                .build();
-        final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
-
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicTickersBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
-        }
-    }
-
-    @Test
-    public void shouldReceiveKlineDataConsumer() {
-        final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetLinear())
-                .topics(getPublicKlineBtcUsdt())
-                .build();
-        final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
-
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicKlineBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
-        }
-    }
-
-    @Test
-    public void shouldReceiveAllLiquidationDataConsumer() {
-        final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetLinear())
-                .topics(getPublicAllLiquidationBtcUsdt())
-                .build();
-        final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
-        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        // Liquidation can happen at any time
         assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.MINUTES), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
@@ -187,21 +105,21 @@ final class BybitPublicLinearDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicAllLiquidationBtcUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.PUBLIC_TRADE_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 
     @Test
-    public void shouldReceiveInsurancePoolDataConsumer() {
+    public void shouldReceiveTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
-                .url(getPublicTestnetLinear())
-                .topics(getPublicInsurancePoolUsdt())
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_LINEAR)
+                .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -213,7 +131,86 @@ final class BybitPublicLinearDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPublicInsurancePoolUsdt()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.TICKERS_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+        }
+    }
+
+    @Test
+    public void shouldReceiveKlineDataConsumer() {
+        final var config = new DataConfig.Builder()
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_LINEAR)
+                .topic(Topic.KLINE_1_BTC_USDT)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Topic.KLINE_1_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+        }
+    }
+
+    @Test
+    public void shouldReceiveAllLiquidationDataConsumer() {
+        final var config = new DataConfig.Builder()
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_LINEAR)
+                .topic(Topic.ALL_LIQUIDATION_BTC_USDT)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        // Liquidation can happen at any time
+        assertFalse(TestUtils.await(testSubscriber, 10, TimeUnit.MINUTES), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Topic.ALL_LIQUIDATION_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+        }
+    }
+
+    @Test
+    public void shouldReceiveInsurancePoolDataConsumer() {
+        final var config = new DataConfig.Builder()
+                .type(Type.WEBSOCKET)
+                .url(Url.PUBLIC_TESTNET_LINEAR)
+                .topic(Topic.INSURANCE_USDT)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Topic.INSURANCE_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 }

@@ -25,6 +25,10 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.Constants;
+import com.github.akarazhev.jcryptolib.bybit.config.Topic;
+import com.github.akarazhev.jcryptolib.bybit.config.Type;
+import com.github.akarazhev.jcryptolib.bybit.config.Url;
+import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -37,10 +41,8 @@ import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.Config.getApiKey;
-import static com.github.akarazhev.jcryptolib.bybit.Config.getApiSecret;
-import static com.github.akarazhev.jcryptolib.bybit.Config.getPrivateTestnet;
-import static com.github.akarazhev.jcryptolib.bybit.BybitTestConfig.getPrivateOrder;
+import static com.github.akarazhev.jcryptolib.bybit.config.Config.getApiKey;
+import static com.github.akarazhev.jcryptolib.bybit.config.Config.getApiSecret;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -60,17 +62,17 @@ final class BybitPrivateDataConsumerTest {
     @Test
     public void shouldReceiveOrderDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(DataConfig.Type.WEBSOCKET)
+                .type(Type.WEBSOCKET)
                 .isUseAuth(true)
                 .key(getApiKey())
                 .secret(getApiSecret())
-                .url(getPrivateTestnet())
-                .topics(getPrivateOrder())
+                .url(Url.PRIVATE_TESTNET)
+                .topic(Topic.ORDER)
                 .build();
         final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Map<String, Object>>();
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -82,7 +84,7 @@ final class BybitPrivateDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(getPrivateOrder()[0], value.get(Constants.TOPIC_FIELD));
+            assertEquals(Topic.ORDER.toString(), value.getData().get(Constants.TOPIC_FIELD));
         }
     }
 }

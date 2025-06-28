@@ -24,6 +24,8 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.stream.Provider;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -54,7 +56,7 @@ final class DataConsumerListener implements WebSocket.Listener {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataConsumerListener.class);
     private final HttpClient client;
     private final DataConfig config;
-    private final FlowableEmitter<Map<String, Object>> emitter;
+    private final FlowableEmitter<Payload<Map<String, Object>>> emitter;
     private final StringBuilder buffer = new StringBuilder();
     private final AtomicBoolean isConnecting = new AtomicBoolean(false);
     private final AtomicBoolean isAwaitingPong = new AtomicBoolean(false);
@@ -63,12 +65,12 @@ final class DataConsumerListener implements WebSocket.Listener {
     private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
     public static DataConsumerListener create(final HttpClient client, final DataConfig config,
-                                             final FlowableEmitter<Map<String, Object>> emitter) {
+                                              final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         return new DataConsumerListener(client, config, emitter);
     }
 
     private DataConsumerListener(final HttpClient client, final DataConfig config,
-                                final FlowableEmitter<Map<String, Object>> emitter) {
+                                final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
@@ -128,7 +130,7 @@ final class DataConsumerListener implements WebSocket.Listener {
                 if (!emitter.isCancelled()) {
                     LOGGER.debug("Received message: {}", text);
                     if (!isAuth(text)) {
-                        emitter.onNext(JsonUtils.jsonToMap(text));
+                        emitter.onNext(Payload.of(Provider.BYBIT, JsonUtils.jsonToMap(text)));
                     }
                 }
             }
@@ -249,7 +251,7 @@ final class DataConsumerListener implements WebSocket.Listener {
             try {
                 client.newWebSocketBuilder()
                         .connectTimeout(Duration.ofMillis(config.getConnectTimeoutMs()))
-                        .buildAsync(URI.create(config.getUrl()), this)
+                        .buildAsync(URI.create(config.getUrl().toString()), this)
                         .whenComplete((ws, ex) -> {
                             isConnecting.set(false);
                             if (ex != null) {

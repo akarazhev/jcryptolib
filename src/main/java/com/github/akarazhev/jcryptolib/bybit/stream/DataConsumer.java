@@ -24,6 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.stream.Payload;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 
@@ -37,7 +38,7 @@ import java.util.Map;
  * connection, reconnection with exponential backoff, ping/pong, and resource
  * cleanup.
  */
-public final class DataConsumer implements FlowableOnSubscribe<Map<String, Object>> {
+public final class DataConsumer implements FlowableOnSubscribe<Payload<Map<String, Object>>> {
     private final HttpClient client;
     private final DataConfig config;
 
@@ -76,7 +77,7 @@ public final class DataConsumer implements FlowableOnSubscribe<Map<String, Objec
      * @throws Throwable if an error occurs
      */
     @Override
-    public void subscribe(final FlowableEmitter<Map<String, Object>> emitter) throws Throwable {
+    public void subscribe(final FlowableEmitter<Payload<Map<String, Object>>> emitter) throws Throwable {
         if (config.isWebSocket()) {
             final var listener = DataConsumerListener.create(client, config, emitter);
             emitter.setCancellable(listener::cancel);

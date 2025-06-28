@@ -27,11 +27,9 @@ package com.github.akarazhev.jcryptolib.stream;
 import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 
-import java.util.Map;
+public interface Subscriber<T> {
 
-public interface Subscriber {
-
-    Consumer<Map<String, Object>> onNext();
+    Consumer<Payload<T>> onNext();
 
     Consumer<Throwable> onError();
 

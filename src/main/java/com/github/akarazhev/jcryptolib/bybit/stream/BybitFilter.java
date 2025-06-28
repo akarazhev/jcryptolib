@@ -24,23 +24,24 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
-import com.github.akarazhev.jcryptolib.bybit.Constants;
 import com.github.akarazhev.jcryptolib.stream.Filter;
+import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.stream.Provider;
 import io.reactivex.rxjava3.functions.Predicate;
 
 import java.util.Map;
 
-public final class BybitFilter implements Filter {
+public final class BybitFilter implements Filter<Map<String, Object>> {
 
     private BybitFilter() {
     }
 
-    public static Predicate<Map<String, Object>> ofFilter() {
+    public static Predicate<Payload<Map<String, Object>>> ofFilter() {
         return new BybitFilter().filter();
     }
 
     @Override
-    public Predicate<Map<String, Object>> filter() {
-        return o -> o.containsKey(Constants.TOPIC_FIELD);
+    public Predicate<Payload<Map<String, Object>>> filter() {
+        return o -> Provider.BYBIT.equals(o.getProvider());
     }
 }

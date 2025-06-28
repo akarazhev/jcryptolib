@@ -22,13 +22,20 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.bybit.config;
 
-public interface DataHandler<T> {
+public enum Type {
+    WEBSOCKET("WebSocket"),
+    REST_API("Rest API");
 
-    void handle(final Payload<T> data);
+    private final String type;
 
-    void close();
+    Type(final String type) {
+        this.type = type;
+    }
 
-    void error(final Throwable t);
+    @Override
+    public String toString() {
+        return type;
+    }
 }

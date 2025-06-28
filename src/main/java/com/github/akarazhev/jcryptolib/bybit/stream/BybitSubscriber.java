@@ -25,6 +25,7 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.stream.DataHandler;
+import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Subscriber;
 import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -33,20 +34,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public final class BybitSubscriber implements Subscriber {
+public final class BybitSubscriber implements Subscriber<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitSubscriber.class);
-    private final DataHandler handler;
+    private final DataHandler<Map<String, Object>> handler;
 
-    private BybitSubscriber(final DataHandler handler) {
+    private BybitSubscriber(final DataHandler<Map<String, Object>> handler) {
         this.handler = handler;
     }
 
-    public static BybitSubscriber create(final DataHandler handler) {
+    public static BybitSubscriber create(final DataHandler<Map<String, Object>> handler) {
         return new BybitSubscriber(handler);
     }
 
     @Override
-    public Consumer<Map<String, Object>> onNext() {
+    public Consumer<Payload<Map<String, Object>>> onNext() {
         return data -> {
             handler.handle(data);
             LOGGER.debug("Received message: {}", data);
