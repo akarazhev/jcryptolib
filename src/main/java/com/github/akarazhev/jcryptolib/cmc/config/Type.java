@@ -22,8 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.cmc.config;
 
-public enum Provider {
-    BYBIT, CMC
+public enum Type {
+    FGI("Fear and Greed Index");
+
+    private final String type;
+
+    Type(final String type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return type;
+    }
 }

@@ -22,8 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.cmc.config;
 
-public enum Provider {
-    BYBIT, CMC
+public enum Url {
+    FGI("https://api.coinmarketcap.com/data-api/v3/fear-greed/chart");
+
+    private final String url;
+
+    Url(final String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return url;
+    }
 }

@@ -24,8 +24,6 @@
 
 package com.github.akarazhev.jcryptolib;
 
-import com.github.akarazhev.jcryptolib.bybit.stream.DataConfig;
-import com.github.akarazhev.jcryptolib.bybit.stream.DataConsumer;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -42,9 +40,19 @@ public final class DataStreams {
         throw new UnsupportedOperationException();
     }
 
-    public static Flowable<Payload<Map<String, Object>>> ofBybit(final HttpClient client, final DataConfig config) {
+    public static Flowable<Payload<Map<String, Object>>> ofBybit(final HttpClient client,
+                                                                 final com.github.akarazhev.jcryptolib.bybit.stream.DataConfig config) {
         LOGGER.info(config.print());
-        return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e),
+        return Flowable.create(e ->
+                        com.github.akarazhev.jcryptolib.bybit.stream.DataConsumer.create(client, config).subscribe(e),
+                BackpressureStrategy.BUFFER);
+    }
+
+    public static Flowable<Payload<Map<String, Object>>> ofCmc(final HttpClient client,
+                                                               final com.github.akarazhev.jcryptolib.cmc.stream.DataConfig config) {
+        LOGGER.info(config.print());
+        return Flowable.create(e ->
+                        com.github.akarazhev.jcryptolib.cmc.stream.DataConsumer.create(client, config).subscribe(e),
                 BackpressureStrategy.BUFFER);
     }
 }

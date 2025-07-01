@@ -22,8 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.cmc.config;
 
-public enum Provider {
-    BYBIT, CMC
+import com.github.akarazhev.jcryptolib.config.AppConfig;
+
+public final class Config {
+    private Config() {
+        throw new UnsupportedOperationException();
+    }
+
+    public static int getConnectTimeoutMs() {
+        return AppConfig.getAsInt("cmc.connect.timeout.ms");
+    }
+
+    public static int getFetchIntervalMs() {
+        return AppConfig.getAsInt("cmc.fetch.interval.ms");
+    }
 }
+

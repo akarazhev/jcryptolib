@@ -22,8 +22,33 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.cmc.stream;
 
-public enum Provider {
-    BYBIT, CMC
+import com.github.akarazhev.jcryptolib.stream.Payload;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.FlowableEmitter;
+import io.reactivex.rxjava3.core.FlowableOnSubscribe;
+
+import java.net.http.HttpClient;
+import java.util.Map;
+
+public final class DataConsumer implements FlowableOnSubscribe<Payload<Map<String, Object>>> {
+    private final HttpClient client;
+    private final DataConfig config;
+
+    private DataConsumer(final HttpClient client, final DataConfig config) {
+        this.client = client;
+        this.config = config;
+    }
+
+    public static DataConsumer create(final HttpClient client, final DataConfig config) {
+        return new DataConsumer(client, config);
+    }
+
+    @Override
+    public void subscribe(@NonNull final FlowableEmitter<Payload<Map<String, Object>>> emitter) throws Throwable {
+        final var fetcher = CmcDataFetcher.create(client, config, emitter);
+        emitter.setCancellable(fetcher::cancel);
+        fetcher.fetch();
+    }
 }
