@@ -63,7 +63,7 @@ final class CmcDataFetcherTest {
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.SECONDS), "Should not receive any messages");
+        assertFalse(TestUtils.await(testSubscriber, 5, TimeUnit.SECONDS), "Should not receive any messages");
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");

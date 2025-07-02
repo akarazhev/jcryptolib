@@ -24,7 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.cmc.stream;
 
-import com.github.akarazhev.jcryptolib.cmc.config.Url;
 import com.github.akarazhev.jcryptolib.stream.DataFetcher;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
@@ -38,9 +37,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -85,17 +84,22 @@ final class CmcDataFetcher implements DataFetcher {
     }
 
     private void fetchData() {
-        if (FGI.equals(config.getType())) {
-            fetchFgi(Url.FGI.toString());
-        }
+        config.getTypes().forEach(type -> {
+            if (FGI.equals(type)) {
+                fetchFgi();
+            }
+        });
     }
 
-    private void fetchFgi(final String url) {
+    private void fetchFgi() {
         if (!emitter.isCancelled()) {
             try {
-                final var response = client.send(createRequest(getUri(url)), HttpResponse.BodyHandlers.ofString());
+                final var end = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+                final var start = end - TimeUnit.DAYS.toSeconds(2);
+                final var request = CmcRequestBuilder.buildFearGreedChartRequest(start, end);
+                final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
-                    final var result = getResult(url, response.body());
+                    final var result = getResult(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);
                         emitter.onNext(Payload.of(Provider.CMC, result));
@@ -110,22 +114,10 @@ final class CmcDataFetcher implements DataFetcher {
         }
     }
 
-    private URI getUri(final String url) {
-        return URI.create(url + "?start=1367193600&end=1751403600&convertId=2781");
-    }
-
-    private HttpRequest createRequest(final URI uri) {
-        return HttpRequest.newBuilder()
-                .uri(uri)
-                .timeout(Duration.ofMillis(config.getConnectTimeoutMs()))
-                .GET()
-                .build();
-    }
-
     @SuppressWarnings("unchecked")
-    private Map<String, Object> getResult(final String url, final String json) throws IOException {
+    private Map<String, Object> getResult(final URI uri, final String json) throws IOException {
         final var data = JsonUtils.jsonToMap(json);
-        if (isResultOk(url, data)) {
+        if (isStatusOk(uri, data)) {
             return (Map<String, Object>) data.get("data");
         }
 
@@ -133,13 +125,13 @@ final class CmcDataFetcher implements DataFetcher {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean isResultOk(final String url, final Map<String, Object> data) throws IOException {
+    private boolean isStatusOk(final URI uri, final Map<String, Object> data) throws IOException {
         final var status = (Map<String, Object>) data.get("status");
         if (status != null) {
             return (status.containsKey("error_code") && "0".equals(status.get("error_code"))) &&
                     (status.containsKey("error_message") && "SUCCESS".equals(status.get("error_message")));
         } else {
-            throw new IOException("Failed to fetch data by uri: " + url);
+            throw new IOException("Failed to fetch data by uri: " + uri);
         }
     }
 }

@@ -27,21 +27,26 @@ package com.github.akarazhev.jcryptolib.cmc.stream;
 import com.github.akarazhev.jcryptolib.cmc.config.Config;
 import com.github.akarazhev.jcryptolib.cmc.config.Type;
 
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class DataConfig {
-    private final Type type;
+    private final Set<Type> types;
     private final int connectTimeoutMs;
     private final int fetchIntervalMs;
 
     private DataConfig(final Builder builder) {
-        this.type = Objects.requireNonNull(builder.type, "Type is null");
+        if (builder.types.isEmpty()) {
+            throw new IllegalArgumentException("Types is empty");
+        }
+
+        this.types = builder.types;
         this.connectTimeoutMs = builder.connectTimeoutMs;
         this.fetchIntervalMs = builder.fetchIntervalMs;
     }
 
-    public Type getType() {
-        return type;
+    public Set<Type> getTypes() {
+        return types;
     }
 
     public int getConnectTimeoutMs() {
@@ -54,19 +59,19 @@ public final class DataConfig {
 
     public String print() {
         return "\nCMC Data Config {" +
-                "\n\ttype=" + type +
+                "\n\ttypes=" + types +
                 "\n\tconnectTimeoutMs=" + connectTimeoutMs +
                 "\n\tfetchIntervalMs=" + fetchIntervalMs +
                 "\n}";
     }
 
     public static final class Builder {
-        private Type type;
+        private final Set<Type> types = new HashSet<>();
         private int connectTimeoutMs = Config.getConnectTimeoutMs();
         private int fetchIntervalMs = Config.getFetchIntervalMs();
 
         public Builder type(final Type type) {
-            this.type = type;
+            this.types.add(type);
             return this;
         }
 
