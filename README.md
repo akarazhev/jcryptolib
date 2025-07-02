@@ -3,7 +3,8 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/akarazhev/jcryptolib)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Java cryptocurrency utility library with reactive programming, HTTP support, and modular design.
+Java cryptocurrency utility library with reactive programming, HTTP support, and modular design that allows easy 
+integration into Java-based trading, analytics, or data ingestion systems.
 
 ---
 
@@ -33,7 +34,7 @@ Add the dependency to your Maven project:
 <dependency>
     <groupId>com.github.akarazhev.jcryptolib</groupId>
     <artifactId>jcryptolib</artifactId>
-    <version>0.1</version>
+    <version>0.0.1</version>
 </dependency>
 ```
 
@@ -101,6 +102,16 @@ src/
           stream/
         util/  
 ```
+
+---
+
+## Versions
+
+- [0.0.1](https://github.com/jcryptolib/jcryptolib/releases/tag/v0.0.1) - Initial release that provides a basic set of
+  utilities for working with cryptocurrencies:
+    - CoinMarketCap data: Fear and Greed Index, Altcoin Season Index, Dominance Index, Market Cycle indicator.
+    - Bybit activities: Launchpool, Launchpad, Megadrop, ByVotes, Airdrop Hunt, ByStarter.
+    - Bybit trading data: Ticker, Kline, Orderbook, All Liquidation.
 
 ---
 

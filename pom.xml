@@ -6,7 +6,7 @@
 
     <groupId>com.github.akarazhev.jcryptolib</groupId>
     <artifactId>jcryptolib</artifactId>
-    <version>0.1</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
 
     <name>jcryptolib</name>
