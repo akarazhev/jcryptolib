@@ -109,9 +109,10 @@ src/
 
 - [0.0.1](https://github.com/jcryptolib/jcryptolib/releases/tag/v0.0.1) - Initial release that provides a basic set of
   utilities for working with cryptocurrencies:
-    - CoinMarketCap data: Fear and Greed Index, Altcoin Season Index, Dominance Index, Market Cycle indicator.
-    - Bybit activities: Launchpool, Launchpad, Megadrop, ByVotes, Airdrop Hunt, ByStarter.
-    - Bybit trading data: Ticker, Kline, Orderbook, All Liquidation.
+  - Crypto Data: BTC and ETH prices and market cap, Fear and Greed Index, Altcoin Season Index, Dominance Index,
+    Market Cycle Indicator.
+  - Bybit Activities: Launchpool, Launchpad, Megadrop, ByVotes, Airdrop Hunt, ByStarter.
+  - Bybit Trading Data: Ticker, Kline, Orderbook, All Liquidation.
 
 ---
 
