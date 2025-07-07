@@ -26,6 +26,8 @@ package com.github.akarazhev.jcryptolib.cmc.stream;
 
 import com.github.akarazhev.jcryptolib.cmc.config.Type;
 import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.stream.Provider;
+import com.github.akarazhev.jcryptolib.stream.Source;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
@@ -35,9 +37,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpClient;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HISTORICAL_VALUES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -75,9 +81,14 @@ final class CmcDataFetcherTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertTrue(value.getData().containsKey("dataList"));
-            assertTrue(value.getData().containsKey("dialConfig"));
-            assertTrue(value.getData().containsKey("historicalValues"));
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.FGI, value.getSource());
+            assertTrue(value.getData().containsKey(DATA_LIST));
+            assertFalse(((List) value.getData().get(DATA_LIST)).isEmpty());
+            assertTrue(value.getData().containsKey(DIAL_CONFIG));
+            assertFalse(((List) value.getData().get(DIAL_CONFIG)).isEmpty());
+            assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
+            assertFalse(((Map) value.getData().get(HISTORICAL_VALUES)).isEmpty());
         }
     }
 }

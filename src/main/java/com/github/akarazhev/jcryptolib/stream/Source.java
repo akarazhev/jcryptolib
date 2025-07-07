@@ -24,39 +24,6 @@
 
 package com.github.akarazhev.jcryptolib.stream;
 
-public final class Payload<T> {
-    private final Provider provider;
-    private final Source source;
-    private final T data;
-
-    public static <T> Payload<T> of(final Provider provider, final Source source, final T data) {
-        return new Payload<>(provider, source, data);
-    }
-
-    private Payload(final Provider provider, final Source source, final T data) {
-        this.provider = provider;
-        this.source = source;
-        this.data = data;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public Provider getProvider() {
-        return provider;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    @Override
-    public String toString() {
-        return "Payload{" +
-                "data=" + data +
-                ", provider=" + provider +
-                ", source=" + source +
-                '}';
-    }
+public enum Source {
+    WEBSOCKET, REST_API, FGI
 }

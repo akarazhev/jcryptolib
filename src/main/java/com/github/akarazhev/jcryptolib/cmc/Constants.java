@@ -22,41 +22,26 @@
  * SOFTWARE.
  */
 
-package com.github.akarazhev.jcryptolib.stream;
+package com.github.akarazhev.jcryptolib.cmc;
 
-public final class Payload<T> {
-    private final Provider provider;
-    private final Source source;
-    private final T data;
-
-    public static <T> Payload<T> of(final Provider provider, final Source source, final T data) {
-        return new Payload<>(provider, source, data);
+public final class Constants {
+    private Constants() {
+        throw new UnsupportedOperationException();
     }
 
-    private Payload(final Provider provider, final Source source, final T data) {
-        this.provider = provider;
-        this.source = source;
-        this.data = data;
+    public static final class FGI {
+        public static final int FGI_START_DATE = 1367193600;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public Provider getProvider() {
-        return provider;
-    }
-
-    public Source getSource() {
-        return source;
-    }
-
-    @Override
-    public String toString() {
-        return "Payload{" +
-                "data=" + data +
-                ", provider=" + provider +
-                ", source=" + source +
-                '}';
+    public static final class Response {
+        public static final String DATA = "data";
+        public static final String STATUS = "status";
+        public static final String ERROR_CODE = "error_code";
+        public static final String ERROR_CODE_OK = "0";
+        public static final String ERROR_MESSAGE = "error_message";
+        public static final String ERROR_MESSAGE_SUCCESS = "SUCCESS";
+        public static final String DATA_LIST = "dataList";
+        public static final String DIAL_CONFIG = "dialConfig";
+        public static final String HISTORICAL_VALUES = "historicalValues";
     }
 }

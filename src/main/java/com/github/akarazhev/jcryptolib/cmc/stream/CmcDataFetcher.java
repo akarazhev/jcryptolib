@@ -27,6 +27,7 @@ package com.github.akarazhev.jcryptolib.cmc.stream;
 import com.github.akarazhev.jcryptolib.stream.DataFetcher;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
+import com.github.akarazhev.jcryptolib.stream.Source;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -40,11 +41,19 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.github.akarazhev.jcryptolib.cmc.Constants.FGI.FGI_START_DATE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE_OK;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE_SUCCESS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STATUS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.FGI;
 
 final class CmcDataFetcher implements DataFetcher {
@@ -94,15 +103,15 @@ final class CmcDataFetcher implements DataFetcher {
     private void fetchFgi() {
         if (!emitter.isCancelled()) {
             try {
-                final var end = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
-                final var start = end - TimeUnit.DAYS.toSeconds(2);
-                final var request = CmcRequestBuilder.buildFearGreedChartRequest(start, end);
+                final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
+                final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
+                final var request = CmcRequestBuilder.buildFearGreedChartRequest(FGI_START_DATE, end);
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
                     final var result = getResult(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);
-                        emitter.onNext(Payload.of(Provider.CMC, result));
+                        emitter.onNext(Payload.of(Provider.CMC, Source.FGI, result));
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -118,7 +127,7 @@ final class CmcDataFetcher implements DataFetcher {
     private Map<String, Object> getResult(final URI uri, final String json) throws IOException {
         final var data = JsonUtils.jsonToMap(json);
         if (isStatusOk(uri, data)) {
-            return (Map<String, Object>) data.get("data");
+            return (Map<String, Object>) data.get(DATA);
         }
 
         return Map.of();
@@ -126,10 +135,10 @@ final class CmcDataFetcher implements DataFetcher {
 
     @SuppressWarnings("unchecked")
     private boolean isStatusOk(final URI uri, final Map<String, Object> data) throws IOException {
-        final var status = (Map<String, Object>) data.get("status");
+        final var status = (Map<String, Object>) data.get(STATUS);
         if (status != null) {
-            return (status.containsKey("error_code") && "0".equals(status.get("error_code"))) &&
-                    (status.containsKey("error_message") && "SUCCESS".equals(status.get("error_message")));
+            return (status.containsKey(ERROR_CODE) && ERROR_CODE_OK.equals(status.get(ERROR_CODE))) &&
+                    (status.containsKey(ERROR_MESSAGE) && ERROR_MESSAGE_SUCCESS.equals(status.get(ERROR_MESSAGE)));
         } else {
             throw new IOException("Failed to fetch data by uri: " + uri);
         }
