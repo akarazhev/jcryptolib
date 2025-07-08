@@ -39,7 +39,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Map;
@@ -77,8 +79,25 @@ final class CmcDataFetcher implements DataFetcher {
 
     @Override
     public void fetch() {
-        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS)
-                .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
+        final var now = LocalDateTime.now();
+        var nextFetch = now.with(config.getFetchAtTime());
+        if (now.isAfter(nextFetch)) {
+            nextFetch = nextFetch.plusDays(1);
+        }
+
+        final var initialDelay = Duration.between(now, nextFetch).toMillis();
+        if (initialDelay > 0) {
+            fetchData();
+        }
+
+        fetcherRef.set(
+                Flowable.timer(initialDelay, TimeUnit.MILLISECONDS)
+                        .flatMap(_ ->
+                                Flowable.interval(0, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS)
+                                        .doOnNext(_ -> fetchData())
+                        )
+                        .subscribe(_ -> {}, t -> LOGGER.error("Fetcher error", t))
+        );
     }
 
     @Override

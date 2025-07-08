@@ -35,8 +35,8 @@ public final class Config {
         return AppConfig.getAsInt("cmc.connect.timeout.ms");
     }
 
-    public static int getFetchIntervalMs() {
-        return AppConfig.getAsInt("cmc.fetch.interval.ms");
+    public static String getFetchAtTime() {
+        return AppConfig.getAsString("cmc.fetch.at.time");
     }
 }
 
