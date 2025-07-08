@@ -24,6 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.cmc.stream;
 
+import com.github.akarazhev.jcryptolib.cmc.config.Type;
 import com.github.akarazhev.jcryptolib.stream.DataFetcher;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
@@ -116,13 +117,19 @@ final class CmcDataFetcher implements DataFetcher {
 
     private void fetchData() {
         config.getTypes().forEach(type -> {
-            final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
-            final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
             if (FGI.equals(type)) {
+                final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
+                final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 fetch(CmcRequestBuilder.buildFearGreedChartRequest(FGI_START_DATE, end), Source.FGI);
             } else if (ASI.equals(type)) {
+                final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
+                final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 final var start = end - TimeUnit.DAYS.toSeconds(90); // TODO: move to config?
                 fetch(CmcRequestBuilder.buildAltcoinSeasonIndexRequest(start, end), Source.ASI);
+            } else if (Type.BDN.equals(type)) {
+                fetch(CmcRequestBuilder.buildBitcoinDominanceNowRequest(), Source.BDN);
+            } else if (Type.BDA.equals(type)) {
+                fetch(CmcRequestBuilder.buildBitcoinDominanceAllRequest(), Source.BDA);
             }
         });
     }

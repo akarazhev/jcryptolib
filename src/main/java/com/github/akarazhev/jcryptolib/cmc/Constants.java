@@ -46,5 +46,12 @@ public final class Constants {
         public static final String POINTS = "points";
         public static final String DIAL_CONFIGS = "dialConfigs";
         public static final String TOP_CRYPTOS = "topCryptos";
+        public static final String CONFIGS = "configs";
+        public static final String DOMINANCE = "dominance";
+        public static final String DOMINANCE_LAST_MONTH = "dominanceLastMonth";
+        public static final String DOMINANCE_LAST_WEEK = "dominanceLastWeek";
+        public static final String DOMINANCE_YEARLY_HIGH = "dominanceYearlyHigh";
+        public static final String DOMINANCE_YEARLY_LOW = "dominanceYearlyLow";
+        public static final String DOMINANCE_YESTERDAY = "dominanceYesterday";
     }
 }

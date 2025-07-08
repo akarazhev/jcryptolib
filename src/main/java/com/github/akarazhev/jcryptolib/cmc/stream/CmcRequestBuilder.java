@@ -9,16 +9,26 @@ import java.util.UUID;
 final class CmcRequestBuilder {
 
     public static HttpRequest buildFearGreedChartRequest(final long start, final long end) {
-        return buildRequest(Url.FGI, UUID.randomUUID(), start, end);
+        return buildRequest(URI.create(String.format(Url.FGI + "?start=%d&end=%d&convertId=2781", start, end)),
+                UUID.randomUUID());
     }
 
     public static HttpRequest buildAltcoinSeasonIndexRequest(final long start, final long end) {
-        return buildRequest(Url.ASI, UUID.randomUUID(), start, end);
+        return buildRequest(URI.create(String.format(Url.ASI + "?start=%d&end=%d&convertId=2781", start, end)),
+                UUID.randomUUID());
     }
 
-    private static HttpRequest buildRequest(final Url url, final UUID xRequestId, final long start, final long end) {
+    public static HttpRequest buildBitcoinDominanceNowRequest() {
+        return buildRequest(URI.create(Url.BDN.toString()), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildBitcoinDominanceAllRequest() {
+        return buildRequest(URI.create(String.format(Url.BDA + "?range=all")), UUID.randomUUID());
+    }
+
+    private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {
         return HttpRequest.newBuilder()
-                .uri(URI.create(String.format(url + "?start=%d&end=%d&convertId=2781", start, end)))
+                .uri(uri)
                 .header("accept", "application/json, text/plain, */*")
                 .header("accept-language", "en-US,en;q=0.9")
                 .header("cache-control", "no-cache")

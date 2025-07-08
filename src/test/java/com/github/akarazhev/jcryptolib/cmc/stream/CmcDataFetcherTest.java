@@ -41,9 +41,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIGS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_LAST_MONTH;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_LAST_WEEK;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HISTORICAL_VALUES;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.POINTS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOP_CRYPTOS;
@@ -125,6 +132,74 @@ final class CmcDataFetcherTest {
             assertFalse(((List) value.getData().get(DIAL_CONFIGS)).isEmpty());
             assertTrue(value.getData().containsKey(TOP_CRYPTOS));
             assertFalse(((List) value.getData().get(TOP_CRYPTOS)).isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldReceiveBitcoinDominanceNow() {
+        final var config = new DataConfig.Builder()
+                .type(Type.BDN)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.BDN, value.getSource());
+            assertTrue(value.getData().containsKey(CONFIGS));
+            assertFalse(((List) value.getData().get(CONFIGS)).isEmpty());
+            assertTrue(value.getData().containsKey(DOMINANCE));
+            assertFalse(((List) value.getData().get(DOMINANCE)).isEmpty());
+            assertTrue(value.getData().containsKey(DOMINANCE_LAST_MONTH));
+            assertFalse(((List) value.getData().get(DOMINANCE_LAST_MONTH)).isEmpty());
+            assertTrue(value.getData().containsKey(DOMINANCE_LAST_WEEK));
+            assertFalse(((List) value.getData().get(DOMINANCE_LAST_WEEK)).isEmpty());
+            assertTrue(value.getData().containsKey(DOMINANCE_YEARLY_HIGH));
+            assertFalse(((List) value.getData().get(DOMINANCE_YEARLY_HIGH)).isEmpty());
+            assertTrue(value.getData().containsKey(DOMINANCE_YEARLY_LOW));
+            assertFalse(((List) value.getData().get(DOMINANCE_YEARLY_LOW)).isEmpty());
+            assertTrue(value.getData().containsKey(DOMINANCE_YESTERDAY));
+            assertFalse(((List) value.getData().get(DOMINANCE_YESTERDAY)).isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldReceiveBitcoinDominanceAll() {
+        final var config = new DataConfig.Builder()
+                .type(Type.BDA)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.BDA, value.getSource());
+            assertTrue(value.getData().containsKey(CONFIGS));
+            assertFalse(((List) value.getData().get(CONFIGS)).isEmpty());
+            assertTrue(value.getData().containsKey(POINTS));
+            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
         }
     }
 }

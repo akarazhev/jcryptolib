@@ -26,7 +26,9 @@ package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Url {
     FGI("https://api.coinmarketcap.com/data-api/v3/fear-greed/chart"),
-    ASI("https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart");
+    ASI("https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart"),
+    BDN("https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/overview"),
+    BDA("https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart");
 
     private final String url;
 
