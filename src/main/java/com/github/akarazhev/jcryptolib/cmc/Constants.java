@@ -43,5 +43,8 @@ public final class Constants {
         public static final String DATA_LIST = "dataList";
         public static final String DIAL_CONFIG = "dialConfig";
         public static final String HISTORICAL_VALUES = "historicalValues";
+        public static final String POINTS = "points";
+        public static final String DIAL_CONFIGS = "dialConfigs";
+        public static final String TOP_CRYPTOS = "topCryptos";
     }
 }

@@ -25,7 +25,8 @@
 package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Type {
-    FGI("Fear and Greed Index");
+    FGI("CMC Fear and Greed Index"),
+    ASI("CMC Altcoin Season Index");
 
     private final String type;
 

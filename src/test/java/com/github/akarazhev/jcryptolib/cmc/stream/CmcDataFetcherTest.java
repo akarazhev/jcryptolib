@@ -43,7 +43,10 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HISTORICAL_VALUES;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.POINTS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOP_CRYPTOS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -89,6 +92,39 @@ final class CmcDataFetcherTest {
             assertFalse(((List) value.getData().get(DIAL_CONFIG)).isEmpty());
             assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
             assertFalse(((Map) value.getData().get(HISTORICAL_VALUES)).isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldReceiveAltcoinSeasonIndex() {
+        final var config = new DataConfig.Builder()
+                .type(Type.ASI)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.ASI, value.getSource());
+            assertTrue(value.getData().containsKey(POINTS));
+            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
+            assertFalse(((Map) value.getData().get(HISTORICAL_VALUES)).isEmpty());
+            assertTrue(value.getData().containsKey(DIAL_CONFIGS));
+            assertFalse(((List) value.getData().get(DIAL_CONFIGS)).isEmpty());
+            assertTrue(value.getData().containsKey(TOP_CRYPTOS));
+            assertFalse(((List) value.getData().get(TOP_CRYPTOS)).isEmpty());
         }
     }
 }

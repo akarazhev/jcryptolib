@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -56,6 +57,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE_
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE_SUCCESS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STATUS;
+import static com.github.akarazhev.jcryptolib.cmc.config.Type.ASI;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.FGI;
 
 final class CmcDataFetcher implements DataFetcher {
@@ -96,7 +98,8 @@ final class CmcDataFetcher implements DataFetcher {
                                 Flowable.interval(0, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS)
                                         .doOnNext(_ -> fetchData())
                         )
-                        .subscribe(_ -> {}, t -> LOGGER.error("Fetcher error", t))
+                        .subscribe(_ -> {
+                        }, t -> LOGGER.error("Fetcher error", t))
         );
     }
 
@@ -113,24 +116,26 @@ final class CmcDataFetcher implements DataFetcher {
 
     private void fetchData() {
         config.getTypes().forEach(type -> {
+            final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
+            final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
             if (FGI.equals(type)) {
-                fetchFgi();
+                fetch(CmcRequestBuilder.buildFearGreedChartRequest(FGI_START_DATE, end), Source.FGI);
+            } else if (ASI.equals(type)) {
+                final var start = end - TimeUnit.DAYS.toSeconds(90); // TODO: move to config?
+                fetch(CmcRequestBuilder.buildAltcoinSeasonIndexRequest(start, end), Source.ASI);
             }
         });
     }
 
-    private void fetchFgi() {
+    private void fetch(final HttpRequest request, final Source source) {
         if (!emitter.isCancelled()) {
             try {
-                final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
-                final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
-                final var request = CmcRequestBuilder.buildFearGreedChartRequest(FGI_START_DATE, end);
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
                     final var result = getResult(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);
-                        emitter.onNext(Payload.of(Provider.CMC, Source.FGI, result));
+                        emitter.onNext(Payload.of(Provider.CMC, source, result));
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
