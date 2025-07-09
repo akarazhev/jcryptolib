@@ -130,6 +130,12 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceNowRequest(), Source.BDN);
             } else if (Type.BDA.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceAllRequest(), Source.BDA);
+            } else if (Type.PMN.equals(type)) {
+                fetch(CmcRequestBuilder.buildPuellMultipleNowRequest(), Source.PMN);
+            } else if (Type.PMA.equals(type)) {
+                fetch(CmcRequestBuilder.buildPuellMultipleAllRequest(), Source.PMA);
+            } else if (Type.IND.equals(type)) {
+                fetch(CmcRequestBuilder.buildIndicatorsRequest(), Source.IND);
             }
         });
     }

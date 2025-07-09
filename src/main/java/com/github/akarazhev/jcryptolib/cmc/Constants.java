@@ -53,5 +53,11 @@ public final class Constants {
         public static final String DOMINANCE_YEARLY_HIGH = "dominanceYearlyHigh";
         public static final String DOMINANCE_YEARLY_LOW = "dominanceYearlyLow";
         public static final String DOMINANCE_YESTERDAY = "dominanceYesterday";
+        public static final String PUELL_MULTIPLE = "puellMultiple";
+        public static final String PI_CYCLE_TOP = "piCycleTop";
+        public static final String LIKELIHOOD = "likelihood";
+        public static final String INDICATORS = "indicators";
+        public static final String TOTAL_HIT_COUNT = "totalHitCount";
+        public static final String TRIGGERED_COUNT = "triggeredCount";
     }
 }

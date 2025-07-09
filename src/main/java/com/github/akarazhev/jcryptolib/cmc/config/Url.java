@@ -28,7 +28,10 @@ public enum Url {
     FGI("https://api.coinmarketcap.com/data-api/v3/fear-greed/chart"),
     ASI("https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart"),
     BDN("https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/overview"),
-    BDA("https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart");
+    BDA("https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart"),
+    PMN("https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
+    PMA("https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
+    IND("https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators");
 
     private final String url;
 

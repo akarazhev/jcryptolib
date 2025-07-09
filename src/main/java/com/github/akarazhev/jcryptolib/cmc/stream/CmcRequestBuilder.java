@@ -23,7 +23,19 @@ final class CmcRequestBuilder {
     }
 
     public static HttpRequest buildBitcoinDominanceAllRequest() {
-        return buildRequest(URI.create(String.format(Url.BDA + "?range=all")), UUID.randomUUID());
+        return buildRequest(URI.create(Url.BDA + "?range=all"), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildPuellMultipleNowRequest() {
+        return buildRequest(URI.create(Url.PMN + "?convertId=2781"), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildPuellMultipleAllRequest() {
+        return buildRequest(URI.create(Url.PMA + "?range=ALL&convertId=2781"), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildIndicatorsRequest() {
+        return buildRequest(URI.create(Url.IND + "?convertId=2781&sortBy=index&sortType=asc"), UUID.randomUUID());
     }
 
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {

@@ -25,5 +25,5 @@
 package com.github.akarazhev.jcryptolib.stream;
 
 public enum Source {
-    WEBSOCKET, REST_API, FGI, ASI, BDN, BDA
+    WEBSOCKET, REST_API, FGI, ASI, BDN, BDA, PMN, PMA, IND
 }

@@ -28,7 +28,10 @@ public enum Type {
     FGI("Fear and Greed Index"),
     ASI("Altcoin Season Index"),
     BDN("Bitcoin Dominance Now"),
-    BDA("Bitcoin Dominance All");
+    BDA("Bitcoin Dominance All"),
+    PMN("Puell Multiple Now"),
+    PMA("Puell Multiple All"),
+    IND("Indicators");
 
     private final String type;
 
