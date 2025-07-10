@@ -25,22 +25,21 @@
 package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Type {
-    FGI("Fear and Greed Index"),
-    ASI("Altcoin Season Index"),
-    BDN("Bitcoin Dominance Now"),
-    BDA("Bitcoin Dominance All"),
-    PMN("Puell Multiple Now"),
-    PMA("Puell Multiple All"),
-    IND("Indicators");
+    FGI("Fear and Greed Index", "https://api.coinmarketcap.com/data-api/v3/fear-greed/chart"),
+    ASI("Altcoin Season Index", "https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart"),
+    BDN("Bitcoin Dominance Now", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/overview"),
+    BDA("Bitcoin Dominance All", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart"),
+    PMN("Puell Multiple Now", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
+    PMA("Puell Multiple All", "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
+    IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators");
 
-    private final String type;
+    private final String url;
 
-    Type(final String type) {
-        this.type = type;
+    Type(final String type, final String url) {
+        this.url = url;
     }
 
-    @Override
-    public String toString() {
-        return type;
+    public String getUrl() {
+        return url;
     }
 }
