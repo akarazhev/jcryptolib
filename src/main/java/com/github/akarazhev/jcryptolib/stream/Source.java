@@ -25,5 +25,30 @@
 package com.github.akarazhev.jcryptolib.stream;
 
 public enum Source {
-    WEBSOCKET, REST_API, FGI, ASI, BDN, BDA, PMN, PMA, IND, CMC, ETF_NF
+    // WebSocket connection
+    WEBSOCKET,
+    // REST API
+    REST_API,
+    // Fear and Greed Index
+    FGI,
+    // Altcoin Season Index
+    ASI,
+    // Bitcoin Dominance Now
+    BDN,
+    // Bitcoin Dominance All
+    BDA,
+    // Puell Multiple Now
+    PMN,
+    // Puell Multiple All
+    PMA,
+    // Indicators
+    IND,
+    // Crypto Market Cap
+    CMC,
+    // Crypto EFTs Net Flow
+    ETF_NF,
+    // Crypto EFTs BTC
+    ETF_BTC,
+    // Crypto EFTs ETH
+    ETF_ETH;
 }

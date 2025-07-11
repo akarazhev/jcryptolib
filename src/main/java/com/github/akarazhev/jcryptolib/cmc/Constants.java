@@ -59,5 +59,7 @@ public final class Constants {
         public static final String INDICATORS = "indicators";
         public static final String TOTAL_HIT_COUNT = "totalHitCount";
         public static final String TRIGGERED_COUNT = "triggeredCount";
+        public static final String YEARLY_PERFORMANCE = "yearlyPerformance";
+        public static final String THIRTY_DAYS_PERCENTAGE = "thirtyDaysPercentage";
     }
 }

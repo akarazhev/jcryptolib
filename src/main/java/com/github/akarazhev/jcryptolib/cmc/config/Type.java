@@ -31,7 +31,8 @@ public enum Type {
     BDA("Bitcoin Dominance All", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart"),
     PMN("Puell Multiple Now", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
     PMA("Puell Multiple All", "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
-    IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators");
+    IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators"),
+    CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical");
 
     private final String url;
 

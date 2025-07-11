@@ -59,6 +59,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSA
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE_SUCCESS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STATUS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.ASI;
+import static com.github.akarazhev.jcryptolib.cmc.config.Type.CMC;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.FGI;
 
 final class CmcDataFetcher implements DataFetcher {
@@ -117,7 +118,9 @@ final class CmcDataFetcher implements DataFetcher {
 
     private void fetchData() {
         config.getTypes().forEach(type -> {
-            if (FGI.equals(type)) {
+            if (CMC.equals(type)) {
+                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(), Source.CMC);
+            } else if (FGI.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 fetch(CmcRequestBuilder.buildFearGreedChartRequest(FGI_START_DATE, end), Source.FGI);

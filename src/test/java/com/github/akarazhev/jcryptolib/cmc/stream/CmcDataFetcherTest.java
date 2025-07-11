@@ -57,9 +57,11 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LIKELIHOOD;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PI_CYCLE_TOP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.POINTS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PUELL_MULTIPLE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.THIRTY_DAYS_PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOP_CRYPTOS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_HIT_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TRIGGERED_COUNT;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_PERFORMANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -75,6 +77,38 @@ final class CmcDataFetcherTest {
     @AfterAll
     static void cleanup() {
         client.close();
+    }
+
+    @Test
+    public void shouldReceiveCryptoMarketCap() {
+        final var config = new DataConfig.Builder()
+                .type(Type.CMC)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.CMC, value.getSource());
+            assertTrue(value.getData().containsKey(POINTS));
+            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
+            assertFalse(((Map) value.getData().get(HISTORICAL_VALUES)).isEmpty());
+            assertTrue(value.getData().containsKey(YEARLY_PERFORMANCE));
+            assertFalse(((Map) value.getData().get(YEARLY_PERFORMANCE)).isEmpty());
+            assertTrue(value.getData().containsKey(THIRTY_DAYS_PERCENTAGE));
+        }
     }
 
     @Test

@@ -25,5 +25,8 @@
 package com.github.akarazhev.jcryptolib.stream;
 
 public enum Provider {
-    BYBIT, CMC
+    // Bybit (https://bybit.com/)
+    BYBIT,
+    // CoinMarketCap (https://coinmarketcap.com/)
+    CMC
 }
