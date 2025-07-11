@@ -12,6 +12,10 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.CMC.getUrl() + "?range=all&convertId=2781"), UUID.randomUUID());
     }
 
+    public static HttpRequest buildCryptoEftNetFlowRequest() {
+        return buildRequest(URI.create(Type.ETF_NF.getUrl() + "?category=all&range=30d"), UUID.randomUUID());
+    }
+
     public static HttpRequest buildFearGreedChartRequest(final long start, final long end) {
         return buildRequest(URI.create(String.format(Type.FGI.getUrl() + "?start=%d&end=%d&convertId=2781", start, end)),
                 UUID.randomUUID());

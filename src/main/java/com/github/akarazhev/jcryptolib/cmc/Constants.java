@@ -61,5 +61,9 @@ public final class Constants {
         public static final String TRIGGERED_COUNT = "triggeredCount";
         public static final String YEARLY_PERFORMANCE = "yearlyPerformance";
         public static final String THIRTY_DAYS_PERCENTAGE = "thirtyDaysPercentage";
+        public static final String AGGREGATION = "aggregation";
+        public static final String TOTAL = "total";
+        public static final String TOTAL_BTC_VALUE = "totalBtcValue";
+        public static final String TOTAL_ETH_VALUE = "totalEthValue";
     }
 }

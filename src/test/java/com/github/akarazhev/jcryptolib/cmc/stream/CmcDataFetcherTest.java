@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.AGGREGATION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
@@ -59,6 +60,9 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.POINTS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PUELL_MULTIPLE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.THIRTY_DAYS_PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOP_CRYPTOS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_BTC_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_ETH_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_HIT_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TRIGGERED_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_PERFORMANCE;
@@ -108,6 +112,37 @@ final class CmcDataFetcherTest {
             assertTrue(value.getData().containsKey(YEARLY_PERFORMANCE));
             assertFalse(((Map) value.getData().get(YEARLY_PERFORMANCE)).isEmpty());
             assertTrue(value.getData().containsKey(THIRTY_DAYS_PERCENTAGE));
+        }
+    }
+
+    @Test
+    public void shouldReceiveCryptoEFTsNetFlow() {
+        final var config = new DataConfig.Builder()
+                .type(Type.ETF_NF)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.ETF_NF, value.getSource());
+            assertTrue(value.getData().containsKey(POINTS));
+            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            assertTrue(value.getData().containsKey(AGGREGATION));
+            assertTrue(value.getData().containsKey(TOTAL));
+            assertTrue(value.getData().containsKey(TOTAL_BTC_VALUE));
+            assertTrue(value.getData().containsKey(TOTAL_ETH_VALUE));
         }
     }
 

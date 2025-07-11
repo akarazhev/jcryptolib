@@ -32,7 +32,8 @@ public enum Type {
     PMN("Puell Multiple Now", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
     PMA("Puell Multiple All", "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
     IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators"),
-    CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical");
+    CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical"),
+    ETF_NF("Crypto EFTs Net Flow", "https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart");
 
     private final String url;
 
