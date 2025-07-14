@@ -29,8 +29,9 @@ public final class Constants {
         throw new UnsupportedOperationException();
     }
 
-    public static final class FGI {
+    public static final class CMC {
         public static final int FGI_START_DATE = 1367193600;
+        public static final int ASI_PERIOD_DAYS = 90;
     }
 
     public static final class Response {

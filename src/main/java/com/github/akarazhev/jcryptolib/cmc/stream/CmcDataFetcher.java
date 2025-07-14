@@ -51,7 +51,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.akarazhev.jcryptolib.cmc.Constants.FGI.FGI_START_DATE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.ASI_PERIOD_DAYS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.FGI_START_DATE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE_OK;
@@ -130,7 +131,7 @@ final class CmcDataFetcher implements DataFetcher {
             } else if (ASI.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
-                final var start = end - TimeUnit.DAYS.toSeconds(90); // TODO: move to config?
+                final var start = end - TimeUnit.DAYS.toSeconds(ASI_PERIOD_DAYS);
                 fetch(CmcRequestBuilder.buildAltcoinSeasonIndexRequest(start, end), Source.ASI);
             } else if (Type.BDN.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceNowRequest(), Source.BDN);
