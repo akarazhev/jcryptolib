@@ -5,7 +5,7 @@ investment decisions.
 
 Request URL with curl:
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=1749888180&end=1752480180&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=1749919260&end=1752511260&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -20,7 +20,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=174988818
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: ef171a03d9a74b0e96b8471a873c4621'
+  -H 'x-request-id: 46ff4fd99af94d11a160a671e7113a08'
 ```
 The response is a JSON object with the following structure:
 ```json
@@ -233,9 +233,9 @@ The response is a JSON object with the following structure:
       {
         "score": 70,
         "name": "Greed",
-        "timestamp": "1752479590",
-        "btcPrice": "122795.71",
-        "btcVolume": "104446561825.70"
+        "timestamp": "1752511090",
+        "btcPrice": "119832.23",
+        "btcVolume": "177027247504.88"
       }
     ],
     "dialConfig": [
@@ -269,7 +269,7 @@ The response is a JSON object with the following structure:
       "now": {
         "score": 70,
         "name": "Greed",
-        "timestamp": "1752479590"
+        "timestamp": "1752511090"
       },
       "yesterday": {
         "score": 68,
@@ -299,10 +299,10 @@ The response is a JSON object with the following structure:
     }
   },
   "status": {
-    "timestamp": "2025-07-14T08:03:08.867Z",
+    "timestamp": "2025-07-14T16:41:28.776Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "25",
+    "elapsed": "2",
     "credit_count": 0
   }
 }
