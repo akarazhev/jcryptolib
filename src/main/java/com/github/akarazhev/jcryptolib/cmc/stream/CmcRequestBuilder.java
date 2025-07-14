@@ -56,15 +56,15 @@ final class CmcRequestBuilder {
                 .header("platform", "web")
                 .header("priority", "u=1, i")
                 .header("referer", "https://coinmarketcap.com/")
-                .header("sec-ch-ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", " +
-                        "\"Not/A)Brand\";v=\"24\"")
+                .header("sec-ch-ua", "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";" +
+                        "v=\"138\"")
                 .header("sec-ch-ua-mobile", "?0")
                 .header("sec-ch-ua-platform", "\"macOS\"")
                 .header("sec-fetch-dest", "empty")
                 .header("sec-fetch-mode", "cors")
                 .header("sec-fetch-site", "same-site")
-                .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
-                        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
+                .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
+                        "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
                 .header("x-request-id", xRequestId.toString().replace("-", ""))
                 .GET()
                 .build();
