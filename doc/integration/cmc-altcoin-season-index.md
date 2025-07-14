@@ -23,30 +23,6 @@ curl 'https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart?start=17518
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
   -H 'x-request-id: c9e5b69b625d427db753b28d2052b662'
 ```
-Request URL with node-fetch:
-```javascript
-fetch("https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart?start=1751876700&end=1752481500&convertId=2781", {
-  "headers": {
-    "accept": "application/json, text/plain, */*",
-    "accept-language": "en-US,en;q=0.9",
-    "cache-control": "no-cache",
-    "platform": "web",
-    "priority": "u=1, i",
-    "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"macOS\"",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-site",
-    "x-request-id": "c9e5b69b625d427db753b28d2052b662"
-  },
-  "referrer": "https://coinmarketcap.com/",
-  "body": null,
-  "method": "GET",
-  "mode": "cors",
-  "credentials": "omit"
-});
-```
 The response is a JSON object with the following structure:
 ```json
 {

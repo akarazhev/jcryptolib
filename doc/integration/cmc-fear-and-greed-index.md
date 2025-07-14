@@ -22,30 +22,6 @@ curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=174988818
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
   -H 'x-request-id: ef171a03d9a74b0e96b8471a873c4621'
 ```
-Request URL with node-fetch:
-```javascript
-fetch("https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=1749888180&end=1752480180&convertId=2781", {
-  "headers": {
-    "accept": "application/json, text/plain, */*",
-    "accept-language": "en-US,en;q=0.9",
-    "cache-control": "no-cache",
-    "platform": "web",
-    "priority": "u=1, i",
-    "sec-ch-ua": "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"macOS\"",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-site",
-    "x-request-id": "ef171a03d9a74b0e96b8471a873c4621"
-  },
-  "referrer": "https://coinmarketcap.com/",
-  "body": null,
-  "method": "GET",
-  "mode": "cors",
-  "credentials": "omit"
-});
-```
 The response is a JSON object with the following structure:
 ```json
 {
