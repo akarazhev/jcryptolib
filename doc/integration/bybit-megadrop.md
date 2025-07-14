@@ -1,8 +1,4 @@
-# Bybit API
-
-This is a collection of Bybit API that are used to fetch data. 
-
-## Megadrop
+# Bybit Megadrop
 
 Buy Earn products on Bybit to win points and share the new token prize pool.
 
@@ -25,7 +21,7 @@ curl 'https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
 ```
 Request URL with node-fetch:
-```
+```javascript
 fetch("https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList", {
   "headers": {
     "accept": "application/json, text/plain, */*",

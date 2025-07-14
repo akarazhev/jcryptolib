@@ -1,8 +1,4 @@
-# CoinMarketCap API
-
-This is a collection of CoinMarketCap API that are used to fetch data. 
-
-## Crypto Fear and Greed Index
+# CMC Crypto Fear and Greed Index
 
 Discover our Fear and Greed Index, a powerful tool that analyzes market sentiment to help you make informed crypto 
 investment decisions.
