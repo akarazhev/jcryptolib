@@ -2,7 +2,7 @@
 
 Request URL with curl:
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=1367193600&end=1752526800&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=1750007940&end=1752599940&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -17,7 +17,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=136719360
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: b166b93a1da44a5aad0a12b1cdf0ea6b'
+  -H 'x-request-id: 300f52d212274aeeb404cdd8f09b0d2f'
 ```
 
 The response is a JSON object with the following structure:
@@ -26,19 +26,19 @@ The response is a JSON object with the following structure:
   "data": {
     "dataList": [
       {
-        "score": 59,
+        "score": 51,
         "name": "Neutral",
-        "timestamp": "1687996800",
-        "btcPrice": "30086.19",
-        "btcVolume": "13180860821.04"
+        "timestamp": "1750032000",
+        "btcPrice": "105555.59",
+        "btcVolume": "50366626944.57"
       },
       ...
       {
         "score": 70,
         "name": "Greed",
-        "timestamp": "1752515590",
-        "btcPrice": "119781.41",
-        "btcVolume": "178306444512.13"
+        "timestamp": "1752599290",
+        "btcPrice": "117252.49",
+        "btcVolume": "94531413434.83"
       }
     ],
     "dialConfig": [
@@ -72,22 +72,22 @@ The response is a JSON object with the following structure:
       "now": {
         "score": 70,
         "name": "Greed",
-        "timestamp": "1752515590"
+        "timestamp": "1752599290"
       },
       "yesterday": {
-        "score": 68,
+        "score": 70,
         "name": "Greed",
-        "timestamp": "1752364800"
+        "timestamp": "1752451200"
       },
       "lastWeek": {
-        "score": 52,
+        "score": 50,
         "name": "Neutral",
-        "timestamp": "1751846400"
+        "timestamp": "1751932800"
       },
       "lastMonth": {
-        "score": 52,
+        "score": 50,
         "name": "Neutral",
-        "timestamp": "1749859200"
+        "timestamp": "1749945600"
       },
       "yearlyHigh": {
         "score": 88,
@@ -102,10 +102,10 @@ The response is a JSON object with the following structure:
     }
   },
   "status": {
-    "timestamp": "2025-07-14T18:12:03.242Z",
+    "timestamp": "2025-07-15T17:19:10.609Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "2",
+    "elapsed": "1",
     "credit_count": 0
   }
 }
