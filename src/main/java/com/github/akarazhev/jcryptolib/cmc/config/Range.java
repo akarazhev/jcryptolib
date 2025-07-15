@@ -24,24 +24,17 @@
 
 package com.github.akarazhev.jcryptolib.cmc.config;
 
-public enum Type {
-    FG("Fear and Greed", "https://api.coinmarketcap.com/data-api/v3/fear-greed/chart"),
-    AS("Altcoin Season", "https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart"),
-    BDO("Bitcoin Dominance Overview", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/overview"),
-    BD("Bitcoin Dominance", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart"),
-    PML("Puell Multiple Latest", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
-    PM("Puell Multiple", "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
-    IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators"),
-    CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical"),
-    ETF_NF("Crypto EFTs Net Flow", "https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart");
+public enum Range {
+    ALL("all"),
+    DAYS_30("30d");
 
-    private final String url;
+    private final String value;
 
-    Type(final String type, final String url) {
-        this.url = url;
+    Range(final String value) {
+        this.value = value;
     }
 
-    public String getUrl() {
-        return url;
+    public String getValue() {
+        return value;
     }
 }

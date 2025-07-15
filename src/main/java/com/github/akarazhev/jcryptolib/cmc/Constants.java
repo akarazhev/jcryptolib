@@ -32,6 +32,7 @@ public final class Constants {
     public static final class CMC {
         public static final int FGI_START_DATE = 1367193600;
         public static final int ASI_PERIOD_DAYS = 90;
+        public static final int CONVERT_ID = 2781;
     }
 
     public static final class Response {

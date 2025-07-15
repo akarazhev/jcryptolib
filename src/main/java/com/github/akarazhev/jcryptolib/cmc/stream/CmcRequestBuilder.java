@@ -1,5 +1,6 @@
 package com.github.akarazhev.jcryptolib.cmc.stream;
 
+import com.github.akarazhev.jcryptolib.cmc.config.Range;
 import com.github.akarazhev.jcryptolib.cmc.config.Type;
 
 import java.net.URI;
@@ -8,42 +9,47 @@ import java.util.UUID;
 
 final class CmcRequestBuilder {
 
-    public static HttpRequest buildCryptoMarketCapRequest() {
-        return buildRequest(URI.create(Type.CMC.getUrl() + "?range=all&convertId=2781"), UUID.randomUUID());
+    public static HttpRequest buildCryptoMarketCapRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.CMC.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildCryptoEftNetFlowRequest() {
-        return buildRequest(URI.create(Type.ETF_NF.getUrl() + "?category=all&range=30d"), UUID.randomUUID());
+    public static HttpRequest buildCryptoEftNetFlowRequest(final Range range) {
+        final var url = String.format("?category=all&range=%s", range.getValue());
+        return buildRequest(URI.create(Type.ETF_NF.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildFearGreedChartRequest(final long start, final long end) {
-        return buildRequest(URI.create(String.format(Type.FGI.getUrl() + "?start=%d&end=%d&convertId=2781", start, end)),
-                UUID.randomUUID());
+    public static HttpRequest buildFearGreedRequest(final int convertId, final long start, final long end) {
+        final var url = String.format("?start=%d&end=%d&convertId=%d", start, end, convertId);
+        return buildRequest(URI.create(Type.FG.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildAltcoinSeasonIndexRequest(final long start, final long end) {
-        return buildRequest(URI.create(String.format(Type.ASI.getUrl() + "?start=%d&end=%d&convertId=2781", start, end)),
-                UUID.randomUUID());
+    public static HttpRequest buildAltcoinSeasonRequest(final int convertId, final long start, final long end) {
+        final var url = String.format("?start=%d&end=%d&convertId=%d", start, end, convertId);
+        return buildRequest(URI.create(Type.AS.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildBitcoinDominanceNowRequest() {
-        return buildRequest(URI.create(Type.BDN.getUrl()), UUID.randomUUID());
+    public static HttpRequest buildBitcoinDominanceOverviewRequest() {
+        return buildRequest(URI.create(Type.BDO.getUrl()), UUID.randomUUID());
     }
 
-    public static HttpRequest buildBitcoinDominanceAllRequest() {
-        return buildRequest(URI.create(Type.BDA.getUrl() + "?range=all"), UUID.randomUUID());
+    public static HttpRequest buildBitcoinDominanceRequest(final Range range) {
+        final var url = String.format("?range=%s", range.getValue());
+        return buildRequest(URI.create(Type.BD.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildPuellMultipleNowRequest() {
-        return buildRequest(URI.create(Type.PMN.getUrl() + "?convertId=2781"), UUID.randomUUID());
+    public static HttpRequest buildPuellMultipleLatestRequest(final int convertId) {
+        final var url = String.format("?convertId=%d", convertId);
+        return buildRequest(URI.create(Type.PML.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildPuellMultipleAllRequest() {
-        return buildRequest(URI.create(Type.PMA.getUrl() + "?range=ALL&convertId=2781"), UUID.randomUUID());
+    public static HttpRequest buildPuellMultipleRequest() {
+        return buildRequest(URI.create(Type.PM.getUrl() + "?range=ALL&convertId=2781"), UUID.randomUUID());
     }
 
-    public static HttpRequest buildIndicatorsRequest() {
-        return buildRequest(URI.create(Type.IND.getUrl() + "?convertId=2781&sortBy=index&sortType=asc"), UUID.randomUUID());
+    public static HttpRequest buildIndicatorsRequest(final int convertId) {
+        final var url = String.format("?convertId=%d&sortBy=index&sortType=asc", convertId);
+        return buildRequest(URI.create(Type.IND.getUrl() + url), UUID.randomUUID());
     }
 
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {
