@@ -51,9 +51,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.ASI_PERIOD_DAYS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.AS_PERIOD_DAYS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.CONVERT_ID;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.FGI_START_DATE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.FG_PERIOD_DAYS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE_OK;
@@ -130,12 +130,12 @@ final class CmcDataFetcher implements DataFetcher {
             } else if (FG.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
-                final var start = end - TimeUnit.DAYS.toSeconds(ASI_PERIOD_DAYS);
+                final var start = end - TimeUnit.DAYS.toSeconds(FG_PERIOD_DAYS);
                 fetch(CmcRequestBuilder.buildFearGreedRequest(CONVERT_ID, start, end), Source.FG);
             } else if (AS.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
-                final var start = end - TimeUnit.DAYS.toSeconds(ASI_PERIOD_DAYS);
+                final var start = end - TimeUnit.DAYS.toSeconds(AS_PERIOD_DAYS);
                 fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(CONVERT_ID, start, end), Source.AS);
             } else if (Type.BDO.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceOverviewRequest(), Source.BDO);
