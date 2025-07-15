@@ -4,7 +4,7 @@
 
 Request URL with curl:
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical?convertId=2781&range=all' \
+curl 'https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical?convertId=2781&range=30d' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -19,7 +19,7 @@ curl 'https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 01b6e9f1c6bb43158cfc36004f3e5901'
+  -H 'x-request-id: 248adb15039c425080bbe56554887ff3'
 ```
 
 The response is a JSON object with the following structure:
@@ -28,53 +28,53 @@ The response is a JSON object with the following structure:
   "data": {
     "points": [
       {
-        "marketCap": 901399351176.46,
-        "volume": 79134402796.83,
-        "btcValue": 392646879629.14,
-        "ethValue": 137002970321.63,
-        "stableValue": 152579705252.97,
-        "otherValue": 219169795972.72,
-        "timestamp": "1655683200"
+        "marketCap": 2377311440200.79,
+        "volume": 85500455679.31,
+        "btcValue": 1277947163756.47,
+        "ethValue": 419097090855.90,
+        "stableValue": 155925212458.86,
+        "otherValue": 524341973129.56,
+        "timestamp": "1721088000"
       },
       ...
       {
-        "marketCap": 3735990911394.18,
-        "volume": 293159139635.51,
-        "btcValue": 2381762961466.73,
-        "ethValue": 361184974943.06,
-        "stableValue": 240339901964.65,
-        "otherValue": 752703073019.74,
-        "timestamp": "1752519805"
+        "marketCap": 3692070942634.88,
+        "volume": 196026085823.17,
+        "btcValue": 2331375988144.50,
+        "ethValue": 368259135708.28,
+        "stableValue": 239718213730.56,
+        "otherValue": 752717605051.54,
+        "timestamp": "1752597598"
       }
     ],
     "historicalValues": {
       "now": {
-        "marketCap": 3735990911394.175106405016889012
+        "marketCap": 3692070942634.877282674693146137
       },
       "yesterday": {
-        "marketCap": 3659383301005.780000000000000000
+        "marketCap": 3716211159114.990000000000000000
       },
       "lastWeek": {
-        "marketCap": 3368903740745.580000000000000000
+        "marketCap": 3340490469840.170000000000000000
       },
       "lastMonth": {
-        "marketCap": 3303513358182.010000000000000000
+        "marketCap": 3275383864728.550000000000000000
       }
     },
     "yearlyPerformance": {
       "high": {
-        "marketCap": 3721464308632.090000000000000000,
-        "timestamp": "1734393600"
+        "marketCap": 3745815779140.900000000000000000,
+        "timestamp": "1752537600"
       },
       "low": {
         "marketCap": 1900955521605.020000000000000000,
         "timestamp": "1725667200"
       }
     },
-    "thirtyDaysPercentage": 13.09
+    "thirtyDaysPercentage": 12.72
   },
   "status": {
-    "timestamp": "2025-07-14T19:04:49.634Z",
+    "timestamp": "2025-07-15T16:41:12.786Z",
     "error_code": "0",
     "error_message": "SUCCESS",
     "elapsed": "4",
@@ -87,7 +87,7 @@ The response is a JSON object with the following structure:
 
 Request URL with curl:
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart?category=all&range=all' \
+curl 'https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart?category=all&range=30d' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -102,7 +102,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart?categ
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 661b05cd9aa04971897da3ed0c59bda7'
+  -H 'x-request-id: 80b824e0880649f1b058da3f58c6640c'
 ```
 
 The response is a JSON object with the following structure:
@@ -111,26 +111,26 @@ The response is a JSON object with the following structure:
   "data": {
     "points": [
       {
-        "value": 6036200000,
-        "btcValue": 6036200000,
-        "ethValue": 0,
-        "timestamp": "1706745600000"
+        "value": 455300000,
+        "btcValue": 433900000,
+        "ethValue": 21400000,
+        "timestamp": "1750032000000"
       },
       ...
       {
-        "value": 4459333000,
-        "btcValue": 3363933000,
-        "ethValue": 1095400000,
-        "timestamp": "1751328000000"
+        "value": 556400000,
+        "btcValue": 297400000,
+        "ethValue": 259000000,
+        "timestamp": "1752451200000"
       }
     ],
-    "aggregation": "monthly",
-    "total": 4459333000,
-    "totalBtcValue": 3363933000,
-    "totalEthValue": 1095400000
+    "aggregation": "daily",
+    "total": 556400000,
+    "totalBtcValue": 297400000,
+    "totalEthValue": 259000000
   },
   "status": {
-    "timestamp": "2025-07-14T19:05:18.331Z",
+    "timestamp": "2025-07-15T16:42:51.365Z",
     "error_code": "0",
     "error_message": "SUCCESS",
     "elapsed": "2",
