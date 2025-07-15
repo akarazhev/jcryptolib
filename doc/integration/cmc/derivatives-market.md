@@ -1,11 +1,11 @@
 # Derivatives Market
 
-## Open Interest
+## Open Interest Overview (OIO)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/open-interest/chart?range=ALL&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v4/open-interest/overview?convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -20,7 +20,100 @@ curl 'https://api.coinmarketcap.com/data-api/v4/open-interest/chart?range=ALL&co
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: fa8b824cb40541ea908d3dfb50298819'
+  -H 'x-request-id: e33193aee68d4b7b89d8a33bcd475267'
+```
+
+The response is a JSON object with the following structure:
+
+```json
+{
+  "data": {
+    "now": {
+      "futures": {
+        "openInterest": 3291345102.49,
+        "chg": -22.26
+      },
+      "perpetuals": {
+        "openInterest": 744043897453.33,
+        "chg": -1.28
+      }
+    },
+    "yesterday": {
+      "futures": {
+        "openInterest": 4233937628.19
+      },
+      "perpetuals": {
+        "openInterest": 753700393736.02
+      }
+    },
+    "lastWeek": {
+      "futures": {
+        "openInterest": 2672331393.56
+      },
+      "perpetuals": {
+        "openInterest": 792536984870.91
+      }
+    },
+    "lastMonth": {
+      "futures": {
+        "openInterest": 3670451633.94
+      },
+      "perpetuals": {
+        "openInterest": 641534795132.09
+      }
+    },
+    "yearlyHigh": {
+      "futures": {
+        "openInterest": 1071662508142.54,
+        "timestamp": "1752192000"
+      },
+      "perpetuals": {
+        "openInterest": 802725003382.59,
+        "timestamp": "1751500800"
+      }
+    },
+    "yearlyLow": {
+      "futures": {
+        "openInterest": 2328278814.33,
+        "timestamp": "1751155200"
+      },
+      "perpetuals": {
+        "openInterest": 2261040757.41,
+        "timestamp": "1751068800"
+      }
+    }
+  },
+  "status": {
+    "timestamp": "2025-07-15T20:23:45.140Z",
+    "error_code": "0",
+    "error_message": "SUCCESS",
+    "elapsed": "2",
+    "credit_count": 0
+  }
+}
+```
+
+## Open Interest (OI)
+
+Request URL with curl:
+
+```bash
+curl 'https://api.coinmarketcap.com/data-api/v4/open-interest/chart?range=24h&convertId=2781' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'cache-control: no-cache' \
+  -H 'origin: https://coinmarketcap.com' \
+  -H 'platform: web' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://coinmarketcap.com/' \
+  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
+  -H 'x-request-id: 58bd1114e51a43ebb7a73787fc4cebec'
 ```
 
 The response is a JSON object with the following structure:
@@ -30,54 +123,56 @@ The response is a JSON object with the following structure:
   "data": {
     "points": [
       {
-        "futures": 1282534429.93,
-        "perpetuals": 111650166618.06,
-        "marketcap": 1054114116355.40,
-        "timestamp": "1694995200"
+        "futures": 4364123435.18,
+        "perpetuals": 789492386016.47,
+        "cex": 49.36,
+        "dex": 50.64,
+        "marketcap": 3735044507334.04,
+        "timestamp": "1752524700"
       },
       ...
       {
-        "futures": 4233937628.19,
-        "perpetuals": 753700393736.02,
-        "cex": 49.60,
-        "dex": 50.40,
-        "marketcap": 3716211159114.99,
-        "timestamp": "1752451200"
+        "futures": 4445516196.50,
+        "perpetuals": 744118660594.53,
+        "cex": 49.40,
+        "dex": 50.60,
+        "marketcap": 3672471755080.34,
+        "timestamp": "1752611100"
       }
     ],
     "overview": {
       "cex": {
-        "value": 779926171347.20,
-        "percentage": 49.60,
-        "chg": -1.72
+        "value": 734706194793.04,
+        "percentage": 49.40,
+        "chg": 0.08
       },
       "dex": {
-        "value": 800799454722.32,
-        "percentage": 50.40,
-        "chg": 1.76
+        "value": 752638536363.88,
+        "percentage": 50.60,
+        "chg": -0.08
       },
       "marketcap": {
-        "value": 3738538091884.00,
-        "chg": 252.54
+        "value": 3673794977237.06,
+        "chg": -1.68
       }
     }
   },
   "status": {
-    "timestamp": "2025-07-14T20:08:44.482Z",
+    "timestamp": "2025-07-15T20:28:03.140Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "2",
+    "elapsed": "7",
     "credit_count": 0
   }
 }
 ```
 
-## Derivatives Volume
+## Derivatives Volume (DV)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/derivatives/chart?range=ALL&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v4/derivatives/chart?range=24h&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -92,7 +187,7 @@ curl 'https://api.coinmarketcap.com/data-api/v4/derivatives/chart?range=ALL&conv
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 1591fac10b884b17b716c1ee4b36665f'
+  -H 'x-request-id: 07d248d6589c4a38b406197f039f6210'
 ```
 
 The response is a JSON object with the following structure:
@@ -102,64 +197,64 @@ The response is a JSON object with the following structure:
   "data": {
     "overview": {
       "futures": {
-        "value": 1401568943.85,
-        "chg": -14.58
+        "value": 1157781594.10,
+        "chg": -17.50
       },
       "perpetuals": {
-        "value": 1830281197964.13,
-        "chg": 758.02
+        "value": 1821114728089.31,
+        "chg": -1.06
       },
       "marketcap": {
-        "value": 3734182401874.80,
-        "chg": 208.89
+        "value": 3673289880643.17,
+        "chg": -1.69
       },
       "cex": {
-        "value": 808833016728.26,
-        "percentage": 97.34,
-        "chg": 0.43
+        "value": 840572449807.69,
+        "percentage": 97.29,
+        "chg": -1.23
       },
       "dex": {
-        "value": 12306420995.58,
-        "percentage": 2.66,
-        "chg": -13.64
+        "value": 23386363475.96,
+        "percentage": 2.71,
+        "chg": 80.67
       }
     },
     "points": [
       {
-        "futures": 544987382.95,
-        "perpetuals": 121438904268.40,
-        "cex": 96.92,
-        "dex": 3.08,
-        "marketcap": 1203080973493.21,
-        "timestamp": "1690156800"
+        "futures": 1403455567.62,
+        "perpetuals": 1840686348555.00,
+        "cex": 98.50,
+        "dex": 1.50,
+        "marketcap": 3739240537405.96,
+        "timestamp": "1752525000"
       },
       ...
       {
-        "futures": 465535977.34,
-        "perpetuals": 1041964134203.85,
-        "cex": 97.34,
-        "dex": 2.66,
-        "marketcap": 3716211159114.99,
-        "timestamp": "1752451200"
+        "futures": 1157781594.10,
+        "perpetuals": 1821114728089.31,
+        "cex": 97.29,
+        "dex": 2.71,
+        "marketcap": 3676195436352.57,
+        "timestamp": "1752611400"
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T20:14:59.089Z",
+    "timestamp": "2025-07-15T20:32:57.966Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "2",
+    "elapsed": "38",
     "credit_count": 0
   }
 }
 ```
 
-## Funding Rates
+## Funding Rates (FR)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/funding-rate/chart?range=30d&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/funding-rate/chart?range=24h&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -174,7 +269,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/funding-rate/chart?range=30d&con
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 2825a91f4f03438b9ebadff55003f35e'
+  -H 'x-request-id: c368e83c4c2d494daef73d3cff78f501'
 ```
 
 The response is a JSON object with the following structure:
@@ -197,22 +292,22 @@ The response is a JSON object with the following structure:
     ],
     "points": [
       {
-        "marketcap": 3252593398321.96,
-        "marketFundingRate": 0.003735854538514300,
-        "cryptoFundingRate": 0.003231241107527500,
-        "timestamp": "1749931200"
+        "marketcap": 3735044507334.04,
+        "marketFundingRate": 0.010084518327938900,
+        "cryptoFundingRate": 0.010470880664575400,
+        "timestamp": "1752524700"
       },
       ...
       {
-        "marketcap": 3740916444455.31,
-        "marketFundingRate": 0.010321448040446700,
-        "cryptoFundingRate": 0.010672866751565400,
-        "timestamp": "1752523200"
+        "marketcap": 3672471755080.34,
+        "marketFundingRate": 0.010620139540791500,
+        "cryptoFundingRate": 0.01186108389899900,
+        "timestamp": "1752611100"
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T20:11:07.582Z",
+    "timestamp": "2025-07-15T20:33:04.839Z",
     "error_code": "0",
     "error_message": "SUCCESS",
     "elapsed": "3",
@@ -221,12 +316,12 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Funding Rates
+## Volmex Implied Volatility (VIV)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/funding-rate/top-coins' \
+curl 'https://api.coinmarketcap.com/data-api/v4/volmex-implied-volatility/chart?range=24h&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -241,98 +336,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/funding-rate/top-coins' \
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 15c8c8bc9b4e4e72a1d4d492ac608ce1'
-```
-
-The response is a JSON object with the following structure:
-
-```json
-{
-  "data": {
-    "topCoins": [
-      {
-        "coinId": 2087,
-        "coinName": "KuCoin Token",
-        "coinSlug": "kucoin-token",
-        "coinSymbol": "KCS",
-        "fundingRate": 0.062600
-      },
-      ...
-      {
-        "coinId": 32196,
-        "coinName": "Hyperliquid",
-        "coinSlug": "hyperliquid",
-        "coinSymbol": "HYPE",
-        "fundingRate": 0.023199869627480600
-      }
-    ],
-    "bottomCoins": [
-      {
-        "coinId": 16086,
-        "coinName": "BitTorrent [New]",
-        "coinSlug": "bittorrent-new",
-        "coinSymbol": "BTT",
-        "fundingRate": -0.073639024532008600
-      },
-      ...
-      {
-        "coinId": 1839,
-        "coinName": "BNB",
-        "coinSlug": "bnb",
-        "coinSymbol": "BNB",
-        "fundingRate": 0.00100922245061600
-      }
-    ],
-    "allCoins": [
-      {
-        "coinId": 1027,
-        "coinName": "Ethereum",
-        "coinSlug": "ethereum",
-        "coinSymbol": "ETH",
-        "fundingRate": 0.008620346332209400
-      },
-      ...
-      {
-        "coinId": 23095,
-        "coinName": "Bonk",
-        "coinSlug": "bonk1",
-        "coinSymbol": "BONK",
-        "fundingRate": 0.058775135229671800
-      }
-    ],
-    "time": "1752523500"
-  },
-  "status": {
-    "timestamp": "2025-07-14T20:16:07.789Z",
-    "error_code": "0",
-    "error_message": "SUCCESS",
-    "elapsed": "3",
-    "credit_count": 0
-  }
-}
-```
-
-## Volmex Implied Volatility
-
-Request URL with curl:
-
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/volmex-implied-volatility/chart?range=ALL&convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 97934df027ad4f9ba3420e2b72783c9d'
+  -H 'x-request-id: 1a3939786c7c4c61a4689db451e51c0e'
 ```
 
 The response is a JSON object with the following structure:
@@ -342,119 +346,39 @@ The response is a JSON object with the following structure:
   "data": {
     "overview": {
       "marketcap": {
-        "value": 3732598821777.54,
-        "chg": 314.09
+        "value": 3674709854355.57,
+        "chg": -1.91
       },
       "bitcoin": {
-        "value": 42.41083340935447,
-        "chg": -44.45
+        "value": 42.78914746905205,
+        "chg": 0.82
       },
       "ethereum": {
-        "value": 70.73556222191311,
-        "chg": -28.50
+        "value": 71.30246838773229,
+        "chg": 0.77
       }
     },
     "points": [
       {
-        "marketcap": 901399351176.46,
-        "timestamp": "1655683200"
+        "marketcap": 3746329035989.14,
+        "bitcoin": 42.44,
+        "ethereum": 70.76,
+        "timestamp": "1752525600"
       },
       ...
       {
-        "marketcap": 3732598821777.54,
-        "bitcoin": 42.41083340935447,
-        "ethereum": 70.73556222191311,
-        "timestamp": "1752524262"
+        "marketcap": 3674709854355.57,
+        "bitcoin": 42.78914746905205,
+        "ethereum": 71.30246838773229,
+        "timestamp": "1752612122"
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T20:17:42.710Z",
+    "timestamp": "2025-07-15T20:42:02.619Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "150",
-    "credit_count": 0
-  }
-}
-```
-
-## CEX/DEX Derivatives Volume (24h)
-
-Request URL with curl:
-
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/derivatives/chart?range=ALL&convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 1471ef86a4484b1fa91358b9ec0d0a3d'
-```
-
-The response is a JSON object with the following structure:
-
-```json
-{
-  "data": {
-    "overview": {
-      "futures": {
-        "value": 1401568943.85,
-        "chg": -14.58
-      },
-      "perpetuals": {
-        "value": 1830281197964.13,
-        "chg": 758.02
-      },
-      "marketcap": {
-        "value": 3734182401874.80,
-        "chg": 208.89
-      },
-      "cex": {
-        "value": 808833016728.26,
-        "percentage": 97.34,
-        "chg": 0.43
-      },
-      "dex": {
-        "value": 12306420995.58,
-        "percentage": 2.66,
-        "chg": -13.64
-      }
-    },
-    "points": [
-      {
-        "futures": 544987382.95,
-        "perpetuals": 121438904268.40,
-        "cex": 96.92,
-        "dex": 3.08,
-        "marketcap": 1203080973493.21,
-        "timestamp": "1690156800"
-      },
-      ...
-      {
-        "futures": 465535977.34,
-        "perpetuals": 1041964134203.85,
-        "cex": 97.34,
-        "dex": 2.66,
-        "marketcap": 3716211159114.99,
-        "timestamp": "1752451200"
-      }
-    ]
-  },
-  "status": {
-    "timestamp": "2025-07-14T20:14:59.089Z",
-    "error_code": "0",
-    "error_message": "SUCCESS",
-    "elapsed": "2",
+    "elapsed": "49",
     "credit_count": 0
   }
 }
