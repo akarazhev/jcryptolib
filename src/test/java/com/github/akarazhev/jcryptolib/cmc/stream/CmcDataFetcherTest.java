@@ -147,9 +147,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveFearAndGreedIndex() {
+    public void shouldReceiveFearAndGreed() {
         final var config = new DataConfig.Builder()
-                .type(Type.FGI)
+                .type(Type.FG)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -167,7 +167,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.FGI, value.getSource());
+            assertEquals(Source.FG, value.getSource());
             assertTrue(value.getData().containsKey(DATA_LIST));
             assertFalse(((List) value.getData().get(DATA_LIST)).isEmpty());
             assertTrue(value.getData().containsKey(DIAL_CONFIG));
@@ -178,9 +178,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveAltcoinSeasonIndex() {
+    public void shouldReceiveAltcoinSeason() {
         final var config = new DataConfig.Builder()
-                .type(Type.ASI)
+                .type(Type.AS)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -198,7 +198,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.ASI, value.getSource());
+            assertEquals(Source.AS, value.getSource());
             assertTrue(value.getData().containsKey(POINTS));
             assertFalse(((List) value.getData().get(POINTS)).isEmpty());
             assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
@@ -211,9 +211,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveBitcoinDominanceNow() {
+    public void shouldReceiveBitcoinDominanceOverview() {
         final var config = new DataConfig.Builder()
-                .type(Type.BDN)
+                .type(Type.BDO)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -231,7 +231,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.BDN, value.getSource());
+            assertEquals(Source.BDO, value.getSource());
             assertTrue(value.getData().containsKey(CONFIGS));
             assertFalse(((List) value.getData().get(CONFIGS)).isEmpty());
             assertTrue(value.getData().containsKey(DOMINANCE));
@@ -250,9 +250,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveBitcoinDominanceAll() {
+    public void shouldReceiveBitcoinDominance() {
         final var config = new DataConfig.Builder()
-                .type(Type.BDA)
+                .type(Type.BD)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -270,7 +270,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.BDA, value.getSource());
+            assertEquals(Source.BD, value.getSource());
             assertTrue(value.getData().containsKey(CONFIGS));
             assertFalse(((List) value.getData().get(CONFIGS)).isEmpty());
             assertTrue(value.getData().containsKey(POINTS));
@@ -279,9 +279,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceivePuellMultipleNow() {
+    public void shouldReceivePuellMultipleLatest() {
         final var config = new DataConfig.Builder()
-                .type(Type.PMN)
+                .type(Type.PML)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -299,7 +299,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.PMN, value.getSource());
+            assertEquals(Source.PML, value.getSource());
             assertTrue(value.getData().containsKey(PUELL_MULTIPLE));
             assertTrue(value.getData().containsKey(PI_CYCLE_TOP));
             assertFalse(((Map) value.getData().get(PI_CYCLE_TOP)).isEmpty());
@@ -309,9 +309,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceivePuellMultipleAll() {
+    public void shouldReceivePuellMultiple() {
         final var config = new DataConfig.Builder()
-                .type(Type.PMA)
+                .type(Type.PM)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -329,7 +329,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.PMA, value.getSource());
+            assertEquals(Source.PM, value.getSource());
             assertTrue(value.getData().containsKey(POINTS));
             assertFalse(((List) value.getData().get(POINTS)).isEmpty());
         }
