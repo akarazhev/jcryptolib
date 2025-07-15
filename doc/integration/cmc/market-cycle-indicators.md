@@ -1,6 +1,6 @@
 # Crypto Market Cycle Indicators
 
-## Crypto Market Cycle Top Indicators
+## Crypto Market Cycle Top Indicators (IND)
 
 Request URL with curl:
 
@@ -64,7 +64,7 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Market Cycle Latest
+## Market Cycle Latest (MCL)
 
 Request URL with curl:
 
@@ -113,12 +113,12 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Puell Multiple All
+## Puell Multiple (PM)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple?range=ALL&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple?range=30d&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -133,7 +133,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple?ran
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 21afe356b46c4fabbe801a353b9d1e43'
+  -H 'x-request-id: d3f4d09fa1eb4efd8a8e5857a9f5b5aa'
 ```
 
 The response is a JSON object with the following structure:
@@ -143,20 +143,20 @@ The response is a JSON object with the following structure:
   "data": {
     "points": [
       {
-        "puellMultiple": 1,
-        "btcUsdPrice": 0.09,
-        "timestamp": "1282003200000"
+        "puellMultiple": 1.1939571467490602,
+        "btcUsdPrice": 105464.84,
+        "timestamp": "1749945600000"
       },
       ...
       {
-        "puellMultiple": 1.2454655306221762,
-        "btcUsdPrice": 108298.23,
-        "timestamp": "1751932800000"
+        "puellMultiple": 1.3026878687829473,
+        "btcUsdPrice": 117432.20,
+        "timestamp": "1752364800000"
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T18:25:28.181Z",
+    "timestamp": "2025-07-15T17:38:13.769Z",
     "error_code": "0",
     "error_message": "SUCCESS",
     "elapsed": "2",
@@ -165,12 +165,12 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Pi Cycle Top Indicator
+## Pi Cycle Top Indicator (PCT)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top?range=ALL&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top?range=30d&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -185,7 +185,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top?range
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: e1427cc59eeb40e69b066268c04c1fb9'
+  -H 'x-request-id: bce869ca3182435aadd71835e87672ce'
 ```
 
 The response is a JSON object with the following structure:
@@ -195,36 +195,36 @@ The response is a JSON object with the following structure:
   "data": {
     "points": [
       {
-        "ma110": 0.07,
-        "ma350mu2": 0.14,
-        "price": 0.09,
-        "timestamp": "1282003200000"
+        "ma110": 93465.40,
+        "ma350mu2": 166262.31,
+        "price": 105464.84,
+        "timestamp": "1749945600000"
       },
       ...
       {
-        "ma110": 97863.14,
-        "ma350mu2": 172157.01,
-        "price": 108298.23,
-        "timestamp": "1751932800000"
+        "ma110": 98997.22,
+        "ma350mu2": 173280.53,
+        "price": 117432.20,
+        "timestamp": "1752364800000"
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T18:23:15.191Z",
+    "timestamp": "2025-07-15T17:38:17.811Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "3",
+    "elapsed": "1",
     "credit_count": 0
   }
 }
 ```
 
-## Bitcoin Rainbow Price Chart Indicator
+## Bitcoin Rainbow Price Chart Indicator (BRPC)
 
 Request URL with curl:
 
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow?range=all&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow?range=30d&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -239,7 +239,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow?range=all&
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: e7debb8ba3b44c0c90f2baf4fa46895f'
+  -H 'x-request-id: 98e1902933444d1db7c65f7c6d6b30d5'
 ```
 
 The response is a JSON object with the following structure:
@@ -250,43 +250,43 @@ The response is a JSON object with the following structure:
     "points": [
       {
         "layers": [
-          0.03,
-          0.04,
-          0.06,
-          0.08,
-          0.11,
-          0.15,
-          0.21,
-          0.28,
-          0.38,
-          0.52
+          51501.30,
+          68633.77,
+          93286.93,
+          128064.28,
+          172886.78,
+          233397.16,
+          320653.62,
+          441506.01,
+          592703.28,
+          806250.47
         ],
-        "btcUsdPrice": 0.09,
-        "timestamp": "1282003200000"
+        "btcUsdPrice": 105464.84,
+        "timestamp": "1749945600000"
       },
       ...
       {
         "layers": [
-          67773.43,
-          90319.01,
-          122761.48,
-          168526.94,
-          227511.37,
-          307140.35,
-          421966.00,
-          581002.42,
-          779971.35,
-          1060990.03
+          53099.32,
+          70763.39,
+          96181.51,
+          132037.96,
+          178251.25,
+          240639.18,
+          330603.10,
+          455205.40,
+          611094.13,
+          831267.44
         ],
-        "timestamp": "1773705600000"
+        "timestamp": "1752537600000"
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T18:26:44.159Z",
+    "timestamp": "2025-07-15T17:43:15.742Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "3",
+    "elapsed": "2",
     "credit_count": 0
   }
 }

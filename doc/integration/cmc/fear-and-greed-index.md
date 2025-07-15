@@ -1,4 +1,4 @@
-# CMC Crypto Fear and Greed Index
+# CMC Crypto Fear and Greed Index (FG)
 
 Request URL with curl:
 
