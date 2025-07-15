@@ -110,8 +110,8 @@ src/
 - [0.0.1](https://github.com/jcryptolib/jcryptolib/releases/tag/v0.0.1) - Initial release that provides a basic set of
   utilities for working with cryptocurrencies:
   - CMC Market Data: 
-    - Market Overview, Fear and Greed Index, Altcoin Season Index, Dominance Index, CoinMarketCap 100 Index,
-      Market Cycle Indicator, Derivatives Market.
+    - Market Overview, Spot Market, Derivatives Market, Fear and Greed Index, Altcoin Season Index, Market Cycle Indicator, 
+      Bitcoin Dominance, CoinMarketCap 100 Index.
   - Bybit Activities: 
     - Launchpool, Launchpad, Megadrop, ByVotes, Airdrop Hunt, ByStarter.
   - Bybit Trading Data: 
