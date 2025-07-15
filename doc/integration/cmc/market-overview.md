@@ -19,7 +19,7 @@ curl 'https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 248adb15039c425080bbe56554887ff3'
+  -H 'x-request-id: 2720bdf9c6d449be8cb5c7a8d69043cc'
 ```
 
 The response is a JSON object with the following structure:
@@ -38,18 +38,18 @@ The response is a JSON object with the following structure:
       },
       ...
       {
-        "marketCap": 3692070942634.88,
-        "volume": 196026085823.17,
-        "btcValue": 2331375988144.50,
-        "ethValue": 368259135708.28,
-        "stableValue": 239718213730.56,
-        "otherValue": 752717605051.54,
-        "timestamp": "1752597598"
+        "marketCap": 3691550334463.82,
+        "volume": 197037346658.03,
+        "btcValue": 2329966374244.93,
+        "ethValue": 368117038843.11,
+        "stableValue": 239674273814.08,
+        "otherValue": 753792647561.70,
+        "timestamp": "1752598893"
       }
     ],
     "historicalValues": {
       "now": {
-        "marketCap": 3692070942634.877282674693146137
+        "marketCap": 3691550334463.821052669948852872
       },
       "yesterday": {
         "marketCap": 3716211159114.990000000000000000
@@ -71,13 +71,13 @@ The response is a JSON object with the following structure:
         "timestamp": "1725667200"
       }
     },
-    "thirtyDaysPercentage": 12.72
+    "thirtyDaysPercentage": 12.71
   },
   "status": {
-    "timestamp": "2025-07-15T16:41:12.786Z",
+    "timestamp": "2025-07-15T17:01:33.444Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "4",
+    "elapsed": "125",
     "credit_count": 0
   }
 }
@@ -102,7 +102,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart?categ
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 80b824e0880649f1b058da3f58c6640c'
+  -H 'x-request-id: 6e42132aca7940769de956c35c90aba9'
 ```
 
 The response is a JSON object with the following structure:
@@ -130,10 +130,10 @@ The response is a JSON object with the following structure:
     "totalEthValue": 259000000
   },
   "status": {
-    "timestamp": "2025-07-15T16:42:51.365Z",
+    "timestamp": "2025-07-15T17:01:19.357Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "2",
+    "elapsed": "1",
     "credit_count": 0
   }
 }
