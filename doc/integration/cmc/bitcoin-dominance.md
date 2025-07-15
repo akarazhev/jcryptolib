@@ -1,6 +1,7 @@
 # Bitcoin Dominance
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart?range=all' \
   -H 'accept: application/json, text/plain, */*' \
@@ -21,6 +22,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart?r
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {

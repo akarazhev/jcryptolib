@@ -1,6 +1,7 @@
 # CMC Crypto Fear and Greed Index
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=1750007940&end=1752599940&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
@@ -21,6 +22,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start=175000794
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {

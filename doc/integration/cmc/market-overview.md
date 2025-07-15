@@ -3,6 +3,7 @@
 ## Crypto Market Cap (CMC)
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical?convertId=2781&range=30d' \
   -H 'accept: application/json, text/plain, */*' \
@@ -23,6 +24,7 @@ curl 'https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
@@ -86,6 +88,7 @@ The response is a JSON object with the following structure:
 ## Crypto ETFs Net Flow (ETF_NF)
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart?category=all&range=30d' \
   -H 'accept: application/json, text/plain, */*' \
@@ -106,6 +109,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart?categ
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {

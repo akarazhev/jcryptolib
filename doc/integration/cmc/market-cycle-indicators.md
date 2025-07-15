@@ -3,6 +3,7 @@
 ## Crypto Market Cycle Top Indicators
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators?convertId=2781&sortBy=index&sortType=asc' \
   -H 'accept: application/json, text/plain, */*' \
@@ -23,6 +24,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators?convert
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
@@ -65,6 +67,7 @@ The response is a JSON object with the following structure:
 ## Market Cycle Latest
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/latest?convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
@@ -85,6 +88,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/latest?convertId=2
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
@@ -112,6 +116,7 @@ The response is a JSON object with the following structure:
 ## Puell Multiple All
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple?range=ALL&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
@@ -132,6 +137,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple?ran
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
@@ -162,6 +168,7 @@ The response is a JSON object with the following structure:
 ## Pi Cycle Top Indicator
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top?range=ALL&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
@@ -182,6 +189,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top?range
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
@@ -214,6 +222,7 @@ The response is a JSON object with the following structure:
 ## Bitcoin Rainbow Price Chart Indicator
 
 Request URL with curl:
+
 ```bash
 curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow?range=all&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
@@ -234,6 +243,7 @@ curl 'https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow?range=all&
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
