@@ -1,8 +1,9 @@
 # Altcoin Season Index
 
 Request URL with curl:
+
 ```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart?start=1744741380&end=1752517380&convertId=2781' \
+curl 'https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart?start=1751995320&end=1752600120&convertId=2781' \
   -H 'accept: application/json, text/plain, */*' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: no-cache' \
@@ -17,52 +18,53 @@ curl 'https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart?start=17447
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 00552d7dce444ef9a8475c33177ade7f'
+  -H 'x-request-id: 3d3c8f13d8c143eda1d7adbcb30eb746'
 ```
 
 The response is a JSON object with the following structure:
+
 ```json
 {
   "data": {
     "points": [
       {
-        "name": "Bitcoin Season",
-        "altcoinIndex": "15",
-        "altcoinMarketcap": "977153699477.37",
-        "timestamp": "1744761600"
+        "name": "",
+        "altcoinIndex": "28",
+        "altcoinMarketcap": "1205096162295.70",
+        "timestamp": "1752019200"
       },
       ...
       {
         "name": "",
-        "altcoinIndex": "31",
-        "altcoinMarketcap": "1361767030895.50",
-        "timestamp": "1752517101"
+        "altcoinIndex": "35",
+        "altcoinMarketcap": "1363375291866.42",
+        "timestamp": "1752600121"
       }
     ],
     "historicalValues": {
       "now": {
         "name": "",
-        "altcoinIndex": "31",
-        "altcoinMarketcap": "1361767030895.50",
-        "timestamp": "1752517101"
+        "altcoinIndex": "35",
+        "altcoinMarketcap": "1363375291866.42",
+        "timestamp": "1752600121"
       },
       "yesterday": {
         "name": "",
-        "altcoinIndex": "29",
-        "altcoinMarketcap": "1323262354393.94",
-        "timestamp": "1752364800"
+        "altcoinIndex": "32",
+        "altcoinMarketcap": "1346736387703.65",
+        "timestamp": "1752451200"
       },
       "lastWeek": {
-        "name": "",
-        "altcoinIndex": "26",
-        "altcoinMarketcap": "1196432472712.21",
-        "timestamp": "1751846400"
+        "name": "Bitcoin Season",
+        "altcoinIndex": "22",
+        "altcoinMarketcap": "1186712659110.31",
+        "timestamp": "1751932800"
       },
       "lastMonth": {
-        "name": "",
-        "altcoinIndex": "27",
-        "altcoinMarketcap": "1194283064489.16",
-        "timestamp": "1749859200"
+        "name": "Bitcoin Season",
+        "altcoinIndex": "25",
+        "altcoinMarketcap": "1178789747839.10",
+        "timestamp": "1749945600"
       },
       "yearlyHigh": {
         "name": "Altcoin Season",
@@ -73,7 +75,7 @@ The response is a JSON object with the following structure:
       "yearlyLow": {
         "name": "Bitcoin Season",
         "altcoinIndex": "12",
-        "altcoinMarketcap": "1079193710003.17",
+        "altcoinMarketcap": "0",
         "timestamp": "1745625600"
       }
     },
@@ -96,11 +98,11 @@ The response is a JSON object with the following structure:
     ],
     "topCryptos": [
       {
-        "id": 35491,
-        "name": "MemeCore",
-        "symbol": "M",
-        "slug": "memecore",
-        "percentChange": 554.99845670
+        "id": 34466,
+        "name": "Pudgy Penguins",
+        "symbol": "PENGU",
+        "slug": "pudgy-penguins",
+        "percentChange": 662.83147386
       },
       ...
       {
@@ -108,15 +110,15 @@ The response is a JSON object with the following structure:
         "name": "DeXe",
         "symbol": "DEXE",
         "slug": "dexe",
-        "percentChange": -46.61261523
+        "percentChange": -45.67619750
       }
     ]
   },
   "status": {
-    "timestamp": "2025-07-14T18:23:00.597Z",
+    "timestamp": "2025-07-15T17:22:01.812Z",
     "error_code": "0",
     "error_message": "SUCCESS",
-    "elapsed": "1",
+    "elapsed": "32",
     "credit_count": 0
   }
 }
