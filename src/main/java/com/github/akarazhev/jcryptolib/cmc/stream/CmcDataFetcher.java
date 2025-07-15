@@ -130,7 +130,8 @@ final class CmcDataFetcher implements DataFetcher {
             } else if (FG.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
-                fetch(CmcRequestBuilder.buildFearGreedRequest(CONVERT_ID, FGI_START_DATE, end), Source.FG);
+                final var start = end - TimeUnit.DAYS.toSeconds(ASI_PERIOD_DAYS);
+                fetch(CmcRequestBuilder.buildFearGreedRequest(CONVERT_ID, start, end), Source.FG);
             } else if (AS.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
