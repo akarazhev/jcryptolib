@@ -124,7 +124,7 @@ final class CmcDataFetcher implements DataFetcher {
     private void fetchData() {
         config.getTypes().forEach(type -> {
             if (CMC.equals(type)) {
-                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(CONVERT_ID, ALL), Source.CMC);
+                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(CONVERT_ID, DAYS_30), Source.CMC);
             } else if (ETF_NF.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoEftNetFlowRequest(DAYS_30), Source.ETF_NF);
             } else if (FG.equals(type)) {
