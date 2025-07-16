@@ -63,6 +63,11 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.BRPC.getUrl() + url), UUID.randomUUID());
     }
 
+    public static HttpRequest buildCoinMarketCap100IndexRequest(final Range range) {
+        final var url = String.format("?range=%s", range.getValue());
+        return buildRequest(URI.create(Type.CMC100.getUrl() + url), UUID.randomUUID());
+    }
+
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {
         return HttpRequest.newBuilder()
                 .uri(uri)

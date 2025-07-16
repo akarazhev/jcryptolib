@@ -25,8 +25,8 @@
 package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Range {
-    ALL("all"),
-    DAYS_30("30d");
+    DAYS_30("30d"),
+    HOURS_24("24h");
 
     private final String value;
 

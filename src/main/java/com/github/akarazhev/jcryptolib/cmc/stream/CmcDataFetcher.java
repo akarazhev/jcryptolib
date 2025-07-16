@@ -60,8 +60,8 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE_
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE_SUCCESS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STATUS;
-import static com.github.akarazhev.jcryptolib.cmc.config.Range.ALL;
 import static com.github.akarazhev.jcryptolib.cmc.config.Range.DAYS_30;
+import static com.github.akarazhev.jcryptolib.cmc.config.Range.HOURS_24;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.AS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.CMC;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.ETF_NF;
@@ -151,6 +151,8 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(CONVERT_ID, DAYS_30), Source.PCT);
             } else if (Type.BRPC.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinRainbowPriceChartIndicatorRequest(CONVERT_ID, DAYS_30), Source.BRPC);
+            } else if (Type.CMC100.equals(type)) {
+                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), Source.CMC100);
             }
         });
     }

@@ -68,5 +68,7 @@ public final class Constants {
         public static final String TOTAL = "total";
         public static final String TOTAL_BTC_VALUE = "totalBtcValue";
         public static final String TOTAL_ETH_VALUE = "totalEthValue";
+        public static final String CONSTITUENTS = "constituents";
+        public static final String VALUES = "values";
     }
 }
