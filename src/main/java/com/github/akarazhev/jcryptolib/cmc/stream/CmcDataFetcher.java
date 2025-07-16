@@ -140,13 +140,17 @@ final class CmcDataFetcher implements DataFetcher {
             } else if (Type.BDO.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceOverviewRequest(), Source.BDO);
             } else if (Type.BD.equals(type)) {
-                fetch(CmcRequestBuilder.buildBitcoinDominanceRequest(ALL), Source.BD);
-            } else if (Type.PML.equals(type)) {
-                fetch(CmcRequestBuilder.buildPuellMultipleLatestRequest(CONVERT_ID), Source.PML);
+                fetch(CmcRequestBuilder.buildBitcoinDominanceRequest(DAYS_30), Source.BD);
+            } else if (Type.MCL.equals(type)) {
+                fetch(CmcRequestBuilder.buildMarketCycleLatestRequest(CONVERT_ID), Source.MCL);
             } else if (Type.PM.equals(type)) {
-                fetch(CmcRequestBuilder.buildPuellMultipleRequest(), Source.PM);
+                fetch(CmcRequestBuilder.buildPuellMultipleRequest(CONVERT_ID, DAYS_30), Source.PM);
             } else if (Type.IND.equals(type)) {
                 fetch(CmcRequestBuilder.buildIndicatorsRequest(CONVERT_ID), Source.IND);
+            } else if (Type.PCT.equals(type)) {
+                fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(CONVERT_ID, DAYS_30), Source.PCT);
+            } else if (Type.BRPC.equals(type)) {
+                fetch(CmcRequestBuilder.buildBitcoinRainbowPriceChartIndicatorRequest(CONVERT_ID, DAYS_30), Source.BRPC);
             }
         });
     }

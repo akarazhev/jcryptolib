@@ -29,11 +29,13 @@ public enum Type {
     AS("Altcoin Season", "https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart"),
     BDO("Bitcoin Dominance Overview", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/overview"),
     BD("Bitcoin Dominance", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart"),
-    PML("Puell Multiple Latest", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
+    MCL("Market Cycle Latest", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
     PM("Puell Multiple", "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
     IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators"),
     CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical"),
-    ETF_NF("Crypto EFTs Net Flow", "https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart");
+    ETF_NF("Crypto EFTs Net Flow", "https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart"),
+    PCT("Pi Cycle Top Indicator", "https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top"),
+    BRPC("Bitcoin Rainbow Price Chart Indicator", "https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow");
 
     private final String url;
 

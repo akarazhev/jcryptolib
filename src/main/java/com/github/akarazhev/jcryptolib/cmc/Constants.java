@@ -31,7 +31,7 @@ public final class Constants {
 
     public static final class CMC {
         public static final int FG_START_DATE = 1367193600;
-        public static final int FG_PERIOD_DAYS = 7;
+        public static final int FG_PERIOD_DAYS = 30;
         public static final int AS_PERIOD_DAYS = 7;
         public static final int CONVERT_ID = 2781;
     }

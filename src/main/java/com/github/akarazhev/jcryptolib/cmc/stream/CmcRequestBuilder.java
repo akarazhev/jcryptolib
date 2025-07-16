@@ -38,18 +38,29 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.BD.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildPuellMultipleLatestRequest(final int convertId) {
+    public static HttpRequest buildMarketCycleLatestRequest(final int convertId) {
         final var url = String.format("?convertId=%d", convertId);
-        return buildRequest(URI.create(Type.PML.getUrl() + url), UUID.randomUUID());
+        return buildRequest(URI.create(Type.MCL.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildPuellMultipleRequest() {
-        return buildRequest(URI.create(Type.PM.getUrl() + "?range=ALL&convertId=2781"), UUID.randomUUID());
+    public static HttpRequest buildPuellMultipleRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.PM.getUrl() + url), UUID.randomUUID());
     }
 
     public static HttpRequest buildIndicatorsRequest(final int convertId) {
         final var url = String.format("?convertId=%d&sortBy=index&sortType=asc", convertId);
         return buildRequest(URI.create(Type.IND.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildPiCycleTopIndicatorRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.PCT.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildBitcoinRainbowPriceChartIndicatorRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.BRPC.getUrl() + url), UUID.randomUUID());
     }
 
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {
