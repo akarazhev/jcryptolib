@@ -365,7 +365,7 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceivePiCycleTopIndicator() {
+    public void shouldReceivePiCycleTop() {
         final var config = new DataConfig.Builder()
                 .type(Type.PCT)
                 .build();
@@ -392,7 +392,7 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveBitcoinRainbowPriceChartIndicator() {
+    public void shouldReceiveBitcoinRainbowPriceChart() {
         final var config = new DataConfig.Builder()
                 .type(Type.BRPC)
                 .build();
