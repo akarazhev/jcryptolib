@@ -73,6 +73,31 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.CSV.getUrl() + url), UUID.randomUUID());
     }
 
+    public static HttpRequest buildOpenInterestOverviewRequest(final int convertId) {
+        final var url = String.format("?convertId=%d", convertId);
+        return buildRequest(URI.create(Type.OIO.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildOpenInterestRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.OI.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildDerivativesVolumeRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.DV.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildFundingRatesRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.FR.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildVolmexImpliedVolatilityRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.VIV.getUrl() + url), UUID.randomUUID());
+    }
+
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {
         return HttpRequest.newBuilder()
                 .uri(uri)

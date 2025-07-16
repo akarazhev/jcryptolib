@@ -70,6 +70,14 @@ public final class Constants {
         public static final String TOTAL_ETH_VALUE = "totalEthValue";
         public static final String CONSTITUENTS = "constituents";
         public static final String VALUES = "values";
-        public static final String OVERVIEW = "overView";
+        public static final String OVER_VIEW = "overView";
+        public static final String OVERVIEW = "overview";
+        public static final String NOW = "now";
+        public static final String YESTERDAY = "yesterday";
+        public static final String LAST_WEEK = "lastWeek";
+        public static final String LAST_MONTH = "lastMonth";
+        public static final String YEARLY_HIGH = "yearlyHigh";
+        public static final String YEARLY_LOW = "yearlyLow";
+        public static final String COINS = "coins";
     }
 }

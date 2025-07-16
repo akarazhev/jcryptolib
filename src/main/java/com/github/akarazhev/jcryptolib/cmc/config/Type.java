@@ -37,7 +37,12 @@ public enum Type {
     PCT("Pi Cycle Top", "https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top"),
     BRP("Bitcoin Rainbow Price", "https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow"),
     CMC100("CoinMarketCap 100 Index", "https://api.coinmarketcap.com/data-api/v3/top100/historical/chart"),
-    CSV("Crypto Spot Volume", "https://api.coinmarketcap.com/data-api/v3/global-metrics/spot/chart");
+    CSV("Crypto Spot Volume", "https://api.coinmarketcap.com/data-api/v3/global-metrics/spot/chart"),
+    OIO("Open Interest Overview", "https://api.coinmarketcap.com/data-api/v4/open-interest/overview"),
+    OI("Open Interest", "https://api.coinmarketcap.com/data-api/v4/open-interest/chart"),
+    DV("Derivatives Volume", "https://api.coinmarketcap.com/data-api/v4/derivatives/chart"),
+    FR("Funding Rates", "https://api.coinmarketcap.com/data-api/v3/funding-rate/chart"),
+    VIV("Volmex Implied Volatility", "https://api.coinmarketcap.com/data-api/v4/volmex-implied-volatility/chart");
 
     private final String url;
 

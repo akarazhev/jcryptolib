@@ -39,5 +39,10 @@ public enum Source {
     PCT,
     BRP,
     CMC100,
-    CSV
+    CSV,
+    OIO,
+    OI,
+    DV,
+    FR,
+    VIV
 }

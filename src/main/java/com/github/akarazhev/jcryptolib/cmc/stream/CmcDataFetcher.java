@@ -155,6 +155,16 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), Source.CMC100);
             } else if (Type.CSV.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(CONVERT_ID, HOURS_24), Source.CSV);
+            } else if (Type.OIO.equals(type)) {
+                fetch(CmcRequestBuilder.buildOpenInterestOverviewRequest(CONVERT_ID), Source.OIO);
+            } else if (Type.OI.equals(type)) {
+                fetch(CmcRequestBuilder.buildOpenInterestRequest(CONVERT_ID, HOURS_24), Source.OI);
+            } else if (Type.DV.equals(type)) {
+                fetch(CmcRequestBuilder.buildDerivativesVolumeRequest(CONVERT_ID, HOURS_24), Source.DV);
+            } else if (Type.FR.equals(type)) {
+                fetch(CmcRequestBuilder.buildFundingRatesRequest(CONVERT_ID, HOURS_24), Source.FR);
+            } else if (Type.VIV.equals(type)) {
+                fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(CONVERT_ID, HOURS_24), Source.VIV);
             }
         });
     }
