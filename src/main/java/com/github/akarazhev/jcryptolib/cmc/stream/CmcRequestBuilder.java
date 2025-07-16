@@ -58,14 +58,19 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.PCT.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildBitcoinRainbowPriceChartIndicatorRequest(final int convertId, final Range range) {
+    public static HttpRequest buildBitcoinRainbowPriceRequest(final int convertId, final Range range) {
         final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
-        return buildRequest(URI.create(Type.BRPC.getUrl() + url), UUID.randomUUID());
+        return buildRequest(URI.create(Type.BRP.getUrl() + url), UUID.randomUUID());
     }
 
     public static HttpRequest buildCoinMarketCap100IndexRequest(final Range range) {
         final var url = String.format("?range=%s", range.getValue());
         return buildRequest(URI.create(Type.CMC100.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildCryptoSpotVolumeRequest(final int convertId, final Range range) {
+        final var url = String.format("?range=%s&convertId=%d", range.getValue(), convertId);
+        return buildRequest(URI.create(Type.CSV.getUrl() + url), UUID.randomUUID());
     }
 
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {

@@ -35,8 +35,9 @@ public enum Type {
     CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical"),
     ETF_NF("Crypto EFTs Net Flow", "https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart"),
     PCT("Pi Cycle Top", "https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top"),
-    BRPC("Bitcoin Rainbow Price Chart", "https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow"),
-    CMC100("CoinMarketCap 100 Index", "https://api.coinmarketcap.com/data-api/v3/top100/historical/chart");
+    BRP("Bitcoin Rainbow Price", "https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow"),
+    CMC100("CoinMarketCap 100 Index", "https://api.coinmarketcap.com/data-api/v3/top100/historical/chart"),
+    CSV("Crypto Spot Volume", "https://api.coinmarketcap.com/data-api/v3/global-metrics/spot/chart");
 
     private final String url;
 

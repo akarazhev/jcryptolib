@@ -70,5 +70,6 @@ public final class Constants {
         public static final String TOTAL_ETH_VALUE = "totalEthValue";
         public static final String CONSTITUENTS = "constituents";
         public static final String VALUES = "values";
+        public static final String OVERVIEW = "overView";
     }
 }

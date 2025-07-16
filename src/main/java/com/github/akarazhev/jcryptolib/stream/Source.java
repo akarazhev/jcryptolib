@@ -37,6 +37,7 @@ public enum Source {
     CMC,
     ETF_NF,
     PCT,
-    BRPC,
-    CMC100
+    BRP,
+    CMC100,
+    CSV
 }
