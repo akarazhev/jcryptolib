@@ -85,4 +85,29 @@ final class BybitDataFetcherTest {
             assertTrue(value.getData().containsKey(MIN_REWARD_AMOUNT));
         }
     }
+
+    @Test
+    public void shouldReceiveLaunchPool() {
+        final var config = new DataConfig.Builder()
+                .type(Type.LPL)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.BYBIT, value.getProvider());
+            assertEquals(Source.LPL, value.getSource());
+        }
+    }
 }

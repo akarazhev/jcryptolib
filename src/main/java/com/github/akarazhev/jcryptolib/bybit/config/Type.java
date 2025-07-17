@@ -33,7 +33,8 @@ public enum Type {
     PTSD("Public Testnet Spread", "wss://stream-testnet.bybit.com/v5/public/spread"),
     PT("Private Testnet", "wss://stream-testnet.bybit.com/v5/private"),
     TO("Testnet Order", "wss://stream-testnet.bybit.com/v5/trade"),
-    MD("MegaDrop", "https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList");
+    MD("Mega Drop", "https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList"),
+    LPL("Launch Pool", "https://www.bybit.com/x-api/spot/api/launchpool/v1/home");
 
     private final String url;
 

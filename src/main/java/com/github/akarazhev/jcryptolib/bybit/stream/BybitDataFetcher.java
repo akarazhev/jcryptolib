@@ -46,9 +46,12 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.LIST;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RESULT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_CODE;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SUCCESS;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOTAL_PROJECTS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
 
 final class BybitDataFetcher implements DataFetcher {
@@ -91,8 +94,52 @@ final class BybitDataFetcher implements DataFetcher {
         config.getTypes().forEach(type -> {
             if (MD.equals(type)) {
                 fetch(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
+            } else if (LPL.equals(type)) {
+                fetchSequential(BybitRequestBuilder.buildLaunchPoolPageRequest(), Source.LPL);
             }
         });
+    }
+
+    private void fetchSequential(final HttpRequest request, final Source source) {
+        if (!emitter.isCancelled()) {
+            try {
+                final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 200) {
+                    final var result = getResultAsMap(response.uri(), response.body());
+                    if (result != null && !result.isEmpty()) {
+                        final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
+                        fetchBySize(BybitRequestBuilder.buildLaunchPoolPageRequest(totalProjects), source);
+                    }
+                } else {
+                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                }
+            } catch (final Exception e) {
+                LOGGER.error("Failed to fetch data by uri", e);
+                emitter.onError(e);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void fetchBySize(final HttpRequest request, final Source source) {
+        try {
+            final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                final var result = getResultAsMap(response.uri(), response.body());
+                if (result != null && !result.isEmpty()) {
+                    final var data = ((List<Map<String, Object>>) result.get(LIST));
+                    if (data != null && !data.isEmpty()) {
+                        LOGGER.debug("Fetched message: {}", data);
+                        data.forEach(r -> emitter.onNext(Payload.of(Provider.BYBIT, source, r)));
+                    }
+                }
+            } else {
+                LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+            }
+        } catch (final Exception e) {
+            LOGGER.error("Failed to fetch data by uri", e);
+            emitter.onError(e);
+        }
     }
 
     private void fetch(final HttpRequest request, final Source source) {
@@ -100,7 +147,7 @@ final class BybitDataFetcher implements DataFetcher {
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
-                    final var result = getResult(response.uri(), response.body());
+                    final var result = getResultAsList(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);
                         result.forEach(r -> emitter.onNext(Payload.of(Provider.BYBIT, source, r)));
@@ -116,13 +163,23 @@ final class BybitDataFetcher implements DataFetcher {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> getResult(final URI uri, final String json) throws IOException {
+    private List<Map<String, Object>> getResultAsList(final URI uri, final String json) throws IOException {
         final var data = JsonUtils.jsonToMap(json);
         if (isRetCodeOk(uri, data)) {
             return (List<Map<String, Object>>) data.get(RESULT);
         }
 
         return List.of();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getResultAsMap(final URI uri, final String json) throws IOException {
+        final var data = JsonUtils.jsonToMap(json);
+        if (isRetCodeOk(uri, data)) {
+            return (Map<String, Object>) data.get(RESULT);
+        }
+
+        return Map.of();
     }
 
     private boolean isRetCodeOk(final URI uri, final Map<String, Object> data) throws IOException {

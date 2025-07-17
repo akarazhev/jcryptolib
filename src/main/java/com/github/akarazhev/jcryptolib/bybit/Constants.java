@@ -31,6 +31,15 @@ public final class Constants {
 
     public static final String TOPIC_FIELD = "topic";
 
+    public static final class Request {
+        private Request() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static final String PAGE_SIZE = "pageSize";
+        public static final String CURRENT = "current";
+    }
+
     public static final class Response {
         private Response() {
             throw new UnsupportedOperationException();
@@ -57,5 +66,6 @@ public final class Constants {
         public static final String RET_CODE_CAMEL_CASE = "retCode";
         public static final String RET_MSG = "retMsg";
         public static final String OK = "OK";
+        public static final String TOTAL_PROJECTS = "totalProjects";
     }
 }
