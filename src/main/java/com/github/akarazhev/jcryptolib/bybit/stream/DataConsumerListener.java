@@ -26,6 +26,7 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
+import com.github.akarazhev.jcryptolib.stream.Source;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.time.Duration;
@@ -70,7 +72,7 @@ final class DataConsumerListener implements WebSocket.Listener {
     }
 
     private DataConsumerListener(final HttpClient client, final DataConfig config,
-                                final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
+                                 final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
@@ -130,7 +132,7 @@ final class DataConsumerListener implements WebSocket.Listener {
                 if (!emitter.isCancelled()) {
                     LOGGER.debug("Received message: {}", text);
                     if (!isAuth(text)) {
-                        emitter.onNext(Payload.of(Provider.BYBIT, JsonUtils.jsonToMap(text)));
+                        emitter.onNext(Payload.of(Provider.BYBIT, Source.WS, JsonUtils.jsonToMap(text)));
                     }
                 }
             }
@@ -251,7 +253,7 @@ final class DataConsumerListener implements WebSocket.Listener {
             try {
                 client.newWebSocketBuilder()
                         .connectTimeout(Duration.ofMillis(config.getConnectTimeoutMs()))
-                        .buildAsync(URI.create(config.getUrl().toString()), this)
+                        .buildAsync(getURI(), this)
                         .whenComplete((ws, ex) -> {
                             isConnecting.set(false);
                             if (ex != null) {
@@ -336,6 +338,14 @@ final class DataConsumerListener implements WebSocket.Listener {
         if (webSocket != null) {
             LOGGER.debug("Closing WebSocket");
             webSocket.abort();
+        }
+    }
+
+    private URI getURI() {
+        try {
+            return new URI(config.getTypes().iterator().next().getUrl()); // TODO: support multiple types
+        } catch (final URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 }

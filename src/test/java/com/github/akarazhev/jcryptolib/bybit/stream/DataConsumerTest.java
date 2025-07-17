@@ -67,7 +67,7 @@ final class DataConsumerTest {
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
+        TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS);
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -90,7 +90,7 @@ final class DataConsumerTest {
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
+        TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS);
 
         testSubscriber.assertNoErrors();
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
@@ -112,7 +112,7 @@ final class DataConsumerTest {
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        TestUtils.await(testSubscriber, 30, TimeUnit.SECONDS);
+        TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS);
 
         assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
         testSubscriber.cancel();
@@ -120,7 +120,7 @@ final class DataConsumerTest {
 
         final var testSubscriber2 = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber2);
-        TestUtils.await(testSubscriber2, 30, TimeUnit.SECONDS);
+        TestUtils.await(testSubscriber2, 3, TimeUnit.SECONDS);
 
         assertFalse(testSubscriber2.values().isEmpty(), "Should receive messages after reconnect");
         testSubscriber2.cancel();
@@ -141,7 +141,7 @@ final class DataConsumerTest {
         }
 
         for (final var sub : subscribers) {
-            TestUtils.await(sub, 30, TimeUnit.SECONDS);
+            TestUtils.await(sub, 3, TimeUnit.SECONDS);
             assertFalse(sub.values().isEmpty(), "Each consumer should receive at least one message");
         }
 
@@ -160,7 +160,7 @@ final class DataConsumerTest {
             final var consumer = DataConsumer.create(client, config);
             final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
             Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-            TestUtils.await(testSubscriber, 10, TimeUnit.SECONDS);
+            TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS);
 
             testSubscriber.cancel();
             TestUtils.sleep(200);

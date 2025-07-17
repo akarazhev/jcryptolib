@@ -25,7 +25,7 @@
 package com.github.akarazhev.jcryptolib.stream;
 
 public enum Source {
-    WEBSOCKET,
+    WS,
     REST_API,
     FG,
     AS,
