@@ -29,21 +29,18 @@ import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
 import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
 import com.github.akarazhev.jcryptolib.bybit.config.Type;
-import com.github.akarazhev.jcryptolib.bybit.config.Url;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 public final class DataConfig {
-    private final Type type;
+    private final Set<Type> types;
     private final boolean isUseAuth;
     private final String key;
     private final String secret;
-    private final Url url;
     private final String[] topics;
     private final Map<RequestKey, RequestValue> params;
     private final float backoffMultiplier;
@@ -55,11 +52,14 @@ public final class DataConfig {
     private final int fetchIntervalMs;
 
     private DataConfig(final Builder builder) {
-        this.type = Objects.requireNonNull(builder.type, "Type is null");
+        if (builder.types.isEmpty()) {
+            throw new IllegalArgumentException("Types is empty");
+        }
+
+        this.types = builder.types;
         this.isUseAuth = builder.isUseAuth;
         this.key = builder.key;
         this.secret = builder.secret;
-        this.url = builder.url;
         this.topics = builder.getTopics();
         this.params = builder.params;
         this.backoffMultiplier = builder.backoffMultiplier;
@@ -71,12 +71,8 @@ public final class DataConfig {
         this.fetchIntervalMs = builder.fetchIntervalMs;
     }
 
-    public boolean isWebSocket() {
-        return Type.WEBSOCKET == type;
-    }
-
-    public boolean isRestApi() {
-        return Type.REST_API == type;
+    public Set<Type> getTypes() {
+        return types;
     }
 
     public boolean isUseAuth() {
@@ -89,10 +85,6 @@ public final class DataConfig {
 
     public String getSecret() {
         return secret;
-    }
-
-    public Url getUrl() {
-        return url;
     }
 
     public String[] getTopics() {
@@ -137,9 +129,8 @@ public final class DataConfig {
 
     public String print() {
         return "\nBybit Data Config {" +
-                "\n\ttype=" + type +
+                "\n\ttypes=" + types +
                 "\n\tisUseAuth=" + isUseAuth +
-                "\n\turl='" + url + '\'' +
                 "\n\ttopics='" + Arrays.toString(topics) + '\'' +
                 "\n\tparams=" + params +
                 "\n\tbackoffMultiplier=" + backoffMultiplier +
@@ -153,12 +144,11 @@ public final class DataConfig {
     }
 
     public static final class Builder {
-        private Type type;
+        private final Set<Type> types = new HashSet<>();
         private boolean isUseAuth;
         private String key;
         private String secret;
-        private Url url;
-        private final List<Topic> topics = new LinkedList<>();
+        private final Set<Topic> topics = new HashSet<>();
         private final Map<RequestKey, RequestValue> params = new HashMap<>();
         private float backoffMultiplier = Config.getBackoffMultiplier();
         private int connectTimeoutMs = Config.getConnectTimeoutMs();
@@ -169,7 +159,7 @@ public final class DataConfig {
         private int fetchIntervalMs = Config.getFetchIntervalMs();
 
         public Builder type(final Type type) {
-            this.type = type;
+            this.types.add(type);
             return this;
         }
 
@@ -185,11 +175,6 @@ public final class DataConfig {
 
         public Builder secret(final String secret) {
             this.secret = secret;
-            return this;
-        }
-
-        public Builder url(final Url url) {
-            this.url = url;
             return this;
         }
 
@@ -239,9 +224,10 @@ public final class DataConfig {
         }
 
         private String[] getTopics() {
-            final String[] topics = new String[this.topics.size()];
-            for (int i = 0; i < this.topics.size(); i++) {
-                topics[i] = this.topics.get(i).toString();
+            var i = 0;
+            final var topics = new String[this.topics.size()];
+            for (final Topic topic : this.topics) {
+                topics[i++] = topic.toString();
             }
 
             return topics;

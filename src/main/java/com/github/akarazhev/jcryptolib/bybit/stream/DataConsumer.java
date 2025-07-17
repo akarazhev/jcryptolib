@@ -25,11 +25,15 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.stream.Payload;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 
 import java.net.http.HttpClient;
 import java.util.Map;
+
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.ANMT;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
 
 /**
  * Bybit data consumer.
@@ -77,17 +81,21 @@ public final class DataConsumer implements FlowableOnSubscribe<Payload<Map<Strin
      * @throws Throwable if an error occurs
      */
     @Override
-    public void subscribe(final FlowableEmitter<Payload<Map<String, Object>>> emitter) throws Throwable {
-        if (config.isWebSocket()) {
-            final var listener = DataConsumerListener.create(client, config, emitter);
-            emitter.setCancellable(listener::cancel);
-            listener.connect();
-        } else if (config.isRestApi()) {
-            final var fetcher = ApiDataFetcher.create(client, config, emitter);
-            emitter.setCancellable(fetcher::cancel);
-            fetcher.fetch();
-        } else {
-            throw new IllegalArgumentException("Unsupported data config type");
-        }
+    public void subscribe(@NonNull final FlowableEmitter<Payload<Map<String, Object>>> emitter) throws Throwable {
+        config.getTypes().forEach(type -> {
+            if (MD.equals(type)) {
+                final var fetcher = BybitDataFetcher.create(client, config, emitter);
+                emitter.setCancellable(fetcher::cancel);
+                fetcher.fetch();
+            } else if (ANMT.equals(type)) {
+                final var fetcher = RestApiDataFetcher.create(client, config, emitter);
+                emitter.setCancellable(fetcher::cancel);
+                fetcher.fetch();
+            } else {
+                final var listener = DataConsumerListener.create(client, config, emitter);
+                emitter.setCancellable(listener::cancel);
+                listener.connect();
+            }
+        });
     }
 }
