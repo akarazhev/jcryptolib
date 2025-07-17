@@ -27,7 +27,6 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 import com.github.akarazhev.jcryptolib.bybit.Constants;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
 import com.github.akarazhev.jcryptolib.bybit.config.Type;
-import com.github.akarazhev.jcryptolib.bybit.config.Url;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -62,11 +61,10 @@ final class BybitPrivateDataConsumerTest {
     @Test
     public void shouldReceiveOrderDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
+                .type(Type.PT)
                 .isUseAuth(true)
                 .key(getApiKey())
                 .secret(getApiSecret())
-                .url(Url.PRIVATE_TESTNET)
                 .topic(Topic.ORDER)
                 .build();
         final var consumer = DataConsumer.create(client, config);

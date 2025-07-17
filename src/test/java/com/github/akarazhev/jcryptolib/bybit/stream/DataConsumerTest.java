@@ -28,7 +28,6 @@ import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
 import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
 import com.github.akarazhev.jcryptolib.bybit.config.Type;
-import com.github.akarazhev.jcryptolib.bybit.config.Url;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -62,8 +61,7 @@ final class DataConsumerTest {
     @Test
     void testBasicWebSocketDataConsumingAndCleanup() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPOT)
+                .type(Type.PTST)
                 .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -85,8 +83,7 @@ final class DataConsumerTest {
     @Test
     void testBasicRestApiDataConsumingAndCleanup() {
         final var config = new DataConfig.Builder()
-                .type(Type.REST_API)
-                .url(Url.ANNOUNCEMENT)
+                .type(Type.ANMT)
                 .param(RequestKey.LOCALE, RequestValue.EN_US)
                 .param(RequestKey.TAG, RequestValue.LAUNCH_POOL)
                 .build();
@@ -109,8 +106,7 @@ final class DataConsumerTest {
     @Test
     void testReconnectionOnSocketDrop() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPOT)
+                .type(Type.PTST)
                 .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -134,8 +130,7 @@ final class DataConsumerTest {
     void testMultipleConcurrentConsumers() {
         final var consumerCount = 10;
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPOT)
+                .type(Type.PTST)
                 .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var subscribers = new ArrayList<TestSubscriber<Payload<Map<String, Object>>>>(consumerCount);
@@ -158,8 +153,7 @@ final class DataConsumerTest {
     @Test
     void testRapidConnectDisconnect() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPOT)
+                .type(Type.PTST)
                 .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         for (var i = 0; i < 20; i++) {

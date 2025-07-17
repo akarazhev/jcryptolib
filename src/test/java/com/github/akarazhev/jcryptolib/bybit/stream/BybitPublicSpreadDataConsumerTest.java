@@ -27,7 +27,6 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 import com.github.akarazhev.jcryptolib.bybit.Constants;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
 import com.github.akarazhev.jcryptolib.bybit.config.Type;
-import com.github.akarazhev.jcryptolib.bybit.config.Url;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -60,8 +59,7 @@ final class BybitPublicSpreadDataConsumerTest {
     @Test
     public void shouldReceiveOrderBookDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPREAD)
+                .type(Type.PTSD)
                 .topic(Topic.ORDER_BOOK_25_SOL_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -86,8 +84,7 @@ final class BybitPublicSpreadDataConsumerTest {
     @Test
     public void shouldReceiveTradeDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPREAD)
+                .type(Type.PTSD)
                 .topic(Topic.PUBLIC_TRADE_SOL_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -112,8 +109,7 @@ final class BybitPublicSpreadDataConsumerTest {
     @Test
     public void shouldReceiveTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.WEBSOCKET)
-                .url(Url.PUBLIC_TESTNET_SPREAD)
+                .type(Type.PTSD)
                 .topic(Topic.TICKERS_SOL_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
