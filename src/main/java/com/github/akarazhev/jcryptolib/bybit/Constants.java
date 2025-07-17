@@ -30,4 +30,28 @@ public final class Constants {
     }
 
     public static final String TOPIC_FIELD = "topic";
+
+    public static final class Response {
+        private Response() {
+            throw new UnsupportedOperationException();
+        }
+
+        public static final String RESULT = "result";
+        public static final String SUCCESS = "success";
+        public static final String RET_CODE = "ret_code";
+        public static final String ACTIVITY_ID = "activityId";
+        public static final String TOKEN_NAME = "tokenName";
+        public static final String TOKEN_ICON = "tokenIcon";
+        public static final String TOKEN_INFO_LIST = "tokenInfoList";
+        public static final String START_TIME = "startTime";
+        public static final String END_TIME = "endTime";
+        public static final String CLAIM_START_TIME = "claimStartTime";
+        public static final String CLAIM_END_TIME = "claimEndTime";
+        public static final String TOTAL_PRIZE_POOL = "totalPrizePool";
+        public static final String ACTIVITY_STATUS = "activityStatus";
+        public static final String USER_MAX_NUM = "userMaxNum";
+        public static final String TOTAL_NUMBER_AWARDS = "totalNumberAwards";
+        public static final String AWARD_INTERVAL = "awardInterval";
+        public static final String MIN_REWARD_AMOUNT = "minRewardAmount";
+    }
 }
