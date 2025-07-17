@@ -30,6 +30,10 @@ public final class Constants {
     }
 
     public static final class CMC {
+        private CMC() {
+            throw new UnsupportedOperationException();
+        }
+
         public static final int FG_START_DATE = 1367193600;
         public static final int FG_PERIOD_DAYS = 30;
         public static final int AS_PERIOD_DAYS = 7;
@@ -37,6 +41,10 @@ public final class Constants {
     }
 
     public static final class Response {
+        private Response() {
+            throw new UnsupportedOperationException();
+        }
+
         public static final String DATA = "data";
         public static final String STATUS = "status";
         public static final String ERROR_CODE = "error_code";
