@@ -25,17 +25,23 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Type {
-    WEBSOCKET("WebSocket"),
-    REST_API("Rest API");
+    ANMT("Announcements", "https://api.bybit.com/v5/announcements/index"),
+    PTST("Public Testnet Spot", "wss://stream-testnet.bybit.com/v5/public/spot"),
+    PTL("Public Testnet Linear", "wss://stream-testnet.bybit.com/v5/public/linear"),
+    PTI("Public Testnet Inverse", "wss://stream-testnet.bybit.com/v5/public/inverse"),
+    PTO("Public Testnet Option", "wss://stream-testnet.bybit.com/v5/public/option"),
+    PTSD("Public Testnet Spread", "wss://stream-testnet.bybit.com/v5/public/spread"),
+    PT("Private Testnet", "wss://stream-testnet.bybit.com/v5/private"),
+    TO("Testnet Order", "wss://stream-testnet.bybit.com/v5/trade"),
+    MD("MegaDrop", "https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList");
 
-    private final String type;
+    private final String url;
 
-    Type(final String type) {
-        this.type = type;
+    Type(final String type, final String url) {
+        this.url = url;
     }
 
-    @Override
-    public String toString() {
-        return type;
+    public String getUrl() {
+        return url;
     }
 }
