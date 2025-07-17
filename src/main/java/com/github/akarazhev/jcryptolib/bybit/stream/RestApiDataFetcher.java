@@ -26,8 +26,10 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
 import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
+import com.github.akarazhev.jcryptolib.stream.DataFetcher;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
+import com.github.akarazhev.jcryptolib.stream.Source;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -48,30 +50,38 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-final class ApiDataFetcher {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiDataFetcher.class);
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.LIST;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.OK;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RESULT;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_CODE_CAMEL_CASE;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_MSG;
+
+final class RestApiDataFetcher implements DataFetcher {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestApiDataFetcher.class);
     private final AtomicReference<Disposable> fetcherRef = new AtomicReference<>();
     private final HttpClient client;
     private final DataConfig config;
     private final FlowableEmitter<Payload<Map<String, Object>>> emitter;
 
-    public static ApiDataFetcher create(final HttpClient client, final DataConfig config,
-                                        final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
-        return new ApiDataFetcher(client, config, emitter);
+    public static RestApiDataFetcher create(final HttpClient client, final DataConfig config,
+                                            final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
+        return new RestApiDataFetcher(client, config, emitter);
     }
 
-    private ApiDataFetcher(final HttpClient client, final DataConfig config,
-                           final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
+    private RestApiDataFetcher(final HttpClient client, final DataConfig config,
+                               final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
     }
 
+    @Override
     public void fetch() {
         fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS)
                 .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
     }
 
+    @Override
     public void cancel() {
         if (emitter.isCancelled()) {
             final var fetcher = fetcherRef.getAndSet(null);
@@ -83,10 +93,11 @@ final class ApiDataFetcher {
     }
 
     private void fetchData() {
+        final var url = getUrl();
         if (!config.getParams().isEmpty()) {
-            fetch(config.getUrl().toString(), config.getParams());
+            fetch(url, config.getParams());
         } else {
-            fetch(config.getUrl().toString());
+            fetch(url);
         }
     }
 
@@ -106,7 +117,7 @@ final class ApiDataFetcher {
                         } else {
                             result.forEach(value -> {
                                 LOGGER.debug("Fetched message: {}", value);
-                                emitter.onNext(Payload.of(Provider.BYBIT, value));
+                                emitter.onNext(Payload.of(Provider.BYBIT, Source.RAPI, value));
                             });
                             if (result.size() < limit) {
                                 isMoreAvailable = false;
@@ -136,7 +147,7 @@ final class ApiDataFetcher {
                     if (result != null && !result.isEmpty()) {
                         result.forEach(value -> {
                             LOGGER.debug("Fetched message: {}", value);
-                            emitter.onNext(Payload.of(Provider.BYBIT, value));
+                            emitter.onNext(Payload.of(Provider.BYBIT, Source.RAPI, value));
                         });
                     }
                 } else {
@@ -202,14 +213,18 @@ final class ApiDataFetcher {
     private List<Map<String, Object>> getResult(final String json) {
         final var data = JsonUtils.jsonToMap(json);
         if (isRetCodeOk(data)) {
-            return (List<Map<String, Object>>) ((Map<String, Object>) data.get("result")).get("list");
+            return (List<Map<String, Object>>) ((Map<String, Object>) data.get(RESULT)).get(LIST);
         }
 
         return List.of();
     }
 
     private boolean isRetCodeOk(final Map<String, Object> data) {
-        return (data.containsKey("retCode") && (int) data.get("retCode") == 0) ||
-                (data.containsKey("ret_code") && (int) data.get("ret_code") == 0);
+        return (data.containsKey(RET_MSG) && OK.equals(data.get(RET_MSG)) &&
+                (data.containsKey(RET_CODE_CAMEL_CASE) && (Integer) data.get(RET_CODE_CAMEL_CASE) == 0));
+    }
+
+    private String getUrl() {
+        return config.getTypes().iterator().next().getUrl();// TODO: support multiple types
     }
 }

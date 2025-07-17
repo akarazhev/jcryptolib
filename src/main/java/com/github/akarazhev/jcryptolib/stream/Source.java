@@ -26,7 +26,7 @@ package com.github.akarazhev.jcryptolib.stream;
 
 public enum Source {
     WS,
-    REST_API,
+    RAPI,
     FG,
     AS,
     BDO,

@@ -53,5 +53,9 @@ public final class Constants {
         public static final String TOTAL_NUMBER_AWARDS = "totalNumberAwards";
         public static final String AWARD_INTERVAL = "awardInterval";
         public static final String MIN_REWARD_AMOUNT = "minRewardAmount";
+        public static final String LIST = "list";
+        public static final String RET_CODE_CAMEL_CASE = "retCode";
+        public static final String RET_MSG = "retMsg";
+        public static final String OK = "OK";
     }
 }
