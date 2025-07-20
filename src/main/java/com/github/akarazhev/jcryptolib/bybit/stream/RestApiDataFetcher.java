@@ -225,6 +225,6 @@ final class RestApiDataFetcher implements DataFetcher {
     }
 
     private String getUrl() {
-        return config.getTypes().iterator().next().getUrl();// TODO: support multiple types
+        return config.getRestApiType().getUrl();
     }
 }

@@ -343,7 +343,7 @@ final class DataConsumerListener implements WebSocket.Listener {
 
     private URI getURI() {
         try {
-            return new URI(config.getTypes().iterator().next().getUrl()); // TODO: support multiple types
+            return new URI(config.getStreamType().getUrl());
         } catch (final URISyntaxException e) {
             throw new RuntimeException(e);
         }

@@ -8,21 +8,21 @@ import java.net.http.HttpRequest;
 import java.util.Map;
 
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.CURRENT;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.LAUNCH_POOL_URL;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.PAGE_SIZE;
 
 final class BybitRequestBuilder {
 
     public static HttpRequest buildMegaDropRequest() {
-        return buildGetRequest(URI.create(Type.MD.getUrl()));
+        return buildGetRequest(URI.create(Type.MD.getUrls()[0]));
     }
 
     public static HttpRequest buildLaunchPoolPageRequest() {
-        return buildGetRequest(URI.create(Type.LPL.getUrl()));
+        return buildGetRequest(URI.create(Type.LPL.getUrls()[0]));
     }
 
     public static HttpRequest buildLaunchPoolPageRequest(final int size) {
-        return buildPostRequest(URI.create(LAUNCH_POOL_URL), JsonUtils.mapToJson(Map.of(PAGE_SIZE, size, CURRENT, 1)));
+        final var body = JsonUtils.mapToJson(Map.of(PAGE_SIZE, size, CURRENT, 1));
+        return buildPostRequest(URI.create(Type.LPL.getUrls()[1]), body);
     }
 
     private static HttpRequest buildGetRequest(final URI uri) {

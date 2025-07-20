@@ -25,8 +25,8 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.Constants;
+import com.github.akarazhev.jcryptolib.bybit.config.StreamType;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
-import com.github.akarazhev.jcryptolib.bybit.config.Type;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -59,7 +59,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveOrderBookDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.ORDER_BOOK_1_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -84,7 +84,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveTradeDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.PUBLIC_TRADE_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -110,7 +110,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.TICKERS_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -135,7 +135,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveKlineDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.KLINE_1_BTC_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -160,7 +160,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveLTKlineDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.KLINE_LT_5_EOS3L_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -185,7 +185,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveLTTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.TICKERS_LT_EOS3L_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
@@ -210,7 +210,7 @@ final class BybitPublicSpotDataConsumerTest {
     @Test
     public void shouldReceiveLTNavDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PTST)
+                .streamType(StreamType.PTST)
                 .topic(Topic.LT_EOS3L_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);

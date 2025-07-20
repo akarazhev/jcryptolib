@@ -25,8 +25,8 @@
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.Constants;
+import com.github.akarazhev.jcryptolib.bybit.config.StreamType;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
-import com.github.akarazhev.jcryptolib.bybit.config.Type;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.util.TestUtils;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -61,7 +61,7 @@ final class BybitPrivateDataConsumerTest {
     @Test
     public void shouldReceiveOrderDataConsumer() {
         final var config = new DataConfig.Builder()
-                .type(Type.PT)
+                .streamType(StreamType.PT)
                 .isUseAuth(true)
                 .key(getApiKey())
                 .secret(getApiSecret())

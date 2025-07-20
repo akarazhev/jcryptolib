@@ -27,6 +27,8 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 import com.github.akarazhev.jcryptolib.bybit.config.Config;
 import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
 import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
+import com.github.akarazhev.jcryptolib.bybit.config.RestApiType;
+import com.github.akarazhev.jcryptolib.bybit.config.StreamType;
 import com.github.akarazhev.jcryptolib.bybit.config.Topic;
 import com.github.akarazhev.jcryptolib.bybit.config.Type;
 
@@ -38,6 +40,8 @@ import java.util.Set;
 
 public final class DataConfig {
     private final Set<Type> types;
+    private final RestApiType restApiType;
+    private final StreamType streamType;
     private final boolean isUseAuth;
     private final String key;
     private final String secret;
@@ -52,11 +56,9 @@ public final class DataConfig {
     private final int fetchIntervalMs;
 
     private DataConfig(final Builder builder) {
-        if (builder.types.isEmpty()) {
-            throw new IllegalArgumentException("Types is empty");
-        }
-
         this.types = builder.types;
+        this.restApiType = builder.restApiType;
+        this.streamType = builder.streamType;
         this.isUseAuth = builder.isUseAuth;
         this.key = builder.key;
         this.secret = builder.secret;
@@ -73,6 +75,14 @@ public final class DataConfig {
 
     public Set<Type> getTypes() {
         return types;
+    }
+
+    public RestApiType getRestApiType() {
+        return restApiType;
+    }
+
+    public StreamType getStreamType() {
+        return streamType;
     }
 
     public boolean isUseAuth() {
@@ -130,6 +140,8 @@ public final class DataConfig {
     public String print() {
         return "\nBybit Data Config {" +
                 "\n\ttypes=" + types +
+                "\n\trestApiType=" + restApiType +
+                "\n\tstreamType=" + streamType +
                 "\n\tisUseAuth=" + isUseAuth +
                 "\n\ttopics='" + Arrays.toString(topics) + '\'' +
                 "\n\tparams=" + params +
@@ -145,6 +157,8 @@ public final class DataConfig {
 
     public static final class Builder {
         private final Set<Type> types = new HashSet<>();
+        private RestApiType restApiType;
+        private StreamType streamType;
         private boolean isUseAuth;
         private String key;
         private String secret;
@@ -160,6 +174,16 @@ public final class DataConfig {
 
         public Builder type(final Type type) {
             this.types.add(type);
+            return this;
+        }
+
+        public Builder restApiType(final RestApiType restApiType) {
+            this.restApiType = restApiType;
+            return this;
+        }
+
+        public Builder streamType(final StreamType streamType) {
+            this.streamType = streamType;
             return this;
         }
 

@@ -24,18 +24,16 @@
 
 package com.github.akarazhev.jcryptolib.bybit.config;
 
-public enum Type {
-    MD("Mega Drop", new String[]{"https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList"}),
-    LPL("Launch Pool", new String[]{"https://www.bybit.com/x-api/spot/api/launchpool/v1/home",
-            "https://www.bybit.com/x-api/spot/api/launchpool/v1/history"});
+public enum RestApiType {
+    ANMT("Announcements", "https://api.bybit.com/v5/announcements/index");
 
-    private final String[] urls;
+    private final String url;
 
-    Type(final String type, final String[] urls) {
-        this.urls = urls;
+    RestApiType(final String type, final String url) {
+        this.url = url;
     }
 
-    public String[] getUrls() {
-        return urls;
+    public String getUrl() {
+        return url;
     }
 }

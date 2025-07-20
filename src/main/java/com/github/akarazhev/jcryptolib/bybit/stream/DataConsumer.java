@@ -32,10 +32,6 @@ import io.reactivex.rxjava3.core.FlowableOnSubscribe;
 import java.net.http.HttpClient;
 import java.util.Map;
 
-import static com.github.akarazhev.jcryptolib.bybit.config.Type.ANMT;
-import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
-import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
-
 /**
  * Bybit data consumer.
  * <p>
@@ -83,20 +79,22 @@ public final class DataConsumer implements FlowableOnSubscribe<Payload<Map<Strin
      */
     @Override
     public void subscribe(@NonNull final FlowableEmitter<Payload<Map<String, Object>>> emitter) throws Throwable {
-        config.getTypes().forEach(type -> {
-            if (MD.equals(type) || LPL.equals(type)) {
-                final var fetcher = BybitDataFetcher.create(client, config, emitter);
-                emitter.setCancellable(fetcher::cancel);
-                fetcher.fetch();
-            } else if (ANMT.equals(type)) {
-                final var fetcher = RestApiDataFetcher.create(client, config, emitter);
-                emitter.setCancellable(fetcher::cancel);
-                fetcher.fetch();
-            } else {
-                final var listener = DataConsumerListener.create(client, config, emitter);
-                emitter.setCancellable(listener::cancel);
-                listener.connect();
-            }
-        });
+        if (!config.getTypes().isEmpty()) {
+            final var fetcher = BybitDataFetcher.create(client, config, emitter);
+            emitter.setCancellable(fetcher::cancel);
+            fetcher.fetch();
+        }
+
+        if (config.getRestApiType() != null) {
+            final var fetcher = RestApiDataFetcher.create(client, config, emitter);
+            emitter.setCancellable(fetcher::cancel);
+            fetcher.fetch();
+        }
+
+        if (config.getStreamType() != null) {
+            final var listener = DataConsumerListener.create(client, config, emitter);
+            emitter.setCancellable(listener::cancel);
+            listener.connect();
+        }
     }
 }

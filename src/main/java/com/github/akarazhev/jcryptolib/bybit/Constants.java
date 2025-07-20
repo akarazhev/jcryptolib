@@ -36,7 +36,6 @@ public final class Constants {
             throw new UnsupportedOperationException();
         }
 
-        public static final String LAUNCH_POOL_URL = "https://www.bybit.com/x-api/spot/api/launchpool/v1/history";
         public static final String PAGE_SIZE = "pageSize";
         public static final String CURRENT = "current";
     }

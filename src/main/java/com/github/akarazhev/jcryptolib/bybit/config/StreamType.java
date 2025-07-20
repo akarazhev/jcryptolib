@@ -24,18 +24,22 @@
 
 package com.github.akarazhev.jcryptolib.bybit.config;
 
-public enum Type {
-    MD("Mega Drop", new String[]{"https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList"}),
-    LPL("Launch Pool", new String[]{"https://www.bybit.com/x-api/spot/api/launchpool/v1/home",
-            "https://www.bybit.com/x-api/spot/api/launchpool/v1/history"});
+public enum StreamType {
+    PTST("Public Testnet Spot", "wss://stream-testnet.bybit.com/v5/public/spot"),
+    PTL("Public Testnet Linear", "wss://stream-testnet.bybit.com/v5/public/linear"),
+    PTI("Public Testnet Inverse", "wss://stream-testnet.bybit.com/v5/public/inverse"),
+    PTO("Public Testnet Option", "wss://stream-testnet.bybit.com/v5/public/option"),
+    PTSD("Public Testnet Spread", "wss://stream-testnet.bybit.com/v5/public/spread"),
+    PT("Private Testnet", "wss://stream-testnet.bybit.com/v5/private"),
+    TO("Testnet Order", "wss://stream-testnet.bybit.com/v5/trade");
 
-    private final String[] urls;
+    private final String url;
 
-    Type(final String type, final String[] urls) {
-        this.urls = urls;
+    StreamType(final String streamType, final String url) {
+        this.url = url;
     }
 
-    public String[] getUrls() {
-        return urls;
+    public String getUrl() {
+        return url;
     }
 }
