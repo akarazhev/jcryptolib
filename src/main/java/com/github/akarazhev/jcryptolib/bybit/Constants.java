@@ -48,24 +48,26 @@ public final class Constants {
         public static final String RESULT = "result";
         public static final String SUCCESS = "success";
         public static final String RET_CODE = "ret_code";
-        public static final String ACTIVITY_ID = "activityId";
         public static final String TOKEN_NAME = "tokenName";
         public static final String TOKEN_ICON = "tokenIcon";
-        public static final String TOKEN_INFO_LIST = "tokenInfoList";
         public static final String START_TIME = "startTime";
         public static final String END_TIME = "endTime";
         public static final String CLAIM_START_TIME = "claimStartTime";
         public static final String CLAIM_END_TIME = "claimEndTime";
-        public static final String TOTAL_PRIZE_POOL = "totalPrizePool";
-        public static final String ACTIVITY_STATUS = "activityStatus";
-        public static final String USER_MAX_NUM = "userMaxNum";
-        public static final String TOTAL_NUMBER_AWARDS = "totalNumberAwards";
-        public static final String AWARD_INTERVAL = "awardInterval";
-        public static final String MIN_REWARD_AMOUNT = "minRewardAmount";
         public static final String LIST = "list";
         public static final String RET_CODE_CAMEL_CASE = "retCode";
         public static final String RET_MSG = "retMsg";
         public static final String OK = "OK";
         public static final String TOTAL_PROJECTS = "totalProjects";
+        public static final String RETURN_COIN = "returnCoin";
+        public static final String RETURN_COIN_ICON = "returnCoinIcon";
+        public static final String DESC = "desc";
+        public static final String WEBSITE = "website";
+        public static final String WHITE_PAPER = "whitepaper";
+        public static final String RULES = "rules";
+        public static final String STAKE_BEGIN_TIME = "stakeBeginTime";
+        public static final String STAKE_END_TIME = "stakeEndTime";
+        public static final String TRADE_BEGIN_TIME = "tradeBeginTime";
+        public static final String STAKE_POOL_LIST = "stakePoolList";
     }
 }

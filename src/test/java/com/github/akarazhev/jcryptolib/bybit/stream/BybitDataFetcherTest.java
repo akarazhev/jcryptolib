@@ -16,20 +16,22 @@ import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.ACTIVITY_ID;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.ACTIVITY_STATUS;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.AWARD_INTERVAL;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.CLAIM_END_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.CLAIM_START_TIME;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.DESC;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.END_TIME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.MIN_REWARD_AMOUNT;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RETURN_COIN;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RETURN_COIN_ICON;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RULES;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_BEGIN_TIME;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_END_TIME;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_POOL_LIST;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.START_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOKEN_ICON;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOKEN_INFO_LIST;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOKEN_NAME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOTAL_NUMBER_AWARDS;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOTAL_PRIZE_POOL;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.USER_MAX_NUM;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TRADE_BEGIN_TIME;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.WEBSITE;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.WHITE_PAPER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,20 +71,12 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.MD, value.getSource());
-            assertTrue(value.getData().containsKey(ACTIVITY_ID));
             assertTrue(value.getData().containsKey(TOKEN_NAME));
             assertTrue(value.getData().containsKey(TOKEN_ICON));
-            assertTrue(value.getData().containsKey(TOKEN_INFO_LIST));
             assertTrue(value.getData().containsKey(START_TIME));
             assertTrue(value.getData().containsKey(END_TIME));
             assertTrue(value.getData().containsKey(CLAIM_START_TIME));
             assertTrue(value.getData().containsKey(CLAIM_END_TIME));
-            assertTrue(value.getData().containsKey(TOTAL_PRIZE_POOL));
-            assertTrue(value.getData().containsKey(ACTIVITY_STATUS));
-            assertTrue(value.getData().containsKey(USER_MAX_NUM));
-            assertTrue(value.getData().containsKey(TOTAL_NUMBER_AWARDS));
-            assertTrue(value.getData().containsKey(AWARD_INTERVAL));
-            assertTrue(value.getData().containsKey(MIN_REWARD_AMOUNT));
         }
     }
 
@@ -108,6 +102,16 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.LPL, value.getSource());
+            assertTrue(value.getData().containsKey(RETURN_COIN));
+            assertTrue(value.getData().containsKey(RETURN_COIN_ICON));
+            assertTrue(value.getData().containsKey(DESC));
+            assertTrue(value.getData().containsKey(WEBSITE));
+            assertTrue(value.getData().containsKey(WHITE_PAPER));
+            assertTrue(value.getData().containsKey(RULES));
+            assertTrue(value.getData().containsKey(STAKE_BEGIN_TIME));
+            assertTrue(value.getData().containsKey(STAKE_END_TIME));
+            assertTrue(value.getData().containsKey(TRADE_BEGIN_TIME));
+            assertTrue(value.getData().containsKey(STAKE_POOL_LIST));
         }
     }
 }
