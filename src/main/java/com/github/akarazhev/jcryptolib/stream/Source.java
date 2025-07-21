@@ -45,6 +45,7 @@ public enum Source {
     DV,
     FR,
     VIV,
+    LPD,
     MD,
     LPL
 }

@@ -9,30 +9,43 @@ import java.util.Map;
 
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.CURRENT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.PAGE_SIZE;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_LPD;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_LPL;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_MD;
 
 final class BybitRequestBuilder {
 
+    public static HttpRequest buildLaunchPadPageRequest() {
+        return buildGetRequest(URI.create(Type.LPD.getUrls()[0]), REFERER_LPD);
+    }
+
+    public static HttpRequest buildLaunchPadPageRequest(final int size) {
+        String request = "?" + CURRENT + "=" + 1 + "&" + PAGE_SIZE + "=" + size;
+        return buildGetRequest(URI.create(Type.LPD.getUrls()[1] + request), REFERER_LPD);
+    }
+
     public static HttpRequest buildMegaDropRequest() {
-        return buildGetRequest(URI.create(Type.MD.getUrls()[0]));
+        return buildGetRequest(URI.create(Type.MD.getUrls()[0]), REFERER_MD);
     }
 
     public static HttpRequest buildLaunchPoolPageRequest() {
-        return buildGetRequest(URI.create(Type.LPL.getUrls()[0]));
+        return buildGetRequest(URI.create(Type.LPL.getUrls()[0]), REFERER_LPL);
     }
 
     public static HttpRequest buildLaunchPoolPageRequest(final int size) {
         final var body = JsonUtils.mapToJson(Map.of(PAGE_SIZE, size, CURRENT, 1));
-        return buildPostRequest(URI.create(Type.LPL.getUrls()[1]), body);
+        return buildPostRequest(URI.create(Type.LPL.getUrls()[1]), REFERER_LPL, body);
     }
 
-    private static HttpRequest buildGetRequest(final URI uri) {
+    private static HttpRequest buildGetRequest(final URI uri, final String referer) {
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                .header("Accept-Encoding", "gzip, deflate, br, zstd")
                 .header("Accept-Language", "en-US,en;q=0.5")
                 .header("Alt-Used", "www.bybit.com")
                 .header("Priority", "u=0, i")
+                .header("Referer", referer)
+                .header("Origin", "https://www.bybit.com")
                 .header("Sec-Fetch-Dest", "document")
                 .header("Sec-Fetch-Mode", "navigate")
                 .header("Sec-Fetch-Site", "none")
@@ -45,24 +58,22 @@ final class BybitRequestBuilder {
                 .build();
     }
 
-    private static HttpRequest buildPostRequest(final URI uri, final String body) { // todo: to review
+    private static HttpRequest buildPostRequest(final URI uri, final String referer, final String body) {
         return HttpRequest.newBuilder()
                 .uri(uri)
-                .header("accept", "application/json, text/plain, */*")
-                .header("accept-language", "en")
-                .header("content-type", "application/json")
+                .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) " +
+                        "Gecko/20100101 Firefox/140.0")
+                .header("Accept", "application/json, text/plain, */*")
+                .header("Accept-Language", "en")
+                .header("Content-Type", "application/json")
                 .header("lang", "en")
-                .header("origin", "https://www.bybit.com")
-                .header("priority", "u=1, i")
-                .header("referer", "https://www.bybit.com/en/trade/spot/launchpool")
-                .header("sec-ch-ua", "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"")
-                .header("sec-ch-ua-mobile", "?0")
-                .header("sec-ch-ua-platform", "\"macOS\"")
-                .header("sec-fetch-dest", "empty")
-                .header("sec-fetch-mode", "cors")
-                .header("sec-fetch-site", "same-origin")
-                .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
-                        "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
+                .header("Sec-Fetch-Dest", "empty")
+                .header("Sec-Fetch-Mode", "cors")
+                .header("Sec-Fetch-Site", "same-origin")
+                .header("Alt-Used", "www.bybit.com")
+                .header("Referer", referer)
+                .header("Origin", "https://www.bybit.com")
+                .header("Priority", "u=1, i")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
     }

@@ -51,6 +51,7 @@ import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RESULT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_CODE;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SUCCESS;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOTAL_PROJECTS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPD;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
 
@@ -92,23 +93,47 @@ final class BybitDataFetcher implements DataFetcher {
 
     private void fetchData() {
         config.getTypes().forEach(type -> {
-            if (MD.equals(type)) {
+            if (LPD.equals(type)) {
+                fetchLaunchPads();
+            } else if (MD.equals(type)) {
                 fetch(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
             } else if (LPL.equals(type)) {
-                fetchSequential(BybitRequestBuilder.buildLaunchPoolPageRequest(), Source.LPL);
+                fetchLaunchPools();
             }
         });
     }
 
-    private void fetchSequential(final HttpRequest request, final Source source) {
+    private void fetchLaunchPads() {
         if (!emitter.isCancelled()) {
             try {
-                final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                final var response = client.send(BybitRequestBuilder.buildLaunchPadPageRequest(),
+                        HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == 200) {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchBySize(BybitRequestBuilder.buildLaunchPoolPageRequest(totalProjects), source);
+                        fetchBySize(BybitRequestBuilder.buildLaunchPadPageRequest(totalProjects), Source.LPD);
+                    }
+                } else {
+                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                }
+            } catch (final Exception e) {
+                LOGGER.error("Failed to fetch data by uri", e);
+                emitter.onError(e);
+            }
+        }
+    }
+
+    private void fetchLaunchPools() {
+        if (!emitter.isCancelled()) {
+            try {
+                final var response = client.send(BybitRequestBuilder.buildLaunchPoolPageRequest(),
+                        HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 200) {
+                    final var result = getResultAsMap(response.uri(), response.body());
+                    if (result != null && !result.isEmpty()) {
+                        final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
+                        fetchBySize(BybitRequestBuilder.buildLaunchPoolPageRequest(totalProjects), Source.LPL);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());

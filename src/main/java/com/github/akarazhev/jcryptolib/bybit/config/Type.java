@@ -25,6 +25,8 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Type {
+    LPD("Launch Pad", new String[]{"https://www.bybit.com/x-api/spot/api/activity/v2/project/ongoing/list",
+            "https://www.bybit.com/x-api/spot/api/activity/v2/project/finished/list"}),
     MD("Mega Drop", new String[]{"https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList"}),
     LPL("Launch Pool", new String[]{"https://www.bybit.com/x-api/spot/api/launchpool/v1/home",
             "https://www.bybit.com/x-api/spot/api/launchpool/v1/history"});

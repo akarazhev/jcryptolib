@@ -38,6 +38,9 @@ public final class Constants {
 
         public static final String PAGE_SIZE = "pageSize";
         public static final String CURRENT = "current";
+        public static final String REFERER_LPL = "https://www.bybit.com/en/trade/spot/launchpool";
+        public static final String REFERER_LPD = "https://www.bybit.com/en/trade/spot/launchpad";
+        public static final String REFERER_MD = "https://www.bybit.com/en/trade/spot/megadrop";
     }
 
     public static final class Response {
@@ -69,5 +72,13 @@ public final class Constants {
         public static final String STAKE_END_TIME = "stakeEndTime";
         public static final String TRADE_BEGIN_TIME = "tradeBeginTime";
         public static final String STAKE_POOL_LIST = "stakePoolList";
+        public static final String NAME = "name";
+        public static final String TITLE = "title";
+        public static final String ICON = "icon";
+        public static final String SNAPSHOT_START_TIME = "snapshotStartTime";
+        public static final String SNAPSHOT_END_TIME = "snapshotEndTime";
+        public static final String ALLOCATION_START_TIME = "allocationStartTime";
+        public static final String ALLOCATION_END_TIME = "allocationEndTime";
+        public static final String PROJECT_START_TIME = "projectStartTime";
     }
 }
