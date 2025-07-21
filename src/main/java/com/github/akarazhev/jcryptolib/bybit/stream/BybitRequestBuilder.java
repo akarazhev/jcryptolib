@@ -10,6 +10,7 @@ import java.util.Map;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.BYV_TYPE_ALL;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.CURRENT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.PAGE_SIZE;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_BYS;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_BYV;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_LPD;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_LPL;
@@ -40,8 +41,12 @@ final class BybitRequestBuilder {
         return buildPostRequest(URI.create(Type.LPL.getUrls()[1]), REFERER_LPL, body);
     }
 
-    public static HttpRequest buildBybitVolumeRequest() {
+    public static HttpRequest buildByVotesRequest() {
         return buildGetRequest(URI.create(Type.BYV.getUrls()[0] + "?" + TYPE + "=" + BYV_TYPE_ALL), REFERER_BYV);
+    }
+
+    public static HttpRequest buildByStarterRequest() {
+        return buildGetRequest(URI.create(Type.BYS.getUrls()[0]), REFERER_BYS);
     }
 
     private static HttpRequest buildGetRequest(final URI uri, final String referer) {

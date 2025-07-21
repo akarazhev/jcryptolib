@@ -30,7 +30,8 @@ public enum Type {
     MD("Mega Drop", new String[]{"https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList"}),
     LPL("Launch Pool", new String[]{"https://www.bybit.com/x-api/spot/api/launchpool/v1/home",
             "https://www.bybit.com/x-api/spot/api/launchpool/v1/history"}),
-    BYV("ByVotes", new String[]{"https://www.bybit.com/x-api/spot/api/vote/v2/projectList"});
+    BYV("ByVotes", new String[]{"https://www.bybit.com/x-api/spot/api/vote/v2/projectList"}),
+    BYS("ByStarter", new String[]{"https://www.bybit.com/x-api/spot/api/by-starter/v3/project/current"});
 
     private final String[] urls;
 

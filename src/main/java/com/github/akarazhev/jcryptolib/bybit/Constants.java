@@ -43,6 +43,7 @@ public final class Constants {
         public static final String REFERER_LPD = "https://www.bybit.com/en/trade/spot/launchpad";
         public static final String REFERER_MD = "https://www.bybit.com/en/trade/spot/megadrop";
         public static final String REFERER_BYV = "https://www.bybit.com/en/trade/spot/vote-home";
+        public static final String REFERER_BYS = "https://www.bybit.com/en/bystarter";
         public static final int BYV_TYPE_ALL = 0;
     }
 
@@ -89,5 +90,12 @@ public final class Constants {
         public static final String REWARD_START_TIME = "rewardStartTime";
         public static final String REWARD_END_TIME = "rewardEndTime";
         public static final String INTRODUCE_CONTENT = "introduceContent";
+        public static final String COIN_ICON = "coinIcon";
+        public static final String COIN_NAME = "coinName";
+        public static final String PROJECT_INTRO = "projectIntro";
+        public static final String PERIOD_LIST = "periodList";
+        public static final String SALE_START_TIME = "saleStartTime";
+        public static final String SALE_END_TIME = "saleEndTime";
+        public static final String PUBLISH_TIME = "publishTime";
     }
 }
