@@ -38,9 +38,12 @@ public final class Constants {
 
         public static final String PAGE_SIZE = "pageSize";
         public static final String CURRENT = "current";
+        public static final String TYPE = "type";
         public static final String REFERER_LPL = "https://www.bybit.com/en/trade/spot/launchpool";
         public static final String REFERER_LPD = "https://www.bybit.com/en/trade/spot/launchpad";
         public static final String REFERER_MD = "https://www.bybit.com/en/trade/spot/megadrop";
+        public static final String REFERER_BYV = "https://www.bybit.com/en/trade/spot/vote-home";
+        public static final int BYV_TYPE_ALL = 0;
     }
 
     public static final class Response {
@@ -80,5 +83,11 @@ public final class Constants {
         public static final String ALLOCATION_START_TIME = "allocationStartTime";
         public static final String ALLOCATION_END_TIME = "allocationEndTime";
         public static final String PROJECT_START_TIME = "projectStartTime";
+        public static final String COIN = "coin";
+        public static final String VOTE_START_TIME = "voteStartTime";
+        public static final String VOTE_END_TIME = "voteEndTime";
+        public static final String REWARD_START_TIME = "rewardStartTime";
+        public static final String REWARD_END_TIME = "rewardEndTime";
+        public static final String INTRODUCE_CONTENT = "introduceContent";
     }
 }

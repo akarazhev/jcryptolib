@@ -7,11 +7,14 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.Map;
 
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.BYV_TYPE_ALL;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.CURRENT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.PAGE_SIZE;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_BYV;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_LPD;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_LPL;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.REFERER_MD;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Request.TYPE;
 
 final class BybitRequestBuilder {
 
@@ -35,6 +38,10 @@ final class BybitRequestBuilder {
     public static HttpRequest buildLaunchPoolPageRequest(final int size) {
         final var body = JsonUtils.mapToJson(Map.of(PAGE_SIZE, size, CURRENT, 1));
         return buildPostRequest(URI.create(Type.LPL.getUrls()[1]), REFERER_LPL, body);
+    }
+
+    public static HttpRequest buildBybitVolumeRequest() {
+        return buildGetRequest(URI.create(Type.BYV.getUrls()[0] + "?" + TYPE + "=" + BYV_TYPE_ALL), REFERER_BYV);
     }
 
     private static HttpRequest buildGetRequest(final URI uri, final String referer) {

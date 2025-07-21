@@ -51,6 +51,7 @@ import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RESULT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_CODE;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SUCCESS;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOTAL_PROJECTS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYV;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPD;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
@@ -99,6 +100,8 @@ final class BybitDataFetcher implements DataFetcher {
                 fetch(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
             } else if (LPL.equals(type)) {
                 fetchLaunchPools();
+            } else if (BYV.equals(type)) {
+                fetch(BybitRequestBuilder.buildBybitVolumeRequest(), Source.BYV);
             }
         });
     }
