@@ -2,7 +2,7 @@
 
 Perform Tasks for a Chance to Win Tokens!
 
-# Project Information
+## Project Information
 
 Request API with headers:
 
