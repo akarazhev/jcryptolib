@@ -25,10 +25,9 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum RequestValue {
-    LAUNCH_POOL("Launchpool"),
-    LAUNCH_PAD("Launchpad"),
-    BY_VOTES("ByVotes"),
-    EN_US("en-US");
+    NEW_CRYPTO(Constants.Value.NEW_CRYPTO),
+    DE_LISTINGS(Constants.Value.DE_LISTINGS),
+    EN_US(Constants.Value.EN_US);
 
     private final String value;
 

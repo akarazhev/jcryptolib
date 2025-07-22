@@ -26,23 +26,23 @@ package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Topic {
     // BTC and USDT
-    ORDER_BOOK_1_BTC_USDT("orderbook.1.BTCUSDT"),
-    PUBLIC_TRADE_BTC_USDT("publicTrade.BTCUSDT"),
-    TICKERS_BTC_USDT("tickers.BTCUSDT"),
-    KLINE_1_BTC_USDT("kline.1.BTCUSDT"),
-    ALL_LIQUIDATION_BTC_USDT("allLiquidation.BTCUSDT"),
+    ORDER_BOOK_1_BTC_USDT(Constants.Topic.ORDER_BOOK_1_BTC_USDT),
+    PUBLIC_TRADE_BTC_USDT(Constants.Topic.PUBLIC_TRADE_BTC_USDT),
+    TICKERS_BTC_USDT(Constants.Topic.TICKERS_BTC_USDT),
+    KLINE_1_BTC_USDT(Constants.Topic.KLINE_1_BTC_USDT),
+    ALL_LIQUIDATION_BTC_USDT(Constants.Topic.ALL_LIQUIDATION_BTC_USDT),
     // USDT
-    INSURANCE_USDT("insurance.USDT"),
+    INSURANCE_USDT(Constants.Topic.INSURANCE_USDT),
     // Order
-    ORDER("order"),
+    ORDER(Constants.Topic.ORDER),
     // SOL and USDT
-    ORDER_BOOK_25_SOL_USDT("orderbook.25.SOLUSDT_SOL/USDT"),
-    PUBLIC_TRADE_SOL_USDT("publicTrade.SOLUSDT_SOL/USDT"),
-    TICKERS_SOL_USDT("tickers.SOLUSDT_SOL/USDT"),
+    ORDER_BOOK_25_SOL_USDT(Constants.Topic.ORDER_BOOK_25_SOL_USDT),
+    PUBLIC_TRADE_SOL_USDT(Constants.Topic.PUBLIC_TRADE_SOL_USDT),
+    TICKERS_SOL_USDT(Constants.Topic.TICKERS_SOL_USDT),
     // EOS and USDT
-    KLINE_LT_5_EOS3L_USDT("kline_lt.5.EOS3LUSDT"),
-    TICKERS_LT_EOS3L_USDT("tickers_lt.EOS3LUSDT"),
-    LT_EOS3L_USDT("lt.EOS3LUSDT");
+    KLINE_LT_5_EOS3L_USDT(Constants.Topic.KLINE_LT_5_EOS3L_USDT),
+    TICKERS_LT_EOS3L_USDT(Constants.Topic.TICKERS_LT_EOS3L_USDT),
+    LT_EOS3L_USDT(Constants.Topic.LT_EOS3L_USDT);
 
     private final String topic;
 

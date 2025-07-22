@@ -26,45 +26,55 @@ package com.github.akarazhev.jcryptolib.bybit.config;
 
 import com.github.akarazhev.jcryptolib.config.AppConfig;
 
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.API_KEY;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.API_SECRET;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.BACKOFF_MULTIPLIER;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.CONNECT_TIMEOUT_MS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.FETCH_INTERVAL_MS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.INITIAL_RECONNECT_INTERVAL_MS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.MAX_RECONNECT_ATTEMPTS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.MAX_RECONNECT_INTERVAL_MS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.PING_INTERVAL_MS;
+
 public final class Config {
     private Config() {
         throw new UnsupportedOperationException();
     }
 
     public static int getConnectTimeoutMs() {
-        return AppConfig.getAsInt("bybit.connect.timeout.ms");
+        return AppConfig.getAsInt(CONNECT_TIMEOUT_MS);
     }
 
     public static int getInitialReconnectIntervalMs() {
-        return AppConfig.getAsInt("bybit.initial.reconnect.interval.ms");
+        return AppConfig.getAsInt(INITIAL_RECONNECT_INTERVAL_MS);
     }
 
     public static int getMaxReconnectIntervalMs() {
-        return AppConfig.getAsInt("bybit.max.reconnect.interval.ms");
+        return AppConfig.getAsInt(MAX_RECONNECT_INTERVAL_MS);
     }
 
     public static int getMaxReconnectAttempts() {
-        return AppConfig.getAsInt("bybit.max.reconnect.attempts");
+        return AppConfig.getAsInt(MAX_RECONNECT_ATTEMPTS);
     }
 
     public static float getBackoffMultiplier() {
-        return AppConfig.getAsFloat("bybit.backoff.multiplier");
+        return AppConfig.getAsFloat(BACKOFF_MULTIPLIER);
     }
 
     public static int getPingIntervalMs() {
-        return AppConfig.getAsInt("bybit.ping.interval.ms");
+        return AppConfig.getAsInt(PING_INTERVAL_MS);
     }
 
     public static int getFetchIntervalMs() {
-        return AppConfig.getAsInt("bybit.fetch.interval.ms");
+        return AppConfig.getAsInt(FETCH_INTERVAL_MS);
     }
 
     public static String getApiKey() {
-        return AppConfig.getAsString("bybit.api.key");
+        return AppConfig.getAsString(API_KEY);
     }
 
     public static String getApiSecret() {
-        return AppConfig.getAsString("bybit.api.secret");
+        return AppConfig.getAsString(API_SECRET);
     }
 }
 

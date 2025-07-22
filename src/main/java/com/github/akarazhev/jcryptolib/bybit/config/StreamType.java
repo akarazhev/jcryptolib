@@ -25,13 +25,13 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum StreamType {
-    PTST("Public Testnet Spot", "wss://stream-testnet.bybit.com/v5/public/spot"),
-    PTL("Public Testnet Linear", "wss://stream-testnet.bybit.com/v5/public/linear"),
-    PTI("Public Testnet Inverse", "wss://stream-testnet.bybit.com/v5/public/inverse"),
-    PTO("Public Testnet Option", "wss://stream-testnet.bybit.com/v5/public/option"),
-    PTSD("Public Testnet Spread", "wss://stream-testnet.bybit.com/v5/public/spread"),
-    PT("Private Testnet", "wss://stream-testnet.bybit.com/v5/private"),
-    TO("Testnet Order", "wss://stream-testnet.bybit.com/v5/trade");
+    PTST(Constants.PublicTestnetSpot.TYPE, Constants.PublicTestnetSpot.URL),
+    PTL(Constants.PublicTestnetLinear.TYPE, Constants.PublicTestnetLinear.URL),
+    PTI(Constants.PublicTestnetInverse.TYPE, Constants.PublicTestnetInverse.URL),
+    PTO(Constants.PublicTestnetOption.TYPE, Constants.PublicTestnetOption.URL),
+    PTSD(Constants.PublicTestnetSpread.TYPE, Constants.PublicTestnetSpread.URL),
+    PT(Constants.PrivateTestnet.TYPE, Constants.PrivateTestnet.URL),
+    TO(Constants.TestnetOrder.TYPE, Constants.TestnetOrder.URL),;
 
     private final String url;
 

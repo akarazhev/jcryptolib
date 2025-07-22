@@ -25,9 +25,9 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum RequestKey {
-    TAG("tag"),
-    TYPE("type"),
-    LOCALE("locale");
+    TAG(Constants.Key.TAG),
+    TYPE(Constants.Key.TYPE),
+    LOCALE(Constants.Key.LOCALE);
 
     private final String key;
 

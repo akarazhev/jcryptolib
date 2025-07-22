@@ -25,13 +25,13 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Type {
-    LPD("Launch Pad", new String[]{"https://www.bybit.com/x-api/spot/api/activity/v2/project/ongoing/list",
-            "https://www.bybit.com/x-api/spot/api/activity/v2/project/finished/list"}),
-    MD("Mega Drop", new String[]{"https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList"}),
-    LPL("Launch Pool", new String[]{"https://www.bybit.com/x-api/spot/api/launchpool/v1/home",
-            "https://www.bybit.com/x-api/spot/api/launchpool/v1/history"}),
-    BYV("ByVotes", new String[]{"https://www.bybit.com/x-api/spot/api/vote/v2/projectList"}),
-    BYS("ByStarter", new String[]{"https://www.bybit.com/x-api/spot/api/by-starter/v3/project/current"});
+    LPD(Constants.LaunchPad.TYPE, new String[]{Constants.LaunchPad.CURRENT_LIST, Constants.LaunchPad.PAST_LIST}),
+    MD(Constants.MegaDrop.TYPE, new String[]{Constants.MegaDrop.CURRENT_LIST}),
+    LPL(Constants.LaunchPool.TYPE, new String[]{Constants.LaunchPool.CURRENT_LIST, Constants.LaunchPool.PAST_LIST}),
+    BYV(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.CURRENT_LIST}),
+    BYS(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.CURRENT_LIST}),
+    ADH(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.CURRENT_LIST}),
+    ADH_PAST(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.PAST_LIST});
 
     private final String[] urls;
 

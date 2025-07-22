@@ -25,7 +25,7 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum RestApiType {
-    ANMT("Announcements", "https://api.bybit.com/v5/announcements/index");
+    ANMT(Constants.Announcements.TYPE, Constants.Announcements.URL);
 
     private final String url;
 
