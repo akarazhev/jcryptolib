@@ -2,22 +2,26 @@
 
 Buy Earn products on Bybit to win points and share the new token prize pool.
 
-Request URL with curl:
+## Project Information
 
-```bash
-curl 'https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList' \
-  -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
-  -H "Accept-Encoding: gzip, deflate, br, zstd" \
-  -H "Accept-Language: en-US,en;q=0.5" \
-  -H "Alt-Used: www.bybit.com" \
-  -H "Priority: u=0, i" \
-  -H "Sec-Fetch-Dest: document" \
-  -H "Sec-Fetch-Mode: navigate" \
-  -H "Sec-Fetch-Site: none" \
-  -H "Sec-Fetch-User: ?1" \
-  -H "TE: trailers" \
-  -H "Upgrade-Insecure-Requests: 1" \
-  -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) Gecko/20100101 Firefox/140.0"
+Request API with headers:
+
+```text
+GET /x-api/spot/api/megadrop/v1/prizePool/tokenList HTTP/3
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Alt-Used: www.bybit.com
+Priority: u=0, i
+Referer: https://www.bybit.com/en/trade/spot/megadrop
+Origin: https://www.bybit.com
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
 ```
 
 The response is a JSON object with the following structure:
