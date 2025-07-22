@@ -28,10 +28,11 @@ import java.io.IOException;
 import java.util.Properties;
 
 public final class AppConfig {
+    private static final String FILE_NAME = "application.properties";
     private static final Properties PROPERTIES = new Properties();
 
     static {
-        try (final var input = AppConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (final var input = AppConfig.class.getClassLoader().getResourceAsStream(FILE_NAME)) {
             if (input == null) {
                 throw new RuntimeException("application.properties not found in classpath");
             }
