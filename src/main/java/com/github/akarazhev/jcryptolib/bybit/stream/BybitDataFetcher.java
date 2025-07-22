@@ -24,6 +24,7 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.bybit.config.Type;
 import com.github.akarazhev.jcryptolib.stream.DataFetcher;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
@@ -46,16 +47,22 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.LIST;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RESULT;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_CODE;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SUCCESS;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOTAL_PROJECTS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.ADH;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.ADH_PAST;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYV;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPD;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.LIST;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.OK;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.PROJECTS;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RESULT;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_CODE;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_MSG2;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.STATUS_CODE_OK;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.SUCCESS;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.TOTAL_PROJECTS;
 
 final class BybitDataFetcher implements DataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(BybitDataFetcher.class);
@@ -105,6 +112,8 @@ final class BybitDataFetcher implements DataFetcher {
                 fetch(BybitRequestBuilder.buildByVotesRequest(), Source.BYV);
             } else if (BYS.equals(type)) {
                 fetch(BybitRequestBuilder.buildByStarterRequest(), Source.BYS);
+            } else if (ADH_PAST.equals(type) || ADH.equals(type)) {
+                fetchAirdropHunt(type);
             }
         });
     }
@@ -112,13 +121,13 @@ final class BybitDataFetcher implements DataFetcher {
     private void fetchLaunchPads() {
         if (!emitter.isCancelled()) {
             try {
-                final var response = client.send(BybitRequestBuilder.buildLaunchPadPageRequest(),
+                final var response = client.send(BybitRequestBuilder.buildLaunchPadRequest(),
                         HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
+                if (response.statusCode() == STATUS_CODE_OK) {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchBySize(BybitRequestBuilder.buildLaunchPadPageRequest(totalProjects), Source.LPD);
+                        fetchBySize(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Source.LPD);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -133,13 +142,13 @@ final class BybitDataFetcher implements DataFetcher {
     private void fetchLaunchPools() {
         if (!emitter.isCancelled()) {
             try {
-                final var response = client.send(BybitRequestBuilder.buildLaunchPoolPageRequest(),
+                final var response = client.send(BybitRequestBuilder.buildLaunchPoolRequest(),
                         HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
+                if (response.statusCode() == STATUS_CODE_OK) {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchBySize(BybitRequestBuilder.buildLaunchPoolPageRequest(totalProjects), Source.LPL);
+                        fetchBySize(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Source.LPL);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -155,7 +164,7 @@ final class BybitDataFetcher implements DataFetcher {
     private void fetchBySize(final HttpRequest request, final Source source) {
         try {
             final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
+            if (response.statusCode() == STATUS_CODE_OK) {
                 final var result = getResultAsMap(response.uri(), response.body());
                 if (result != null && !result.isEmpty()) {
                     final var data = ((List<Map<String, Object>>) result.get(LIST));
@@ -177,11 +186,32 @@ final class BybitDataFetcher implements DataFetcher {
         if (!emitter.isCancelled()) {
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
+                if (response.statusCode() == STATUS_CODE_OK) {
                     final var result = getResultAsList(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);
                         result.forEach(r -> emitter.onNext(Payload.of(Provider.BYBIT, source, r)));
+                    }
+                } else {
+                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                }
+            } catch (final Exception e) {
+                LOGGER.error("Failed to fetch data by uri", e);
+                emitter.onError(e);
+            }
+        }
+    }
+
+    private void fetchAirdropHunt(final Type type) {
+        if (!emitter.isCancelled()) {
+            try {
+                final var response = client.send(BybitRequestBuilder.buildAirdropHuntRequest(),
+                        HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == STATUS_CODE_OK) {
+                    final var result = getResultAsMap(response.uri(), response.body());
+                    if (result != null && !result.isEmpty()) {
+                        final var projects = (Integer) result.get(PROJECTS);
+                        fetchBySize(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), Source.ADH);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -215,8 +245,12 @@ final class BybitDataFetcher implements DataFetcher {
 
     private boolean isRetCodeOk(final URI uri, final Map<String, Object> data) throws IOException {
         if (data != null) {
-            return (data.containsKey(SUCCESS) && (Boolean) data.get(SUCCESS)) &&
-                    (data.containsKey(RET_CODE) && (Integer) data.get(RET_CODE) == 0);
+            if ((data.containsKey(RET_CODE) && (Integer) data.get(RET_CODE) == 0)) {
+                return (data.containsKey(RET_MSG2) && OK.equals(data.get(RET_MSG2))) ||
+                        (data.containsKey(SUCCESS) && (Boolean) data.get(SUCCESS));
+            } else {
+                return false;
+            }
         } else {
             throw new IOException("Failed to fetch data by uri: " + uri);
         }

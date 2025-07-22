@@ -50,11 +50,13 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.LIST;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.OK;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RESULT;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_CODE_CAMEL_CASE;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RET_MSG;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.LIMIT;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.PAGE;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.LIST;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.OK;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RESULT;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_CODE_CAMEL_CASE;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_MSG;
 
 final class RestApiDataFetcher implements DataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiDataFetcher.class);
@@ -179,11 +181,11 @@ final class RestApiDataFetcher implements DataFetcher {
 
         setUrlParams(urlString, params);
         if (page >= 0) {
-            urlString.append("&page=").append(page);
+            urlString.append("&").append(PAGE).append("=").append(page);
         }
 
         if (limit >= 0) {
-            urlString.append("&limit=").append(limit);
+            urlString.append("&").append(LIMIT).append("=").append(limit);
         }
 
         return URI.create(urlString.toString());

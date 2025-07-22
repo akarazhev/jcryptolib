@@ -31,41 +31,17 @@ public final class Constants {
 
     public static final String TOPIC_FIELD = "topic";
 
-    public static final class Request {
-        private Request() {
-            throw new UnsupportedOperationException();
-        }
-
-        public static final String PAGE_SIZE = "pageSize";
-        public static final String CURRENT = "current";
-        public static final String TYPE = "type";
-        public static final String REFERER_LPL = "https://www.bybit.com/en/trade/spot/launchpool";
-        public static final String REFERER_LPD = "https://www.bybit.com/en/trade/spot/launchpad";
-        public static final String REFERER_MD = "https://www.bybit.com/en/trade/spot/megadrop";
-        public static final String REFERER_BYV = "https://www.bybit.com/en/trade/spot/vote-home";
-        public static final String REFERER_BYS = "https://www.bybit.com/en/bystarter";
-        public static final int BYV_TYPE_ALL = 0;
-    }
-
     public static final class Response {
         private Response() {
             throw new UnsupportedOperationException();
         }
 
-        public static final String RESULT = "result";
-        public static final String SUCCESS = "success";
-        public static final String RET_CODE = "ret_code";
         public static final String TOKEN_NAME = "tokenName";
         public static final String TOKEN_ICON = "tokenIcon";
         public static final String START_TIME = "startTime";
         public static final String END_TIME = "endTime";
         public static final String CLAIM_START_TIME = "claimStartTime";
         public static final String CLAIM_END_TIME = "claimEndTime";
-        public static final String LIST = "list";
-        public static final String RET_CODE_CAMEL_CASE = "retCode";
-        public static final String RET_MSG = "retMsg";
-        public static final String OK = "OK";
-        public static final String TOTAL_PROJECTS = "totalProjects";
         public static final String RETURN_COIN = "returnCoin";
         public static final String RETURN_COIN_ICON = "returnCoinIcon";
         public static final String DESC = "desc";

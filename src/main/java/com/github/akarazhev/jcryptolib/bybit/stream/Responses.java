@@ -24,6 +24,13 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.JSON_OP_AUTH;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.JSON_OP_PONG;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.JSON_OP_SUBSCRIBE;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.JSON_RET_MSG_PONG;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.JSON_SUCCESS_TRUE;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.JSON_TYPE_COMMAND;
+
 final class Responses {
 
     private Responses() {
@@ -31,22 +38,22 @@ final class Responses {
     }
 
     public static boolean isAuth(final String text) {
-        return text.contains("\"op\":\"auth\"");
+        return text.contains(JSON_OP_AUTH);
     }
 
     public static boolean isSubscription(final String text) {
-        return text.contains("\"op\":\"subscribe\"");
+        return text.contains(JSON_OP_SUBSCRIBE);
     }
 
     public static boolean isCommandResp(final String text) {
-        return text.contains("\"type\":\"COMMAND_RESP\"");
+        return text.contains(JSON_TYPE_COMMAND);
     }
 
     public static boolean isSuccess(final String text) {
-        return text.contains("\"success\":true");
+        return text.contains(JSON_SUCCESS_TRUE);
     }
 
     public static boolean isPong(final String text) {
-        return text.contains("\"op\":\"pong\"") || text.contains("\"ret_msg\":\"pong\"");
+        return text.contains(JSON_OP_PONG) || text.contains(JSON_RET_MSG_PONG);
     }
 }

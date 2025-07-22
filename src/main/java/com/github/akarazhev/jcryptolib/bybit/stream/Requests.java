@@ -30,11 +30,11 @@ import com.github.akarazhev.jcryptolib.util.SecUtils;
 import java.time.Instant;
 import java.util.UUID;
 
-final class Requests {
-    private static final String SUBSCRIBE = "subscribe";
-    private static final String PING = "ping";
-    private static final String AUTH = "auth";
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.AUTH;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.PING;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.SUBSCRIBE;
 
+final class Requests {
     private Requests() {
         throw new UnsupportedOperationException();
     }
