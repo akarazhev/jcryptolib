@@ -46,7 +46,6 @@ final class Constants {
         static final String REFERER_BYV = "https://www.bybit.com/en/trade/spot/vote-home";
         static final String REFERER_BYS = "https://www.bybit.com/en/bystarter";
         static final String REFERER_ADH = "https://www.bybit.com/en/trade/spot/airdrop-hunt";
-        static final int BYV_TYPE_ALL = 0;
         static final String SUBSCRIBE = "subscribe";
         static final String PING = "ping";
         static final String AUTH = "auth";

@@ -52,6 +52,7 @@ import static com.github.akarazhev.jcryptolib.bybit.config.Type.ADH_PAST;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYS_PAST;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYV;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYV_PAST;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPD;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
@@ -110,11 +111,11 @@ final class BybitDataFetcher implements DataFetcher {
                 fetchAsList(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
             } else if (LPL.equals(type)) {
                 fetchLaunchPools();
-            } else if (BYV.equals(type)) {
-                fetchAsList(BybitRequestBuilder.buildByVotesRequest(), Source.BYV);
+            } else if (BYV.equals(type) || BYV_PAST.equals(type)) {
+                fetchAsList(BybitRequestBuilder.buildByVotesRequest(type), Source.BYV);
             } else if (BYS.equals(type) || BYS_PAST.equals(type)) {
                 fetchByStarter(type);
-            } else if (ADH_PAST.equals(type) || ADH.equals(type)) {
+            } else if (ADH.equals(type) || ADH_PAST.equals(type)) {
                 fetchAirdropHunt(type);
             }
         });

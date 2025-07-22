@@ -29,6 +29,7 @@ public enum Type {
     MD(Constants.MegaDrop.TYPE, new String[]{Constants.MegaDrop.CURRENT_LIST}),
     LPL(Constants.LaunchPool.TYPE, new String[]{Constants.LaunchPool.CURRENT_LIST, Constants.LaunchPool.PAST_LIST}),
     BYV(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.CURRENT_LIST}),
+    BYV_PAST(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.PAST_LIST}),
     BYS(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.CURRENT_LIST}),
     BYS_PAST(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.PAST_LIST}),
     ADH(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.CURRENT_LIST}),

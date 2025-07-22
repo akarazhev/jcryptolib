@@ -172,9 +172,9 @@ final class BybitDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveByVotes() {
+    public void shouldReceiveByVotesPast() {
         final var config = new DataConfig.Builder()
-                .type(Type.BYV)
+                .type(Type.BYV_PAST)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();

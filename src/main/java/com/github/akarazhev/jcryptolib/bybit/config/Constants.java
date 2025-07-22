@@ -80,7 +80,8 @@ final class Constants {
         }
 
         static final String TYPE = "ByVotes";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList";
+        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=1";
+        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=2";
     }
 
     final static class ByStarter {
