@@ -86,7 +86,7 @@ final class DataConsumerTest {
         final var config = new DataConfig.Builder()
                 .restApiType(RestApiType.ANMT)
                 .param(RequestKey.LOCALE, RequestValue.EN_US)
-                .param(RequestKey.TAG, RequestValue.LAUNCH_POOL)
+                .param(RequestKey.TYPE, RequestValue.NEW_CRYPTO)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
