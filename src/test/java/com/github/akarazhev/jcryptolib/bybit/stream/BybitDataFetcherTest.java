@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpClient;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -30,19 +29,14 @@ import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.END_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.ICON;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.INTRODUCE_CONTENT;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.NAME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.PERIOD_LIST;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.POOL_END;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.POOL_START;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.PROJECT_INTRO;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.PROJECT_START_TIME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.PUBLISH_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RETURN_COIN;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RETURN_COIN_ICON;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.REWARD_END_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.REWARD_START_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RULES;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SALE_END_TIME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SALE_START_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SNAPSHOT_END_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SNAPSHOT_START_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_BEGIN_TIME;
@@ -210,9 +204,9 @@ final class BybitDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveByStarter() {
+    public void shouldReceiveByStarterPast() {
         final var config = new DataConfig.Builder()
-                .type(Type.BYS)
+                .type(Type.BYS_PAST)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -233,11 +227,6 @@ final class BybitDataFetcherTest {
             assertEquals(Source.BYS, value.getSource());
             assertTrue(value.getData().containsKey(COIN_ICON));
             assertTrue(value.getData().containsKey(COIN_NAME));
-            assertTrue(value.getData().containsKey(PROJECT_INTRO));
-            assertTrue(value.getData().containsKey(PERIOD_LIST));
-            assertTrue(((Map)((List) value.getData().get(PERIOD_LIST)).get(0)).containsKey(SALE_START_TIME));
-            assertTrue(((Map)((List) value.getData().get(PERIOD_LIST)).get(0)).containsKey(SALE_END_TIME));
-            assertTrue(((Map)((List) value.getData().get(PERIOD_LIST)).get(0)).containsKey(PUBLISH_TIME));
         }
     }
 

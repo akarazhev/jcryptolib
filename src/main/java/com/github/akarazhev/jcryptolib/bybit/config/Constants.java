@@ -89,7 +89,9 @@ final class Constants {
         }
 
         static final String TYPE = "ByStarter";
+        static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/by-starter/v1/bystarter/overview";
         static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/by-starter/v3/project/current";
+        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/by-starter/v2/project/previously";
     }
 
     final static class AirdropHunt {

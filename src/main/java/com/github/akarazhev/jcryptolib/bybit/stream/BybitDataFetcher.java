@@ -50,6 +50,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.ADH;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.ADH_PAST;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYS_PAST;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.BYV;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPD;
 import static com.github.akarazhev.jcryptolib.bybit.config.Type.LPL;
@@ -57,6 +58,7 @@ import static com.github.akarazhev.jcryptolib.bybit.config.Type.MD;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.LIST;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.OK;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.PROJECTS;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.PROJECT_COUNT;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RESULT;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_CODE;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_MSG2;
@@ -105,13 +107,13 @@ final class BybitDataFetcher implements DataFetcher {
             if (LPD.equals(type)) {
                 fetchLaunchPads();
             } else if (MD.equals(type)) {
-                fetch(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
+                fetchAsList(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
             } else if (LPL.equals(type)) {
                 fetchLaunchPools();
             } else if (BYV.equals(type)) {
-                fetch(BybitRequestBuilder.buildByVotesRequest(), Source.BYV);
-            } else if (BYS.equals(type)) {
-                fetch(BybitRequestBuilder.buildByStarterRequest(), Source.BYS);
+                fetchAsList(BybitRequestBuilder.buildByVotesRequest(), Source.BYV);
+            } else if (BYS.equals(type) || BYS_PAST.equals(type)) {
+                fetchByStarter(type);
             } else if (ADH_PAST.equals(type) || ADH.equals(type)) {
                 fetchAirdropHunt(type);
             }
@@ -127,7 +129,7 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchBySize(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Source.LPD);
+                        fetchAsMap(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Source.LPD);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -148,7 +150,7 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchBySize(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Source.LPL);
+                        fetchAsMap(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Source.LPL);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -161,7 +163,7 @@ final class BybitDataFetcher implements DataFetcher {
     }
 
     @SuppressWarnings("unchecked")
-    private void fetchBySize(final HttpRequest request, final Source source) {
+    private void fetchAsMap(final HttpRequest request, final Source source) {
         try {
             final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == STATUS_CODE_OK) {
@@ -182,7 +184,7 @@ final class BybitDataFetcher implements DataFetcher {
         }
     }
 
-    private void fetch(final HttpRequest request, final Source source) {
+    private void fetchAsList(final HttpRequest request, final Source source) {
         if (!emitter.isCancelled()) {
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -191,6 +193,27 @@ final class BybitDataFetcher implements DataFetcher {
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);
                         result.forEach(r -> emitter.onNext(Payload.of(Provider.BYBIT, source, r)));
+                    }
+                } else {
+                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                }
+            } catch (final Exception e) {
+                LOGGER.error("Failed to fetch data by uri", e);
+                emitter.onError(e);
+            }
+        }
+    }
+
+    private void fetchByStarter(final Type type) {
+        if (!emitter.isCancelled()) {
+            try {
+                final var response = client.send(BybitRequestBuilder.buildByStarterRequest(),
+                        HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == STATUS_CODE_OK) {
+                    final var result = getResultAsMap(response.uri(), response.body());
+                    if (result != null && !result.isEmpty()) {
+                        final var projectCount = (Integer) result.get(PROJECT_COUNT);
+                        fetchAsList(BybitRequestBuilder.buildByStarterRequest(type, projectCount), Source.BYS);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
@@ -211,7 +234,7 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var projects = (Integer) result.get(PROJECTS);
-                        fetchBySize(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), Source.ADH);
+                        fetchAsMap(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), Source.ADH);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());

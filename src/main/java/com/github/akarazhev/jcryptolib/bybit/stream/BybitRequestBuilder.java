@@ -9,6 +9,7 @@ import java.util.Map;
 
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.BYV_TYPE_ALL;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.CURRENT;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.LIMIT;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.PAGE_NO;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.PAGE_SIZE;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Request.REFERER_ADH;
@@ -49,6 +50,11 @@ final class BybitRequestBuilder {
 
     public static HttpRequest buildByStarterRequest() {
         return buildGetRequest(URI.create(Type.BYS.getUrls()[0]), REFERER_BYS);
+    }
+
+    public static HttpRequest buildByStarterRequest(final Type type, final int size) {
+        String request = "?" + LIMIT + "=" + size;
+        return buildGetRequest(URI.create(type.getUrls()[1] + request), REFERER_BYS);
     }
 
     public static HttpRequest buildAirdropHuntRequest() {

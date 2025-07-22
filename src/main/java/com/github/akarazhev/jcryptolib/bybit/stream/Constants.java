@@ -68,6 +68,7 @@ final class Constants {
         static final String OK = "OK";
         static final String TOTAL_PROJECTS = "totalProjects";
         static final String PROJECTS = "projects";
+        static final String PROJECT_COUNT = "projectCount";
         static final String JSON_OP_AUTH = "\"op\":\"auth\"";
         static final String JSON_OP_SUBSCRIBE = "\"op\":\"subscribe\"";
         static final String JSON_TYPE_COMMAND = "\"type\":\"COMMAND_RESP\"";
