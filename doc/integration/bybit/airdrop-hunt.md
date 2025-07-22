@@ -1,5 +1,9 @@
 # Airdrop Hunt
 
+Perform Tasks for a Chance to Win Tokens!
+
+# Project Information
+
 Request API with headers:
 
 ```text
@@ -37,7 +41,7 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Airdrop Hunt Current
+## Current Events
 
 Request API with headers:
 
@@ -77,7 +81,7 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Airdrop Hunt Past Events
+## Past Events
 
 Request API with headers:
 
