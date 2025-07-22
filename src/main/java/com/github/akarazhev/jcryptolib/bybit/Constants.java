@@ -73,5 +73,10 @@ public final class Constants {
         public static final String SALE_START_TIME = "saleStartTime";
         public static final String SALE_END_TIME = "saleEndTime";
         public static final String PUBLISH_TIME = "publishTime";
+        public static final String AIRDROP_END_TIME = "airdropEndTime";
+        public static final String POOL_END = "poolEnd";
+        public static final String POOL_START = "poolStart";
+        public static final String SYSTEM_TIME = "systemTime";
+        public static final String TOKEN_ID = "tokenId";
     }
 }
