@@ -63,20 +63,31 @@ final class BybitRequestBuilder {
     private static HttpRequest buildGetRequest(final URI uri, final String referer) {
         return HttpRequest.newBuilder()
                 .uri(uri)
-                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Alt-Used", "www.bybit.com")
-                .header("Priority", "u=0, i")
-                .header("Referer", referer)
-                .header("Origin", "https://www.bybit.com")
-                .header("Sec-Fetch-Dest", "document")
-                .header("Sec-Fetch-Mode", "navigate")
-                .header("Sec-Fetch-Site", "none")
-                .header("Sec-Fetch-User", "?1")
-                .header("TE", "trailers")
-                .header("Upgrade-Insecure-Requests", "1")
-                .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) " +
-                        "Gecko/20100101 Firefox/140.0")
+                .header(Constants.GetRequestHeader.ACCEPT,
+                        Constants.GetRequestHeader.ACCEPT_VALUE)
+                .header(Constants.GetRequestHeader.ACCEPT_LANGUAGE,
+                        Constants.GetRequestHeader.ACCEPT_LANGUAGE_VALUE)
+                .header(Constants.GetRequestHeader.ALT_USED,
+                        Constants.GetRequestHeader.ALT_USED_VALUE)
+                .header(Constants.GetRequestHeader.PRIORITY,
+                        Constants.GetRequestHeader.PRIORITY_VALUE)
+                .header(Constants.GetRequestHeader.REFERER, referer)
+                .header(Constants.GetRequestHeader.ORIGIN,
+                        Constants.GetRequestHeader.ORIGIN_VALUE)
+                .header(Constants.GetRequestHeader.SEC_FETCH_DEST,
+                        Constants.GetRequestHeader.SEC_FETCH_DEST_VALUE)
+                .header(Constants.GetRequestHeader.SEC_FETCH_MODE,
+                        Constants.GetRequestHeader.SEC_FETCH_MODE_VALUE)
+                .header(Constants.GetRequestHeader.SEC_FETCH_SITE,
+                        Constants.GetRequestHeader.SEC_FETCH_SITE_VALUE)
+                .header(Constants.GetRequestHeader.SEC_FETCH_USER,
+                        Constants.GetRequestHeader.SEC_FETCH_USER_VALUE)
+                .header(Constants.GetRequestHeader.TE,
+                        Constants.GetRequestHeader.TE_VALUE)
+                .header(Constants.GetRequestHeader.UPGRADE_INSECURE_REQUESTS,
+                        Constants.GetRequestHeader.UPGRADE_INSECURE_REQUESTS_VALUE)
+                .header(Constants.GetRequestHeader.USER_AGENT,
+                        Constants.GetRequestHeader.USER_AGENT_VALUE)
                 .GET()
                 .build();
     }
@@ -84,19 +95,29 @@ final class BybitRequestBuilder {
     private static HttpRequest buildPostRequest(final URI uri, final String referer, final String body) {
         return HttpRequest.newBuilder()
                 .uri(uri)
-                .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) " +
-                        "Gecko/20100101 Firefox/140.0")
-                .header("Accept", "application/json, text/plain, */*")
-                .header("Accept-Language", "en")
-                .header("Content-Type", "application/json")
-                .header("lang", "en")
-                .header("Sec-Fetch-Dest", "empty")
-                .header("Sec-Fetch-Mode", "cors")
-                .header("Sec-Fetch-Site", "same-origin")
-                .header("Alt-Used", "www.bybit.com")
-                .header("Referer", referer)
-                .header("Origin", "https://www.bybit.com")
-                .header("Priority", "u=1, i")
+                .header(Constants.PostRequestHeader.USER_AGENT,
+                        Constants.PostRequestHeader.USER_AGENT_VALUE)
+                .header(Constants.PostRequestHeader.ACCEPT,
+                        Constants.PostRequestHeader.ACCEPT_VALUE)
+                .header(Constants.PostRequestHeader.ACCEPT_LANGUAGE,
+                        Constants.PostRequestHeader.ACCEPT_LANGUAGE_VALUE)
+                .header(Constants.PostRequestHeader.CONTENT_TYPE,
+                        Constants.PostRequestHeader.CONTENT_TYPE_VALUE)
+                .header(Constants.PostRequestHeader.LANG,
+                        Constants.PostRequestHeader.LANG_VALUE)
+                .header(Constants.PostRequestHeader.SEC_FETCH_DEST,
+                        Constants.PostRequestHeader.SEC_FETCH_DEST_VALUE)
+                .header(Constants.PostRequestHeader.SEC_FETCH_MODE,
+                        Constants.PostRequestHeader.SEC_FETCH_MODE_VALUE)
+                .header(Constants.PostRequestHeader.SEC_FETCH_SITE,
+                        Constants.PostRequestHeader.SEC_FETCH_SITE_VALUE)
+                .header(Constants.PostRequestHeader.ALT_USED,
+                        Constants.PostRequestHeader.ALT_USED_VALUE)
+                .header(Constants.PostRequestHeader.REFERER, referer)
+                .header(Constants.PostRequestHeader.ORIGIN,
+                        Constants.PostRequestHeader.ORIGIN_VALUE)
+                .header(Constants.PostRequestHeader.PRIORITY,
+                        Constants.PostRequestHeader.PRIORITY_VALUE)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
     }

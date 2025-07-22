@@ -75,4 +75,68 @@ final class Constants {
         static final String JSON_OP_PONG = "\"op\":\"pong\"";
         static final String JSON_RET_MSG_PONG = "\"ret_msg\":\"pong\"";
     }
+
+    final static class GetRequestHeader {
+        private GetRequestHeader() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String ACCEPT = "Accept";
+        static final String ACCEPT_VALUE = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        static final String ACCEPT_LANGUAGE = "Accept-Language";
+        static final String ACCEPT_LANGUAGE_VALUE = "en-US,en;q=0.5";
+        static final String ALT_USED = "Alt-Used";
+        static final String ALT_USED_VALUE = "www.bybit.com";
+        static final String PRIORITY = "Priority";
+        static final String PRIORITY_VALUE = "u=0, i";
+        static final String REFERER = "Referer";
+        static final String ORIGIN = "Origin";
+        static final String ORIGIN_VALUE = "https://www.bybit.com";
+        static final String SEC_FETCH_DEST = "Sec-Fetch-Dest";
+        static final String SEC_FETCH_DEST_VALUE = "document";
+        static final String SEC_FETCH_MODE = "Sec-Fetch-Mode";
+        static final String SEC_FETCH_MODE_VALUE = "navigate";
+        static final String SEC_FETCH_SITE = "Sec-Fetch-Site";
+        static final String SEC_FETCH_SITE_VALUE = "none";
+        static final String SEC_FETCH_USER = "Sec-Fetch-User";
+        static final String SEC_FETCH_USER_VALUE = "?1";
+        static final String TE = "TE";
+        static final String TE_VALUE = "trailers";
+        static final String UPGRADE_INSECURE_REQUESTS = "Upgrade-Insecure-Requests";
+        static final String UPGRADE_INSECURE_REQUESTS_VALUE = "1";
+        static final String USER_AGENT = "User-Agent";
+        static final String USER_AGENT_VALUE = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) " +
+                "Gecko/20100101 Firefox/140.0";
+    }
+
+    final static class PostRequestHeader {
+        private PostRequestHeader() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String USER_AGENT = "User-Agent";
+        static final String USER_AGENT_VALUE = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) " +
+                "Gecko/20100101 Firefox/140.0";
+        static final String ACCEPT = "Accept";
+        static final String ACCEPT_VALUE = "application/json, text/plain, */*";
+        static final String ACCEPT_LANGUAGE = "Accept-Language";
+        static final String ACCEPT_LANGUAGE_VALUE = "en";
+        static final String CONTENT_TYPE = "Content-Type";
+        static final String CONTENT_TYPE_VALUE = "application/json";
+        static final String LANG = "lang";
+        static final String LANG_VALUE = "en";
+        static final String SEC_FETCH_DEST = "Sec-Fetch-Dest";
+        static final String SEC_FETCH_DEST_VALUE = "empty";
+        static final String SEC_FETCH_MODE = "Sec-Fetch-Mode";
+        static final String SEC_FETCH_MODE_VALUE = "cors";
+        static final String SEC_FETCH_SITE = "Sec-Fetch-Site";
+        static final String SEC_FETCH_SITE_VALUE = "same-origin";
+        static final String ALT_USED = "Alt-Used";
+        static final String ALT_USED_VALUE = "www.bybit.com";
+        static final String REFERER = "Referer";
+        static final String ORIGIN = "Origin";
+        static final String ORIGIN_VALUE = "https://www.bybit.com";
+        static final String PRIORITY = "Priority";
+        static final String PRIORITY_VALUE = "u=1, i";
+    }
 }
