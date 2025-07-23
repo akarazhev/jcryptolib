@@ -26,17 +26,20 @@ package com.github.akarazhev.jcryptolib.cmc.config;
 
 import com.github.akarazhev.jcryptolib.config.AppConfig;
 
+import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.CONNECT_TIMEOUT_MS;
+import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.FETCH_INTERVAL_MS;
+
 public final class Config {
     private Config() {
         throw new UnsupportedOperationException();
     }
 
     public static int getConnectTimeoutMs() {
-        return AppConfig.getAsInt("cmc.connect.timeout.ms");
+        return AppConfig.getAsInt(CONNECT_TIMEOUT_MS);
     }
 
-    public static String getFetchAtTime() {
-        return AppConfig.getAsString("cmc.fetch.at.time");
+    public static int getFetchAtTime() {
+        return AppConfig.getAsInt(FETCH_INTERVAL_MS);
     }
 }
 

@@ -25,24 +25,24 @@
 package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Type {
-    FG("Fear and Greed", "https://api.coinmarketcap.com/data-api/v3/fear-greed/chart"),
-    AS("Altcoin Season", "https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart"),
-    BDO("Bitcoin Dominance Overview", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/overview"),
-    BD("Bitcoin Dominance", "https://api.coinmarketcap.com/data-api/v3/global-metrics/dominance/chart"),
-    MCL("Market Cycle Latest", "https://api.coinmarketcap.com/data-api/v3/market-cycles/latest"),
-    PM("Puell Multiple", "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple"),
-    IND("Indicators", "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators"),
-    CMC("Crypto Market Cap", "https://api.coinmarketcap.com/data-api/v4/global-metrics/quotes/historical"),
-    ETF_NF("Crypto EFTs Net Flow", "https://api.coinmarketcap.com/data-api/v3/etf/overview/netflow/chart"),
-    PCT("Pi Cycle Top", "https://api.coinmarketcap.com/data-api/v3/market-cycles/pi-cycle-top"),
-    BRP("Bitcoin Rainbow Price", "https://api.coinmarketcap.com/data-api/v3/market-cycles/rainbow"),
-    CMC100("CoinMarketCap 100 Index", "https://api.coinmarketcap.com/data-api/v3/top100/historical/chart"),
-    CSV("Crypto Spot Volume", "https://api.coinmarketcap.com/data-api/v3/global-metrics/spot/chart"),
-    OIO("Open Interest Overview", "https://api.coinmarketcap.com/data-api/v4/open-interest/overview"),
-    OI("Open Interest", "https://api.coinmarketcap.com/data-api/v4/open-interest/chart"),
-    DV("Derivatives Volume", "https://api.coinmarketcap.com/data-api/v4/derivatives/chart"),
-    FR("Funding Rates", "https://api.coinmarketcap.com/data-api/v3/funding-rate/chart"),
-    VIV("Volmex Implied Volatility", "https://api.coinmarketcap.com/data-api/v4/volmex-implied-volatility/chart");
+    FG(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL),
+    AS(Constants.AltcoinSeason.TYPE, Constants.AltcoinSeason.URL),
+    BDO(Constants.BitcoinDominanceOverview.TYPE, Constants.BitcoinDominanceOverview.URL),
+    BD(Constants.BitcoinDominance.TYPE, Constants.BitcoinDominance.URL),
+    MCL(Constants.MarketCycleLatest.TYPE, Constants.MarketCycleLatest.URL),
+    PM(Constants.PuellMultiple.TYPE, Constants.PuellMultiple.URL),
+    IND(Constants.Indicators.TYPE, Constants.Indicators.URL),
+    CMC(Constants.CryptoMarketCap.TYPE, Constants.CryptoMarketCap.URL),
+    ETF_NF(Constants.CryptoEFTsNetFlow.TYPE, Constants.CryptoEFTsNetFlow.URL),
+    PCT(Constants.PiCycleTop.TYPE, Constants.PiCycleTop.URL),
+    BRP(Constants.BitcoinRainbowPrice.TYPE, Constants.BitcoinRainbowPrice.URL),
+    CMC100(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL),
+    CSV(Constants.CryptoSpotVolume.TYPE, Constants.CryptoSpotVolume.URL),
+    OIO(Constants.OpenInterestOverview.TYPE, Constants.OpenInterestOverview.URL),
+    OI(Constants.OpenInterest.TYPE, Constants.OpenInterest.URL),
+    DV(Constants.DerivativesVolume.TYPE, Constants.DerivativesVolume.URL),
+    FR(Constants.FundingRates.TYPE, Constants.FundingRates.URL),
+    VIV(Constants.VolmexImpliedVolatility.TYPE, Constants.VolmexImpliedVolatility.URL);
 
     private final String url;
 

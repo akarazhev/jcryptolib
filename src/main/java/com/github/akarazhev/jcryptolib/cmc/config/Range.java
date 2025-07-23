@@ -25,8 +25,8 @@
 package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Range {
-    DAYS_30("30d"),
-    HOURS_24("24h");
+    HOURS_24(Constants.Range.HOURS_24),
+    DAYS_30(Constants.Range.DAYS_30);
 
     private final String value;
 

@@ -27,28 +27,22 @@ package com.github.akarazhev.jcryptolib.cmc.stream;
 import com.github.akarazhev.jcryptolib.cmc.config.Config;
 import com.github.akarazhev.jcryptolib.cmc.config.Type;
 
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class DataConfig {
     private final Set<Type> types;
     private final int connectTimeoutMs;
-    private final LocalTime fetchAtTime;
+    private final int fetchIntervalMs;
 
     private DataConfig(final Builder builder) {
         if (builder.types.isEmpty()) {
             throw new IllegalArgumentException("Types is empty");
         }
 
-        if (!builder.fetchAtTime.contains(":")) {
-            throw new IllegalArgumentException("Fetch at time is not valid");
-        }
-
         this.types = builder.types;
         this.connectTimeoutMs = builder.connectTimeoutMs;
-        final var time = builder.fetchAtTime.split(":");
-        this.fetchAtTime = LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        this.fetchIntervalMs = builder.fetchIntervalMs;
     }
 
     public Set<Type> getTypes() {
@@ -59,14 +53,14 @@ public final class DataConfig {
         return connectTimeoutMs;
     }
 
-    public LocalTime getFetchAtTime() {
-        return fetchAtTime;
+    public int getFetchIntervalMs() {
+        return fetchIntervalMs;
     }
 
     public String print() {
         return "\nCMC Data Config {" +
                 "\n\ttypes=" + types +
-                "\n\tfetchAtTime=" + fetchAtTime +
+                "\n\tfetchIntervalMs=" + fetchIntervalMs +
                 "\n\tconnectTimeoutMs=" + connectTimeoutMs +
                 "\n}";
     }
@@ -74,7 +68,7 @@ public final class DataConfig {
     public static final class Builder {
         private final Set<Type> types = new HashSet<>();
         private int connectTimeoutMs = Config.getConnectTimeoutMs();
-        private String fetchAtTime = Config.getFetchAtTime();
+        private int fetchIntervalMs = Config.getFetchAtTime();
 
         public Builder type(final Type type) {
             this.types.add(type);
@@ -86,8 +80,8 @@ public final class DataConfig {
             return this;
         }
 
-        public Builder fetchAtTime(final String fetchAtTime) {
-            this.fetchAtTime = fetchAtTime;
+        public Builder fetchIntervalMs(final int fetchIntervalMs) {
+            this.fetchIntervalMs = fetchIntervalMs;
             return this;
         }
 
