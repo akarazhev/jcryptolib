@@ -31,6 +31,35 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.UUID;
 
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_LANGUAGE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_LANGUAGE_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.CACHE_CONTROL;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.CACHE_CONTROL_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ORIGIN;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ORIGIN_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.PLATFORM;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.PLATFORM_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.PRIORITY;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.PRIORITY_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.REFERER;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.REFERER_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_DEST;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_DEST_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_MODE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_MODE_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_SITE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_SITE_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_USER;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.SEC_FETCH_USER_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.TE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.TE_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.UPGRADE_INSECURE_REQUESTS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.UPGRADE_INSECURE_REQUESTS_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.USER_AGENT;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.USER_AGENT_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.X_REQUEST_ID;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY_ALL;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CONVERT_ID;
@@ -137,23 +166,21 @@ final class CmcRequestBuilder {
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {
         return HttpRequest.newBuilder()
                 .uri(uri)
-                .header("accept", "application/json, text/plain, */*")
-                .header("accept-language", "en-US,en;q=0.9")
-                .header("cache-control", "no-cache")
-                .header("origin", "https://coinmarketcap.com")
-                .header("platform", "web")
-                .header("priority", "u=1, i")
-                .header("referer", "https://coinmarketcap.com/")
-                .header("sec-ch-ua", "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";" +
-                        "v=\"138\"")
-                .header("sec-ch-ua-mobile", "?0")
-                .header("sec-ch-ua-platform", "\"macOS\"")
-                .header("sec-fetch-dest", "empty")
-                .header("sec-fetch-mode", "cors")
-                .header("sec-fetch-site", "same-site")
-                .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
-                        "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
-                .header("x-request-id", xRequestId.toString().replace("-", ""))
+                .header(ACCEPT, ACCEPT_VALUE)
+                .header(ACCEPT_LANGUAGE, ACCEPT_LANGUAGE_VALUE)
+                .header(CACHE_CONTROL, CACHE_CONTROL_VALUE)
+                .header(ORIGIN, ORIGIN_VALUE)
+                .header(PLATFORM, PLATFORM_VALUE)
+                .header(PRIORITY, PRIORITY_VALUE)
+                .header(REFERER, REFERER_VALUE)
+                .header(SEC_FETCH_DEST, SEC_FETCH_DEST_VALUE)
+                .header(SEC_FETCH_MODE, SEC_FETCH_MODE_VALUE)
+                .header(SEC_FETCH_SITE, SEC_FETCH_SITE_VALUE)
+                .header(SEC_FETCH_USER, SEC_FETCH_USER_VALUE)
+                .header(TE, TE_VALUE)
+                .header(UPGRADE_INSECURE_REQUESTS, UPGRADE_INSECURE_REQUESTS_VALUE)
+                .header(USER_AGENT, USER_AGENT_VALUE)
+                .header(X_REQUEST_ID, xRequestId.toString().replace("-", ""))
                 .GET()
                 .build();
     }

@@ -69,4 +69,41 @@ final class Constants {
         static final String ERROR_MESSAGE = "error_message";
         static final String ERROR_MESSAGE_SUCCESS = "SUCCESS";
     }
+
+    final static class GetRequestHeader {
+        private GetRequestHeader() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String ACCEPT = "Accept";
+        static final String ACCEPT_VALUE = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        static final String ACCEPT_LANGUAGE = "Accept-Language";
+        static final String ACCEPT_LANGUAGE_VALUE = "en-US,en;q=0.5";
+        static final String CACHE_CONTROL = "Cache-Control";
+        static final String CACHE_CONTROL_VALUE = "no-cache";
+        static final String ORIGIN = "Origin";
+        static final String ORIGIN_VALUE = "https://coinmarketcap.com/";
+        static final String PLATFORM = "Platform";
+        static final String PLATFORM_VALUE = "web";
+        static final String PRIORITY = "Priority";
+        static final String PRIORITY_VALUE = "u=0, i";
+        static final String REFERER = "Referer";
+        static final String REFERER_VALUE = "https://coinmarketcap.com/";
+        static final String SEC_FETCH_DEST = "Sec-Fetch-Dest";
+        static final String SEC_FETCH_DEST_VALUE = "document";
+        static final String SEC_FETCH_MODE = "Sec-Fetch-Mode";
+        static final String SEC_FETCH_MODE_VALUE = "navigate";
+        static final String SEC_FETCH_SITE = "Sec-Fetch-Site";
+        static final String SEC_FETCH_SITE_VALUE = "none";
+        static final String SEC_FETCH_USER = "Sec-Fetch-User";
+        static final String SEC_FETCH_USER_VALUE = "?1";
+        static final String TE = "TE";
+        static final String TE_VALUE = "trailers";
+        static final String UPGRADE_INSECURE_REQUESTS = "Upgrade-Insecure-Requests";
+        static final String UPGRADE_INSECURE_REQUESTS_VALUE = "1";
+        static final String USER_AGENT = "User-Agent";
+        static final String USER_AGENT_VALUE = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) " +
+                "Gecko/20100101 Firefox/140.0";
+        static final String X_REQUEST_ID = "x-request-id";
+    }
 }
