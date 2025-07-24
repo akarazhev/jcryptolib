@@ -123,7 +123,7 @@ final class Constants {
         static final String ACCEPT_LANGUAGE_VALUE = "en";
         static final String CONTENT_TYPE = "Content-Type";
         static final String CONTENT_TYPE_VALUE = "application/json";
-        static final String LANG = "lang";
+        static final String LANG = "Lang";
         static final String LANG_VALUE = "en";
         static final String SEC_FETCH_DEST = "Sec-Fetch-Dest";
         static final String SEC_FETCH_DEST_VALUE = "empty";
