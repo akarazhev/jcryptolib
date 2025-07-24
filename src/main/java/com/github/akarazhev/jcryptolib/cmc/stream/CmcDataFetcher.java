@@ -49,21 +49,22 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.AS_PERIOD_DAYS;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.CONVERT_ID;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.CMC.FG_PERIOD_DAYS;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_CODE_OK;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ERROR_MESSAGE_SUCCESS;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STATUS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Range.DAYS_30;
 import static com.github.akarazhev.jcryptolib.cmc.config.Range.HOURS_24;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.AS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.CMC;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.ETF_NF;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.FG;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.AS_PERIOD_DAYS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.CONVERT_ID_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.FG_PERIOD_DAYS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.DATA;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE_OK;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_MESSAGE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_MESSAGE_SUCCESS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.STATUS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.STATUS_CODE_OK;
 
 final class CmcDataFetcher implements DataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(CmcDataFetcher.class);
@@ -104,47 +105,47 @@ final class CmcDataFetcher implements DataFetcher {
     private void fetchData() {
         config.getTypes().forEach(type -> {
             if (CMC.equals(type)) {
-                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(CONVERT_ID, DAYS_30), Source.CMC);
+                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(CONVERT_ID_VALUE, DAYS_30), Source.CMC);
             } else if (ETF_NF.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoEftNetFlowRequest(DAYS_30), Source.ETF_NF);
             } else if (FG.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 final var start = end - TimeUnit.DAYS.toSeconds(FG_PERIOD_DAYS);
-                fetch(CmcRequestBuilder.buildFearGreedRequest(CONVERT_ID, start, end), Source.FG);
+                fetch(CmcRequestBuilder.buildFearGreedRequest(CONVERT_ID_VALUE, start, end), Source.FG);
             } else if (AS.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 final var start = end - TimeUnit.DAYS.toSeconds(AS_PERIOD_DAYS);
-                fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(CONVERT_ID, start, end), Source.AS);
+                fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(CONVERT_ID_VALUE, start, end), Source.AS);
             } else if (Type.BDO.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceOverviewRequest(), Source.BDO);
             } else if (Type.BD.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceRequest(DAYS_30), Source.BD);
             } else if (Type.MCL.equals(type)) {
-                fetch(CmcRequestBuilder.buildMarketCycleLatestRequest(CONVERT_ID), Source.MCL);
+                fetch(CmcRequestBuilder.buildMarketCycleLatestRequest(CONVERT_ID_VALUE), Source.MCL);
             } else if (Type.PM.equals(type)) {
-                fetch(CmcRequestBuilder.buildPuellMultipleRequest(CONVERT_ID, DAYS_30), Source.PM);
+                fetch(CmcRequestBuilder.buildPuellMultipleRequest(CONVERT_ID_VALUE, DAYS_30), Source.PM);
             } else if (Type.IND.equals(type)) {
-                fetch(CmcRequestBuilder.buildIndicatorsRequest(CONVERT_ID), Source.IND);
+                fetch(CmcRequestBuilder.buildIndicatorsRequest(CONVERT_ID_VALUE), Source.IND);
             } else if (Type.PCT.equals(type)) {
-                fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(CONVERT_ID, DAYS_30), Source.PCT);
+                fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(CONVERT_ID_VALUE, DAYS_30), Source.PCT);
             } else if (Type.BRP.equals(type)) {
-                fetch(CmcRequestBuilder.buildBitcoinRainbowPriceRequest(CONVERT_ID, DAYS_30), Source.BRP);
+                fetch(CmcRequestBuilder.buildBitcoinRainbowPriceRequest(CONVERT_ID_VALUE, DAYS_30), Source.BRP);
             } else if (Type.CMC100.equals(type)) {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), Source.CMC100);
             } else if (Type.CSV.equals(type)) {
-                fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(CONVERT_ID, HOURS_24), Source.CSV);
+                fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(CONVERT_ID_VALUE, HOURS_24), Source.CSV);
             } else if (Type.OIO.equals(type)) {
-                fetch(CmcRequestBuilder.buildOpenInterestOverviewRequest(CONVERT_ID), Source.OIO);
+                fetch(CmcRequestBuilder.buildOpenInterestOverviewRequest(CONVERT_ID_VALUE), Source.OIO);
             } else if (Type.OI.equals(type)) {
-                fetch(CmcRequestBuilder.buildOpenInterestRequest(CONVERT_ID, HOURS_24), Source.OI);
+                fetch(CmcRequestBuilder.buildOpenInterestRequest(CONVERT_ID_VALUE, HOURS_24), Source.OI);
             } else if (Type.DV.equals(type)) {
-                fetch(CmcRequestBuilder.buildDerivativesVolumeRequest(CONVERT_ID, HOURS_24), Source.DV);
+                fetch(CmcRequestBuilder.buildDerivativesVolumeRequest(CONVERT_ID_VALUE, HOURS_24), Source.DV);
             } else if (Type.FR.equals(type)) {
-                fetch(CmcRequestBuilder.buildFundingRatesRequest(CONVERT_ID, HOURS_24), Source.FR);
+                fetch(CmcRequestBuilder.buildFundingRatesRequest(CONVERT_ID_VALUE, HOURS_24), Source.FR);
             } else if (Type.VIV.equals(type)) {
-                fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(CONVERT_ID, HOURS_24), Source.VIV);
+                fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(CONVERT_ID_VALUE, HOURS_24), Source.VIV);
             }
         });
     }
@@ -153,7 +154,7 @@ final class CmcDataFetcher implements DataFetcher {
         if (!emitter.isCancelled()) {
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
+                if (response.statusCode() == STATUS_CODE_OK) {
                     final var result = getResult(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         LOGGER.debug("Fetched message: {}", result);

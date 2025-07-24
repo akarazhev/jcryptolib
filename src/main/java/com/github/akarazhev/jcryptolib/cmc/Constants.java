@@ -29,28 +29,11 @@ public final class Constants {
         throw new UnsupportedOperationException();
     }
 
-    public static final class CMC {
-        private CMC() {
-            throw new UnsupportedOperationException();
-        }
-
-        public static final int FG_START_DATE = 1367193600;
-        public static final int FG_PERIOD_DAYS = 30;
-        public static final int AS_PERIOD_DAYS = 7;
-        public static final int CONVERT_ID = 2781;
-    }
-
     public static final class Response {
         private Response() {
             throw new UnsupportedOperationException();
         }
 
-        public static final String DATA = "data";
-        public static final String STATUS = "status";
-        public static final String ERROR_CODE = "error_code";
-        public static final String ERROR_CODE_OK = "0";
-        public static final String ERROR_MESSAGE = "error_message";
-        public static final String ERROR_MESSAGE_SUCCESS = "SUCCESS";
         public static final String DATA_LIST = "dataList";
         public static final String DIAL_CONFIG = "dialConfig";
         public static final String HISTORICAL_VALUES = "historicalValues";
