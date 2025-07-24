@@ -108,11 +108,11 @@ final class BybitDataFetcher implements DataFetcher {
             if (LPD.equals(type)) {
                 fetchLaunchPads();
             } else if (MD.equals(type)) {
-                fetchAsList(BybitRequestBuilder.buildMegaDropRequest(), Source.MD);
+                fetchAsList(BybitRequestBuilder.buildMegaDropRequest(), type, Source.MD);
             } else if (LPL.equals(type)) {
                 fetchLaunchPools();
             } else if (BYV.equals(type) || BYV_PAST.equals(type)) {
-                fetchAsList(BybitRequestBuilder.buildByVotesRequest(type), Source.BYV);
+                fetchAsList(BybitRequestBuilder.buildByVotesRequest(type), type, Source.BYV);
             } else if (BYS.equals(type) || BYS_PAST.equals(type)) {
                 fetchByStarter(type);
             } else if (ADH.equals(type) || ADH_PAST.equals(type)) {
@@ -130,13 +130,13 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchAsMap(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Source.LPD);
+                        fetchAsMap(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Type.LPD, Source.LPD);
                     }
                 } else {
-                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.LPD.getType(), response.statusCode());
                 }
             } catch (final Exception e) {
-                LOGGER.error("Failed to fetch data by uri", e);
+                LOGGER.error("Failed to fetch '{}' data", Type.LPD.getType(), e);
                 emitter.onError(e);
             }
         }
@@ -151,20 +151,20 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchAsMap(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Source.LPL);
+                        fetchAsMap(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Type.LPL, Source.LPL);
                     }
                 } else {
-                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.LPL.getType(), response.statusCode());
                 }
             } catch (final Exception e) {
-                LOGGER.error("Failed to fetch data by uri", e);
+                LOGGER.error("Failed to fetch '{}' data", Type.LPL.getType(), e);
                 emitter.onError(e);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void fetchAsMap(final HttpRequest request, final Source source) {
+    private void fetchAsMap(final HttpRequest request, final Type type, final Source source) {
         try {
             final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == STATUS_CODE_OK) {
@@ -172,34 +172,34 @@ final class BybitDataFetcher implements DataFetcher {
                 if (result != null && !result.isEmpty()) {
                     final var data = ((List<Map<String, Object>>) result.get(LIST));
                     if (data != null && !data.isEmpty()) {
-                        LOGGER.debug("Fetched message: {}", data);
-                        data.forEach(r -> emitter.onNext(Payload.of(Provider.BYBIT, source, r)));
+                        LOGGER.debug("Fetched '{}' message: {}", type.getType(), data);
+                        data.forEach(d -> emitter.onNext(Payload.of(Provider.BYBIT, source, d)));
                     }
                 }
             } else {
-                LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
             }
         } catch (final Exception e) {
-            LOGGER.error("Failed to fetch data by uri", e);
+            LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
             emitter.onError(e);
         }
     }
 
-    private void fetchAsList(final HttpRequest request, final Source source) {
+    private void fetchAsList(final HttpRequest request, final Type type, final Source source) {
         if (!emitter.isCancelled()) {
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
-                    final var result = getResultAsList(response.uri(), response.body());
-                    if (result != null && !result.isEmpty()) {
-                        LOGGER.debug("Fetched message: {}", result);
-                        result.forEach(r -> emitter.onNext(Payload.of(Provider.BYBIT, source, r)));
+                    final var data = getResultAsList(response.uri(), response.body());
+                    if (data != null && !data.isEmpty()) {
+                        LOGGER.debug("Fetched '{}' message: {}", type.getType(), data);
+                        data.forEach(d -> emitter.onNext(Payload.of(Provider.BYBIT, source, d)));
                     }
                 } else {
-                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
                 }
             } catch (final Exception e) {
-                LOGGER.error("Failed to fetch data by uri", e);
+                LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
                 emitter.onError(e);
             }
         }
@@ -214,13 +214,13 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var projectCount = (Integer) result.get(PROJECT_COUNT);
-                        fetchAsList(BybitRequestBuilder.buildByStarterRequest(type, projectCount), Source.BYS);
+                        fetchAsList(BybitRequestBuilder.buildByStarterRequest(type, projectCount), type, Source.BYS);
                     }
                 } else {
-                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
                 }
             } catch (final Exception e) {
-                LOGGER.error("Failed to fetch data by uri", e);
+                LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
                 emitter.onError(e);
             }
         }
@@ -235,13 +235,13 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var projects = (Integer) result.get(PROJECTS);
-                        fetchAsMap(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), Source.ADH);
+                        fetchAsMap(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), type, Source.ADH);
                     }
                 } else {
-                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
                 }
             } catch (final Exception e) {
-                LOGGER.error("Failed to fetch data by uri", e);
+                LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
                 emitter.onError(e);
             }
         }
