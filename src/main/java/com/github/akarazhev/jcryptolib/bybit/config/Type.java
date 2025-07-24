@@ -25,9 +25,9 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Type {
-    LPD(Constants.LaunchPad.TYPE, new String[]{Constants.LaunchPad.CURRENT_LIST, Constants.LaunchPad.PAST_LIST}),
+    LPD(Constants.LaunchPad.TYPE, new String[]{Constants.LaunchPad.PROJECT_URL, Constants.LaunchPad.CURRENT_LIST}),
     MD(Constants.MegaDrop.TYPE, new String[]{Constants.MegaDrop.CURRENT_LIST}),
-    LPL(Constants.LaunchPool.TYPE, new String[]{Constants.LaunchPool.CURRENT_LIST, Constants.LaunchPool.PAST_LIST}),
+    LPL(Constants.LaunchPool.TYPE, new String[]{Constants.LaunchPool.PROJECT_URL, Constants.LaunchPool.CURRENT_LIST}),
     BYV(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.CURRENT_LIST}),
     BYV_PAST(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.PAST_LIST}),
     BYS(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.CURRENT_LIST}),
@@ -35,10 +35,16 @@ public enum Type {
     ADH(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.CURRENT_LIST}),
     ADH_PAST(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.PAST_LIST});
 
+    private final String type;
     private final String[] urls;
 
     Type(final String type, final String[] urls) {
+        this.type = type;
         this.urls = urls;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String[] getUrls() {

@@ -51,8 +51,8 @@ final class Constants {
         }
 
         static final String TYPE = "Launchpad";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/activity/v2/project/ongoing/list";
-        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/activity/v2/project/finished/list";
+        static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/activity/v2/project/ongoing/list";
+        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/activity/v2/project/finished/list";
     }
 
     final static class MegaDrop {
@@ -70,8 +70,8 @@ final class Constants {
         }
 
         static final String TYPE = "Launch Pool";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/launchpool/v1/home";
-        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/launchpool/v1/history";
+        static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/launchpool/v1/home";
+        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/launchpool/v1/history";
     }
 
     final static class ByVotes {
