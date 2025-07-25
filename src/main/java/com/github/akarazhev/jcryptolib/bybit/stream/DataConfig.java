@@ -43,8 +43,8 @@ public final class DataConfig {
     private final RestApiType restApiType;
     private final StreamType streamType;
     private final boolean isUseAuth;
-    private final String key;
-    private final String secret;
+    private final String apiKey;
+    private final String apiSecret;
     private final String[] topics;
     private final Map<RequestKey, RequestValue> params;
     private final float backoffMultiplier;
@@ -60,8 +60,8 @@ public final class DataConfig {
         this.restApiType = builder.restApiType;
         this.streamType = builder.streamType;
         this.isUseAuth = builder.isUseAuth;
-        this.key = builder.key;
-        this.secret = builder.secret;
+        this.apiKey = builder.apiKey;
+        this.apiSecret = builder.apiSecret;
         this.topics = builder.getTopics();
         this.params = builder.params;
         this.backoffMultiplier = builder.backoffMultiplier;
@@ -89,12 +89,12 @@ public final class DataConfig {
         return isUseAuth;
     }
 
-    public String getKey() {
-        return key;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public String getSecret() {
-        return secret;
+    public String getApiSecret() {
+        return apiSecret;
     }
 
     public String[] getTopics() {
@@ -160,8 +160,8 @@ public final class DataConfig {
         private RestApiType restApiType;
         private StreamType streamType;
         private boolean isUseAuth;
-        private String key;
-        private String secret;
+        private String apiKey = Config.getApiKey();
+        private String apiSecret = Config.getApiSecret();
         private final Set<Topic> topics = new HashSet<>();
         private final Map<RequestKey, RequestValue> params = new HashMap<>();
         private float backoffMultiplier = Config.getBackoffMultiplier();
@@ -192,13 +192,13 @@ public final class DataConfig {
             return this;
         }
 
-        public Builder key(final String key) {
-            this.key = key;
+        public Builder apiKey(final String apiKey) {
+            this.apiKey = apiKey;
             return this;
         }
 
-        public Builder secret(final String secret) {
-            this.secret = secret;
+        public Builder apiSecret(final String apiSecret) {
+            this.apiSecret = apiSecret;
             return this;
         }
 

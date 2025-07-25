@@ -40,8 +40,6 @@ import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.akarazhev.jcryptolib.bybit.config.Config.getApiKey;
-import static com.github.akarazhev.jcryptolib.bybit.config.Config.getApiSecret;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -63,8 +61,6 @@ final class BybitPrivateDataConsumerTest {
         final var config = new DataConfig.Builder()
                 .streamType(StreamType.PT)
                 .isUseAuth(true)
-                .key(getApiKey())
-                .secret(getApiSecret())
                 .topic(Topic.ORDER)
                 .build();
         final var consumer = DataConsumer.create(client, config);

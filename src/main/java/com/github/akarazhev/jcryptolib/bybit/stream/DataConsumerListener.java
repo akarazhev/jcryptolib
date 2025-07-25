@@ -203,8 +203,8 @@ final class DataConsumerListener implements WebSocket.Listener {
     private void doAuth(final WebSocket webSocket) {
         if (config.isUseAuth()) {
             try {
-                final var apiKey = Objects.requireNonNull(config.getKey(), "API key is null");
-                final var secret = Objects.requireNonNull(config.getSecret(), "Secret is null");
+                final var apiKey = Objects.requireNonNull(config.getApiKey(), "API key is null");
+                final var secret = Objects.requireNonNull(config.getApiSecret(), "Secret is null");
                 webSocket.sendText(Requests.ofAuth(apiKey, 10000, secret), true); // todo: make expires configurable
             } catch (final Exception e) {
                 LOGGER.error("Exception during auth: {}", e.getMessage());
