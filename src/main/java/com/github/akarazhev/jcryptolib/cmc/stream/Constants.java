@@ -36,7 +36,7 @@ final class Constants {
 
         static final int FG_PERIOD_DAYS = 30;
         static final int AS_PERIOD_DAYS = 7;
-        static final int CONVERT_ID_VALUE = 2781;
+        static final int USD_ID = 2781;
     }
 
     final static class Request {
@@ -68,6 +68,7 @@ final class Constants {
         static final String ERROR_CODE_OK = "0";
         static final String ERROR_MESSAGE = "error_message";
         static final String ERROR_MESSAGE_SUCCESS = "SUCCESS";
+        static final String ERROR_MESSAGE_EMPTY = "";
     }
 
     final static class GetRequestHeader {
@@ -75,8 +76,10 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
+        static final String X_CMC_PRO_API_KEY = "X-CMC_PRO_API_KEY";
         static final String ACCEPT = "Accept";
         static final String ACCEPT_VALUE = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        static final String ACCEPT_JSON_VALUE = "application/json";
         static final String ACCEPT_LANGUAGE = "Accept-Language";
         static final String ACCEPT_LANGUAGE_VALUE = "en-US,en;q=0.5";
         static final String CACHE_CONTROL = "Cache-Control";
