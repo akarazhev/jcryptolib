@@ -72,7 +72,10 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_BTC_V
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_ETH_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_HIT_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TRIGGERED_COUNT;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.UPDATE_TIME;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUES;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE_CLASSIFICATION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_PERFORMANCE;
@@ -637,6 +640,34 @@ final class CmcDataFetcherTest {
             assertFalse(((Map) value.getData().get(OVERVIEW)).isEmpty());
             assertTrue(value.getData().containsKey(POINTS));
             assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldReceiveFearAndGreedLast() {
+        final var config = new DataConfig.Builder()
+                .type(Type.FG_LAST)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.FG_LAST, value.getSource());
+            assertTrue(value.getData().containsKey(VALUE));
+            assertTrue(value.getData().containsKey(UPDATE_TIME));
+            assertTrue(value.getData().containsKey(VALUE_CLASSIFICATION));
         }
     }
 }

@@ -34,6 +34,7 @@ public final class DataConfig {
     private final Set<Type> types;
     private final int connectTimeoutMs;
     private final int fetchIntervalMs;
+    private final String apiKey;
 
     private DataConfig(final Builder builder) {
         if (builder.types.isEmpty()) {
@@ -43,6 +44,7 @@ public final class DataConfig {
         this.types = builder.types;
         this.connectTimeoutMs = builder.connectTimeoutMs;
         this.fetchIntervalMs = builder.fetchIntervalMs;
+        this.apiKey = builder.apiKey;
     }
 
     public Set<Type> getTypes() {
@@ -57,6 +59,10 @@ public final class DataConfig {
         return fetchIntervalMs;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
     public String print() {
         return "\nCMC Data Config {" +
                 "\n\ttypes=" + types +
@@ -69,6 +75,7 @@ public final class DataConfig {
         private final Set<Type> types = new HashSet<>();
         private int connectTimeoutMs = Config.getConnectTimeoutMs();
         private int fetchIntervalMs = Config.getFetchAtTime();
+        private String apiKey = Config.getApiKey();
 
         public Builder type(final Type type) {
             this.types.add(type);
@@ -82,6 +89,11 @@ public final class DataConfig {
 
         public Builder fetchIntervalMs(final int fetchIntervalMs) {
             this.fetchIntervalMs = fetchIntervalMs;
+            return this;
+        }
+
+        public Builder apiKey(final String apiKey) {
+            this.apiKey = apiKey;
             return this;
         }
 

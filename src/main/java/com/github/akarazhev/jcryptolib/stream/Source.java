@@ -28,6 +28,7 @@ public enum Source {
     WS,
     RAPI,
     FG,
+    FG_LAST,
     AS,
     BDO,
     BD,

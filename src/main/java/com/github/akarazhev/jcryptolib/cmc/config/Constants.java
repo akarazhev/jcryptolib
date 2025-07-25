@@ -36,6 +36,7 @@ final class Constants {
 
         static final String CONNECT_TIMEOUT_MS = "cmc.connect.timeout.ms";
         static final String FETCH_INTERVAL_MS = "cmc.fetch.interval.ms";
+        static final String API_KEY = "cmc.api.key";
     }
 
     final static class Range {
@@ -54,6 +55,7 @@ final class Constants {
 
         static final String TYPE = "Fear and Greed";
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/fear-greed/chart";
+        static final String URL_LAST = "https://pro-api.coinmarketcap.com/v3/fear-and-greed/latest";
     }
 
     final static class AltcoinSeason {

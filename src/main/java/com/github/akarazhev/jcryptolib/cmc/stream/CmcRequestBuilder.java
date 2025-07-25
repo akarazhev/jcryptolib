@@ -32,6 +32,7 @@ import java.net.http.HttpRequest;
 import java.util.UUID;
 
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_JSON_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_LANGUAGE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_LANGUAGE_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.ACCEPT_VALUE;
@@ -59,6 +60,7 @@ import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHea
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.UPGRADE_INSECURE_REQUESTS_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.USER_AGENT;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.USER_AGENT_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.X_CMC_PRO_API_KEY;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHeader.X_REQUEST_ID;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY_ALL;
@@ -161,6 +163,19 @@ final class CmcRequestBuilder {
     public static HttpRequest buildVolmexImpliedVolatilityRequest(final int convertId, final Range range) {
         final var url = String.format("?" + RANGE + "=%s&" + CONVERT_ID + "=%d", range.getValue(), convertId);
         return buildRequest(URI.create(Type.VIV.getUrl() + url), UUID.randomUUID());
+    }
+
+    public static HttpRequest buildFearGreedLatestRequest(final String apiKey) {
+        return buildRequest(URI.create(Type.FG_LAST.getUrl()), apiKey);
+    }
+
+    private static HttpRequest buildRequest(final URI uri, final String apiKey) {
+        return HttpRequest.newBuilder()
+                .uri(uri)
+                .header(ACCEPT, ACCEPT_JSON_VALUE)
+                .header(X_CMC_PRO_API_KEY, apiKey)
+                .GET()
+                .build();
     }
 
     private static HttpRequest buildRequest(final URI uri, final UUID xRequestId) {

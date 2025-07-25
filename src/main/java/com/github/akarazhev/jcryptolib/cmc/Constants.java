@@ -70,5 +70,8 @@ public final class Constants {
         public static final String YEARLY_HIGH = "yearlyHigh";
         public static final String YEARLY_LOW = "yearlyLow";
         public static final String COINS = "coins";
+        public static final String VALUE = "value";
+        public static final String UPDATE_TIME = "update_time";
+        public static final String VALUE_CLASSIFICATION = "value_classification";
     }
 }
