@@ -164,6 +164,7 @@ final class Constants {
 
         static final String TYPE = "CoinMarketCap 100 Index";
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/top100/historical/chart";
+        static final String URL_LATEST = "https://pro-api.coinmarketcap.com/v3/index/cmc100-latest";
     }
 
     final static class CryptoSpotVolume {

@@ -134,6 +134,8 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(USD_ID, DAYS_30), Source.PCT);
             } else if (Type.BRP.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinRainbowPriceRequest(USD_ID, DAYS_30), Source.BRP);
+            } else if (Type.CMC100L.equals(type)) {
+                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexLatestRequest(config.getApiKey()), Source.CMC100L);
             } else if (Type.CMC100.equals(type)) {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), Source.CMC100);
             } else if (Type.CSV.equals(type)) {

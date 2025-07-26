@@ -103,5 +103,12 @@ public final class Constants {
         public static final String ALTCOIN_VOLUME_24H = "altcoin_volume_24h";
         public static final String ALTCOIN_VOLUME_24H_REPORTED = "altcoin_volume_24h_reported";
         public static final String ALTCOIN_MARKET_CAP = "altcoin_market_cap";
+        public static final String VALUE_24H_PERCENTAGE_CHANGE = "value_24h_percentage_change";
+        public static final String LAST_UPDATE = "last_update";
+        public static final String NEXT_UPDATE = "next_update";
+        public static final String WEIGHT = "weight";
+        public static final String NAME = "name";
+        public static final String SYMBOL = "symbol";
+        public static final String URL = "url";
     }
 }

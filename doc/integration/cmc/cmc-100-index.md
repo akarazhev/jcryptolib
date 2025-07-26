@@ -1,4 +1,61 @@
-# CoinMarketCap 100 Index (CMC100)
+# CMC100 Index
+
+API endpoints for CoinMarketCap100 Index. This category currently includes 2 endpoints:
+
+- /v3/index/cmc100-latest - Latest CoinMarketCap 100 Index
+- /v3/index/cmc100-historical - Historical CoinMarketCap 100 Index
+
+## CoinMarketCap 100 Index Historical (CMC100H)
+
+## CoinMarketCap 100 Index Latest (CMC100L)
+
+Request API with headers:
+
+```text
+GET /v3/index/cmc100-latest HTTP/3
+
+Accept: application/json
+X-CMC_PRO_API_KEY: API_KEY
+```
+
+The response is a JSON object with the following structure:
+
+```json
+{
+  "data": {
+    "value": 240.28,
+    "constituents": [
+      {
+        "weight": 65.81,
+        "id": 1,
+        "name": "Bitcoin",
+        "symbol": "BTC",
+        "url": "https://coinmarketcap.com/currencies/bitcoin"
+      },
+      ...
+      {
+        "weight": 0.02,
+        "id": 8425,
+        "name": "JasmyCoin",
+        "symbol": "JASMY",
+        "url": "https://coinmarketcap.com/currencies/jasmy"
+      }
+    ],
+    "value_24h_percentage_change": 2.52,
+    "last_update": "2025-07-26T15:20:00Z",
+    "next_update": "2025-07-26T15:25:00Z"
+  },
+  "status": {
+    "timestamp": "2025-07-26T15:23:11.465Z",
+    "error_code": "0",
+    "error_message": "",
+    "elapsed": 3,
+    "credit_count": 1
+  }
+}
+```
+
+## CoinMarketCap 100 Index (CMC100)
 
 Request URL with curl:
 
