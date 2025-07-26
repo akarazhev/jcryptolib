@@ -674,9 +674,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveFearAndGreedLast() {
+    public void shouldReceiveFearAndGreedLatest() {
         final var config = new DataConfig.Builder()
-                .type(Type.FG_LAST)
+                .type(Type.FGL)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -694,7 +694,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.FG_LAST, value.getSource());
+            assertEquals(Source.FGL, value.getSource());
             assertTrue(value.getData().containsKey(VALUE));
             assertTrue(value.getData().containsKey(UPDATE_TIME));
             assertTrue(value.getData().containsKey(VALUE_CLASSIFICATION));

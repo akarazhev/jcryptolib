@@ -167,7 +167,7 @@ final class CmcRequestBuilder {
     }
 
     public static HttpRequest buildFearGreedLatestRequest(final String apiKey) {
-        return buildRequest(URI.create(Type.FG_LAST.getUrl()), apiKey);
+        return buildRequest(URI.create(Type.FGL.getUrl()), apiKey);
     }
 
     public static HttpRequest buildGlobalMetricsLatestRequest(final String apiKey, final int convertId) {

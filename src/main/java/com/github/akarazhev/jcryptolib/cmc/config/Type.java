@@ -27,7 +27,7 @@ package com.github.akarazhev.jcryptolib.cmc.config;
 public enum Type {
     GML(Constants.GlobalMetrics.TYPE, Constants.GlobalMetrics.URL),
     FG(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL),
-    FG_LAST(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_LAST),
+    FGL(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_LATEST),
     AS(Constants.AltcoinSeason.TYPE, Constants.AltcoinSeason.URL),
     BDO(Constants.BitcoinDominanceOverview.TYPE, Constants.BitcoinDominanceOverview.URL),
     BD(Constants.BitcoinDominance.TYPE, Constants.BitcoinDominance.URL),

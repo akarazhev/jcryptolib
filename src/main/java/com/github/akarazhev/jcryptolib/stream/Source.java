@@ -29,7 +29,7 @@ public enum Source {
     RAPI,
     GML,
     FG,
-    FG_LAST,
+    FGL,
     AS,
     BDO,
     BD,
