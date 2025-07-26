@@ -150,8 +150,8 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), Source.VIV);
             } else if (Type.FG_LAST.equals(type)) {
                 fetch(CmcRequestBuilder.buildFearGreedLatestRequest(config.getApiKey()), Source.FG_LAST);
-            } else if (Type.GM.equals(type)) {
-                fetch(CmcRequestBuilder.buildGlobalMetricsRequest(config.getApiKey(), USD_ID), Source.GM);
+            } else if (Type.GML.equals(type)) {
+                fetch(CmcRequestBuilder.buildGlobalMetricsLatestRequest(config.getApiKey(), USD_ID), Source.GML);
             }
         });
     }

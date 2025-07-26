@@ -170,9 +170,9 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.FG_LAST.getUrl()), apiKey);
     }
 
-    public static HttpRequest buildGlobalMetricsRequest(final String apiKey, final int convertId) {
+    public static HttpRequest buildGlobalMetricsLatestRequest(final String apiKey, final int convertId) {
         final var url = String.format("?" + CONVERT_ID_API + "=%d", convertId);
-        return buildRequest(URI.create(Type.GM.getUrl() + url), apiKey);
+        return buildRequest(URI.create(Type.GML.getUrl() + url), apiKey);
     }
 
     private static HttpRequest buildRequest(final URI uri, final String apiKey) {

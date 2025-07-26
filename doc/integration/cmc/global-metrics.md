@@ -1,10 +1,10 @@
 # Global Metrics
 
 API endpoints for global aggregate market data. This category currently includes 2 endpoints:
-- /v3/fear-and-greed/latest - Latest CMC Crypto Fear and Greed Index
-- /v3/fear-and-greed/historical - Historical CMC Crypto Fear and Greed Index
+- /v1/global-metrics/quotes/latest - Latest global metrics
+- /v1/global-metrics/quotes/historical - Historical global metrics
 
-## Latest CMC Crypto Fear and Greed Index
+## Latest CMC Crypto Fear and Greed Index (GML)
 
 Request API with headers:
 
@@ -93,4 +93,4 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Historical CMC Crypto Fear and Greed Index
+## Historical CMC Crypto Fear and Greed Index (GMH)

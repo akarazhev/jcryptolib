@@ -702,9 +702,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveGlobalMetrics() {
+    public void shouldReceiveGlobalMetricsLatest() {
         final var config = new DataConfig.Builder()
-                .type(Type.GM)
+                .type(Type.GML)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -722,7 +722,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.GM, value.getSource());
+            assertEquals(Source.GML, value.getSource());
             assertTrue(value.getData().containsKey(BTC_DOMINANCE));
             assertTrue(value.getData().containsKey(ETH_DOMINANCE));
             assertTrue(value.getData().containsKey(ETH_DOMINANCE_YESTERDAY));
