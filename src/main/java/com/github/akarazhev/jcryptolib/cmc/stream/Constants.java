@@ -44,6 +44,7 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
+        static final String CONVERT_ID_API = "convert_id";
         static final String CONVERT_ID = "convertId";
         static final String RANGE = "range";
         static final String START = "start";
@@ -65,7 +66,8 @@ final class Constants {
         static final String DATA = "data";
         static final String STATUS = "status";
         static final String ERROR_CODE = "error_code";
-        static final String ERROR_CODE_OK = "0";
+        static final String ERROR_CODE_OK_STR = "0";
+        static final int ERROR_CODE_OK_INT = 0;
         static final String ERROR_MESSAGE = "error_message";
         static final String ERROR_MESSAGE_SUCCESS = "SUCCESS";
         static final String ERROR_MESSAGE_EMPTY = "";

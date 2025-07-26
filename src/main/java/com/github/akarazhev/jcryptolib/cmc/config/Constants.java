@@ -48,6 +48,15 @@ final class Constants {
         static final String DAYS_30 = "30d";
     }
 
+    final static class GlobalMetrics {
+        private GlobalMetrics() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String TYPE = "Global Metrics";
+        static final String URL = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest";
+    }
+
     final static class FearAndGreed {
         private FearAndGreed() {
             throw new UnsupportedOperationException();

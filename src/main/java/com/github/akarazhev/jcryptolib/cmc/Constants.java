@@ -73,5 +73,35 @@ public final class Constants {
         public static final String VALUE = "value";
         public static final String UPDATE_TIME = "update_time";
         public static final String VALUE_CLASSIFICATION = "value_classification";
+        public static final String BTC_DOMINANCE = "btc_dominance";
+        public static final String ETH_DOMINANCE = "eth_dominance";
+        public static final String ETH_DOMINANCE_YESTERDAY = "eth_dominance_yesterday";
+        public static final String BTC_DOMINANCE_YESTERDAY = "btc_dominance_yesterday";
+        public static final String ETH_DOMINANCE_24H_PERCENTAGE_CHANGE = "eth_dominance_24h_percentage_change";
+        public static final String BTC_DOMINANCE_24H_PERCENTAGE_CHANGE = "btc_dominance_24h_percentage_change";
+        public static final String DEFI_VOLUME_24H = "defi_volume_24h";
+        public static final String DEFI_VOLUME_24H_REPORTED = "defi_volume_24h_reported";
+        public static final String DEFI_MARKET_CAP = "defi_market_cap";
+        public static final String DEFI_24H_PERCENTAGE_CHANGE = "defi_24h_percentage_change";
+        public static final String STABLECOIN_VOLUME_24H = "stablecoin_volume_24h";
+        public static final String STABLECOIN_VOLUME_24H_REPORTED = "stablecoin_volume_24h_reported";
+        public static final String STABLECOIN_MARKET_CAP = "stablecoin_market_cap";
+        public static final String STABLECOIN_24H_PERCENTAGE_CHANGE = "stablecoin_24h_percentage_change";
+        public static final String DERIVATIVES_VOLUME_24H = "derivatives_volume_24h";
+        public static final String DERIVATIVES_VOLUME_24H_REPORTED = "derivatives_volume_24h_reported";
+        public static final String DERIVATIVES_24H_PERCENTAGE_CHANGE = "derivatives_24h_percentage_change";
+        public static final String LAST_UPDATED = "last_updated";
+        public static final String QUOTE = "quote";
+        public static final String TOTAL_MARKET_CAP = "total_market_cap";
+        public static final String TOTAL_MARKET_CAP_YESTERDAY = "total_market_cap_yesterday";
+        public static final String TOTAL_MARKET_CAP_YESTERDAY_PERCENTAGE_CHANGE = "total_market_cap_yesterday_percentage_change";
+        public static final String CMC_USD_ID = "2781";
+        public static final String TOTAL_VOLUME_24H = "total_volume_24h";
+        public static final String TOTAL_VOLUME_24H_REPORTED = "total_volume_24h_reported";
+        public static final String TOTAL_VOLUME_24H_YESTERDAY = "total_volume_24h_yesterday";
+        public static final String TOTAL_VOLUME_24H_YESTERDAY_PERCENTAGE_CHANGE = "total_volume_24h_yesterday_percentage_change";
+        public static final String ALTCOIN_VOLUME_24H = "altcoin_volume_24h";
+        public static final String ALTCOIN_VOLUME_24H_REPORTED = "altcoin_volume_24h_reported";
+        public static final String ALTCOIN_MARKET_CAP = "altcoin_market_cap";
     }
 }

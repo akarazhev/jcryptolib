@@ -60,7 +60,8 @@ import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.FG_PERIOD
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.DATA;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE;
-import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE_OK;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE_OK_INT;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE_OK_STR;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_MESSAGE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_MESSAGE_EMPTY;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_MESSAGE_SUCCESS;
@@ -149,6 +150,8 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), Source.VIV);
             } else if (Type.FG_LAST.equals(type)) {
                 fetch(CmcRequestBuilder.buildFearGreedLatestRequest(config.getApiKey()), Source.FG_LAST);
+            } else if (Type.GM.equals(type)) {
+                fetch(CmcRequestBuilder.buildGlobalMetricsRequest(config.getApiKey(), USD_ID), Source.GM);
             }
         });
     }
@@ -187,10 +190,13 @@ final class CmcDataFetcher implements DataFetcher {
     private boolean isStatusOk(final URI uri, final Map<String, Object> data) throws IOException {
         final var status = (Map<String, Object>) data.get(STATUS);
         if (status != null) {
-            return (status.containsKey(ERROR_CODE) && ERROR_CODE_OK.equals(status.get(ERROR_CODE))) &&
+            return ((status.containsKey(ERROR_CODE)) &&
+                    (ERROR_CODE_OK_STR.equals(status.get(ERROR_CODE)) ||
+                            ERROR_CODE_OK_INT == (Integer) status.get(ERROR_CODE))) &&
                     ((status.containsKey(ERROR_MESSAGE)) &&
                             (ERROR_MESSAGE_SUCCESS.equals(status.get(ERROR_MESSAGE)) ||
-                                    ERROR_MESSAGE_EMPTY.equals(status.get(ERROR_MESSAGE))));
+                                    ERROR_MESSAGE_EMPTY.equals(status.get(ERROR_MESSAGE)) ||
+                                    (status.get(ERROR_MESSAGE) == null)));
         } else {
             throw new IOException("Failed to fetch data by uri: " + uri);
         }

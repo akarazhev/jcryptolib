@@ -65,6 +65,7 @@ import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.GetRequestHea
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY_ALL;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CONVERT_ID;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CONVERT_ID_API;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.END;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.RANGE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.SORT_BY;
@@ -167,6 +168,11 @@ final class CmcRequestBuilder {
 
     public static HttpRequest buildFearGreedLatestRequest(final String apiKey) {
         return buildRequest(URI.create(Type.FG_LAST.getUrl()), apiKey);
+    }
+
+    public static HttpRequest buildGlobalMetricsRequest(final String apiKey, final int convertId) {
+        final var url = String.format("?" + CONVERT_ID_API + "=%d", convertId);
+        return buildRequest(URI.create(Type.GM.getUrl() + url), apiKey);
     }
 
     private static HttpRequest buildRequest(final URI uri, final String apiKey) {
