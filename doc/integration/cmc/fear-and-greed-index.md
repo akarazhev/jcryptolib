@@ -1,4 +1,42 @@
-# CMC Crypto Fear and Greed Index (FG)
+# CMC Crypto Fear and Greed
+
+API endpoints for cryptocurrencies. This category currently includes 2 endpoints:
+- /v3/fear-and-greed/latest - Latest CMC Crypto Fear and Greed Index
+- /v3/fear-and-greed/historical - Historical CMC Crypto Fear and Greed Index
+
+## Latest CMC Crypto Fear and Greed Index (FGL)
+
+Request API with headers:
+
+```text
+GET /v1/global-metrics/quotes/latest?convert_id=2781 HTTP/3
+
+Accept: application/json
+X-CMC_PRO_API_KEY: API_KEY
+```
+
+The response is a JSON object with the following structure:
+
+```json
+{
+  "data" : {
+    "value" : 64,
+    "update_time" : "2025-07-26T14:53:10.028Z",
+    "value_classification" : "Greed"
+  },
+  "status" : {
+    "timestamp" : "2025-07-26T15:04:05.498Z",
+    "error_code" : "0",
+    "error_message" : "",
+    "elapsed" : 2,
+    "credit_count" : 1
+  }
+}
+```
+
+## Historical CMC Crypto Fear and Greed Index (FGH)
+
+## CMC Crypto Fear and Greed Index (FG)
 
 Request URL with curl:
 
