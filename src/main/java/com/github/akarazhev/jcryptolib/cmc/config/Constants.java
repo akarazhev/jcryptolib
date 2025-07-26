@@ -65,6 +65,7 @@ final class Constants {
         static final String TYPE = "Fear and Greed";
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/fear-greed/chart";
         static final String URL_LATEST = "https://pro-api.coinmarketcap.com/v3/fear-and-greed/latest";
+        static final String URL_HISTORICAL = "https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical";
     }
 
     final static class AltcoinSeason {

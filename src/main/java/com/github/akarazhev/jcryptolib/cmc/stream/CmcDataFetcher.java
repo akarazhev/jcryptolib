@@ -44,6 +44,7 @@ import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -152,10 +153,50 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), Source.VIV);
             } else if (Type.FGL.equals(type)) {
                 fetch(CmcRequestBuilder.buildFearGreedLatestRequest(config.getApiKey()), Source.FGL);
+            } else if (Type.FGH.equals(type)) {
+                fetchFearGreedHistorical();
             } else if (Type.GML.equals(type)) {
                 fetch(CmcRequestBuilder.buildGlobalMetricsLatestRequest(config.getApiKey(), USD_ID), Source.GML);
             }
         });
+    }
+
+    private void fetchFearGreedHistorical() {
+        if (!emitter.isCancelled()) {
+            var start = 1;
+            var isMoreAvailable = true;
+            final var limit = 500;
+            while (isMoreAvailable && !emitter.isCancelled()) {
+                try {
+                    final var request = CmcRequestBuilder.buildFearGreedHistoricalRequest(config.getApiKey(), start, limit);
+                    final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    if (response.statusCode() == STATUS_CODE_OK) {
+                        final var result = getResultAsList(response.uri(), response.body());
+                        if (result == null || result.isEmpty()) {
+                            isMoreAvailable = false;
+                        } else {
+                            result.forEach(value -> {
+                                LOGGER.debug("Fetched message: {}", value);
+                                emitter.onNext(Payload.of(Provider.CMC, Source.FGH, value));
+                            });
+                            LOGGER.info(result.toString());
+                            if (result.size() < limit) {
+                                isMoreAvailable = false;
+                            } else {
+                                start += limit;
+                            }
+                        }
+                    } else {
+                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.FGH.getType(), response.statusCode());
+                        isMoreAvailable = false;
+                    }
+                } catch (final Exception e) {
+                    LOGGER.error("Failed to fetch '{}' data", Type.FGH.getType(), e);
+                    emitter.onError(e);
+                    isMoreAvailable = false;
+                }
+            }
+        }
     }
 
     private void fetch(final HttpRequest request, final Source source) {
@@ -176,6 +217,16 @@ final class CmcDataFetcher implements DataFetcher {
                 emitter.onError(e);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> getResultAsList(final URI uri, final String json) throws IOException {
+        final var data = JsonUtils.jsonToMap(json);
+        if (isStatusOk(uri, data)) {
+            return (List<Map<String, Object>>) data.get(DATA);
+        }
+
+        return List.of();
     }
 
     @SuppressWarnings("unchecked")

@@ -1,6 +1,7 @@
 # CMC Crypto Fear and Greed
 
 API endpoints for cryptocurrencies. This category currently includes 2 endpoints:
+
 - /v3/fear-and-greed/latest - Latest CMC Crypto Fear and Greed Index
 - /v3/fear-and-greed/historical - Historical CMC Crypto Fear and Greed Index
 
@@ -9,7 +10,7 @@ API endpoints for cryptocurrencies. This category currently includes 2 endpoints
 Request API with headers:
 
 ```text
-GET /v1/global-metrics/quotes/latest?convert_id=2781 HTTP/3
+GET /v3/fear-and-greed/latest HTTP/3
 
 Accept: application/json
 X-CMC_PRO_API_KEY: API_KEY
@@ -19,22 +20,58 @@ The response is a JSON object with the following structure:
 
 ```json
 {
-  "data" : {
-    "value" : 64,
-    "update_time" : "2025-07-26T14:53:10.028Z",
-    "value_classification" : "Greed"
+  "data": {
+    "value": 64,
+    "update_time": "2025-07-26T14:53:10.028Z",
+    "value_classification": "Greed"
   },
-  "status" : {
-    "timestamp" : "2025-07-26T15:04:05.498Z",
-    "error_code" : "0",
-    "error_message" : "",
-    "elapsed" : 2,
-    "credit_count" : 1
+  "status": {
+    "timestamp": "2025-07-26T15:04:05.498Z",
+    "error_code": "0",
+    "error_message": "",
+    "elapsed": 2,
+    "credit_count": 1
   }
 }
 ```
 
 ## Historical CMC Crypto Fear and Greed Index (FGH)
+
+Request API with headers:
+
+```text
+GET /v3/fear-and-greed/historical?start=1&limit=500 HTTP/3
+
+Accept: application/json
+X-CMC_PRO_API_KEY: API_KEY
+```
+
+The response is a JSON object with the following structure:
+
+```json
+{
+  "data": [
+    {
+      "timestamp": "1753401600",
+      "value": 66,
+      "value_classification": "Greed"
+    },
+    ...
+    {
+      "timestamp": "1710288000",
+      "value": 90,
+      "value_classification": "Extreme greed"
+    }
+  ],
+  "status": {
+    "timestamp": "2025-07-26T20:43:41.845Z",
+    "error_code": "0",
+    "error_message": "",
+    "elapsed": 5,
+    "credit_count": 1
+  }
+}
+```
 
 ## CMC Crypto Fear and Greed Index (FG)
 

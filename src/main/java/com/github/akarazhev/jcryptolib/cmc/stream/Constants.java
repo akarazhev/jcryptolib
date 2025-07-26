@@ -55,6 +55,7 @@ final class Constants {
         static final String SORT_BY_INDEX = "index";
         static final String SORT_TYPE = "sortType";
         static final String SORT_TYPE_ASC = "asc";
+        static final String LIMIT = "limit";
     }
 
     final static class Response {

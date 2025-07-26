@@ -93,6 +93,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_VOLUME_24H_REPORTED;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SYMBOL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.THIRTY_DAYS_PERCENTAGE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOP_CRYPTOS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_BTC_VALUE;
@@ -739,6 +740,34 @@ final class CmcDataFetcherTest {
             assertEquals(Source.FGL, value.getSource());
             assertTrue(value.getData().containsKey(VALUE));
             assertTrue(value.getData().containsKey(UPDATE_TIME));
+            assertTrue(value.getData().containsKey(VALUE_CLASSIFICATION));
+        }
+    }
+
+    @Test
+    public void shouldReceiveFearAndGreedHistory() {
+        final var config = new DataConfig.Builder()
+                .type(Type.FGH)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 1, TimeUnit.MINUTES), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.FGH, value.getSource());
+            assertTrue(value.getData().containsKey(VALUE));
+            assertTrue(value.getData().containsKey(TIMESTAMP));
             assertTrue(value.getData().containsKey(VALUE_CLASSIFICATION));
         }
     }
