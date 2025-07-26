@@ -57,6 +57,7 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.OK
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RESULT;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_CODE_CAMEL_CASE;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_MSG;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.STATUS_CODE_OK;
 
 final class RestApiDataFetcher implements DataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiDataFetcher.class);
@@ -112,7 +113,7 @@ final class RestApiDataFetcher implements DataFetcher {
                 try {
                     final var request = createRequest(getUri(url, params, page, limit));
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                    if (response.statusCode() == 200) {
+                    if (response.statusCode() == STATUS_CODE_OK) {
                         final var result = getResult(response.body());
                         if (result == null || result.isEmpty()) {
                             isMoreAvailable = false;
@@ -144,7 +145,7 @@ final class RestApiDataFetcher implements DataFetcher {
         if (!emitter.isCancelled()) {
             try {
                 final var response = client.send(createRequest(getUri(url)), HttpResponse.BodyHandlers.ofString());
-                if (response.statusCode() == 200) {
+                if (response.statusCode() == STATUS_CODE_OK) {
                     final var result = getResult(response.body());
                     if (result != null && !result.isEmpty()) {
                         result.forEach(value -> {
