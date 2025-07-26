@@ -92,5 +92,3 @@ The response is a JSON object with the following structure:
   }
 }
 ```
-
-## Historical CMC Crypto Fear and Greed Index (GMH)
