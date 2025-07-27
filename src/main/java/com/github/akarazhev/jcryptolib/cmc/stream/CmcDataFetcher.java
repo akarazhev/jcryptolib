@@ -108,55 +108,55 @@ final class CmcDataFetcher implements DataFetcher {
     private void fetchData() {
         config.getTypes().forEach(type -> {
             if (CMC.equals(type)) {
-                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(USD_ID, DAYS_30), Source.CMC);
+                fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(USD_ID, DAYS_30), type, Source.CMC);
             } else if (ETF_NF.equals(type)) {
-                fetch(CmcRequestBuilder.buildCryptoEftNetFlowRequest(DAYS_30), Source.ETF_NF);
+                fetch(CmcRequestBuilder.buildCryptoEftNetFlowRequest(DAYS_30), type, Source.ETF_NF);
             } else if (FG.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 final var start = end - TimeUnit.DAYS.toSeconds(FG_PERIOD_DAYS);
-                fetch(CmcRequestBuilder.buildFearGreedRequest(USD_ID, start, end), Source.FG);
+                fetch(CmcRequestBuilder.buildFearGreedRequest(USD_ID, start, end), type, Source.FG);
             } else if (AS.equals(type)) {
                 final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
                 final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
                 final var start = end - TimeUnit.DAYS.toSeconds(AS_PERIOD_DAYS);
-                fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(USD_ID, start, end), Source.AS);
+                fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(USD_ID, start, end), type, Source.AS);
             } else if (Type.BDO.equals(type)) {
-                fetch(CmcRequestBuilder.buildBitcoinDominanceOverviewRequest(), Source.BDO);
+                fetch(CmcRequestBuilder.buildBitcoinDominanceOverviewRequest(), type, Source.BDO);
             } else if (Type.BD.equals(type)) {
-                fetch(CmcRequestBuilder.buildBitcoinDominanceRequest(DAYS_30), Source.BD);
+                fetch(CmcRequestBuilder.buildBitcoinDominanceRequest(DAYS_30), type, Source.BD);
             } else if (Type.MCL.equals(type)) {
-                fetch(CmcRequestBuilder.buildMarketCycleLatestRequest(USD_ID), Source.MCL);
+                fetch(CmcRequestBuilder.buildMarketCycleLatestRequest(USD_ID), type, Source.MCL);
             } else if (Type.PM.equals(type)) {
-                fetch(CmcRequestBuilder.buildPuellMultipleRequest(USD_ID, DAYS_30), Source.PM);
+                fetch(CmcRequestBuilder.buildPuellMultipleRequest(USD_ID, DAYS_30), type, Source.PM);
             } else if (Type.IND.equals(type)) {
-                fetch(CmcRequestBuilder.buildIndicatorsRequest(USD_ID), Source.IND);
+                fetch(CmcRequestBuilder.buildIndicatorsRequest(USD_ID), type, Source.IND);
             } else if (Type.PCT.equals(type)) {
-                fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(USD_ID, DAYS_30), Source.PCT);
+                fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(USD_ID, DAYS_30), type, Source.PCT);
             } else if (Type.BRP.equals(type)) {
-                fetch(CmcRequestBuilder.buildBitcoinRainbowPriceRequest(USD_ID, DAYS_30), Source.BRP);
+                fetch(CmcRequestBuilder.buildBitcoinRainbowPriceRequest(USD_ID, DAYS_30), type, Source.BRP);
             } else if (Type.CMC100L.equals(type)) {
-                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexLatestRequest(config.getApiKey()), Source.CMC100L);
+                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexLatestRequest(config.getApiKey()), type, Source.CMC100L);
             } else if (Type.CMC100.equals(type)) {
-                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), Source.CMC100);
+                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), type, Source.CMC100);
             } else if (Type.CSV.equals(type)) {
-                fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(USD_ID, HOURS_24), Source.CSV);
+                fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(USD_ID, HOURS_24), type, Source.CSV);
             } else if (Type.OIO.equals(type)) {
-                fetch(CmcRequestBuilder.buildOpenInterestOverviewRequest(USD_ID), Source.OIO);
+                fetch(CmcRequestBuilder.buildOpenInterestOverviewRequest(USD_ID), type, Source.OIO);
             } else if (Type.OI.equals(type)) {
-                fetch(CmcRequestBuilder.buildOpenInterestRequest(USD_ID, HOURS_24), Source.OI);
+                fetch(CmcRequestBuilder.buildOpenInterestRequest(USD_ID, HOURS_24), type, Source.OI);
             } else if (Type.DV.equals(type)) {
-                fetch(CmcRequestBuilder.buildDerivativesVolumeRequest(USD_ID, HOURS_24), Source.DV);
+                fetch(CmcRequestBuilder.buildDerivativesVolumeRequest(USD_ID, HOURS_24), type, Source.DV);
             } else if (Type.FR.equals(type)) {
-                fetch(CmcRequestBuilder.buildFundingRatesRequest(USD_ID, HOURS_24), Source.FR);
+                fetch(CmcRequestBuilder.buildFundingRatesRequest(USD_ID, HOURS_24), type, Source.FR);
             } else if (Type.VIV.equals(type)) {
-                fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), Source.VIV);
+                fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), type, Source.VIV);
             } else if (Type.FGL.equals(type)) {
-                fetch(CmcRequestBuilder.buildFearGreedLatestRequest(config.getApiKey()), Source.FGL);
+                fetch(CmcRequestBuilder.buildFearGreedLatestRequest(config.getApiKey()), type, Source.FGL);
             } else if (Type.FGH.equals(type)) {
                 fetchFearGreedHistorical();
             } else if (Type.GML.equals(type)) {
-                fetch(CmcRequestBuilder.buildGlobalMetricsLatestRequest(config.getApiKey(), USD_ID), Source.GML);
+                fetch(CmcRequestBuilder.buildGlobalMetricsLatestRequest(config.getApiKey(), USD_ID), type, Source.GML);
             }
         });
     }
@@ -176,7 +176,7 @@ final class CmcDataFetcher implements DataFetcher {
                             isMoreAvailable = false;
                         } else {
                             result.forEach(value -> {
-                                LOGGER.debug("Fetched message: {}", value);
+                                LOGGER.debug("Fetched '{}' message: {}", Type.FGH.getType(), value);
                                 emitter.onNext(Payload.of(Provider.CMC, Source.FGH, value));
                             });
                             LOGGER.info(result.toString());
@@ -199,21 +199,21 @@ final class CmcDataFetcher implements DataFetcher {
         }
     }
 
-    private void fetch(final HttpRequest request, final Source source) {
+    private void fetch(final HttpRequest request, final Type type, final Source source) {
         if (!emitter.isCancelled()) {
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
                     final var result = getResult(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
-                        LOGGER.debug("Fetched message: {}", result);
+                        LOGGER.debug("Fetched '{}' message: {}", type.getType(), result);
                         emitter.onNext(Payload.of(Provider.CMC, source, result));
                     }
                 } else {
-                    LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
                 }
             } catch (final Exception e) {
-                LOGGER.error("Failed to fetch data by uri", e);
+                LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
                 emitter.onError(e);
             }
         }
