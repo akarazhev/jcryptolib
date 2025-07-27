@@ -174,7 +174,7 @@ final class BybitDataFetcherTest {
     @Test
     public void shouldReceiveByVotesPast() {
         final var config = new DataConfig.Builder()
-                .type(Type.BYV_PAST)
+                .type(Type.BYVP)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -206,7 +206,7 @@ final class BybitDataFetcherTest {
     @Test
     public void shouldReceiveByStarterPast() {
         final var config = new DataConfig.Builder()
-                .type(Type.BYS_PAST)
+                .type(Type.BYSP)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -233,7 +233,7 @@ final class BybitDataFetcherTest {
     @Test
     public void shouldReceiveAirdropHuntPast() {
         final var config = new DataConfig.Builder()
-                .type(Type.ADH_PAST)
+                .type(Type.ADHP)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
