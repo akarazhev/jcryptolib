@@ -4,23 +4,24 @@
 
 Request URL with curl:
 
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/open-interest/overview?convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: e33193aee68d4b7b89d8a33bcd475267'
+```text
+GET /data-api/v4/open-interest/overview?convertId=2781 HTTP/2
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Cache-Control: no-cache
+Origin: https://coinmarketcap.com/
+Platform: web
+Priority: u=0, i
+Referer: https://coinmarketcap.com/
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
+x-request-id: [X-Request-ID]
 ```
 
 The response is a JSON object with the following structure:
@@ -97,23 +98,24 @@ The response is a JSON object with the following structure:
 
 Request URL with curl:
 
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/open-interest/chart?range=24h&convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 58bd1114e51a43ebb7a73787fc4cebec'
+```text
+GET /data-api/v4/open-interest/chart?range=24h&convertId=2781 HTTP/2
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Cache-Control: no-cache
+Origin: https://coinmarketcap.com/
+Platform: web
+Priority: u=0, i
+Referer: https://coinmarketcap.com/
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
+x-request-id: [X-Request-ID]
 ```
 
 The response is a JSON object with the following structure:
@@ -171,23 +173,24 @@ The response is a JSON object with the following structure:
 
 Request URL with curl:
 
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/derivatives/chart?range=24h&convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 07d248d6589c4a38b406197f039f6210'
+```text
+GET /data-api/v4/derivatives/chart?range=24h&convertId=2781 HTTP/2
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Cache-Control: no-cache
+Origin: https://coinmarketcap.com/
+Platform: web
+Priority: u=0, i
+Referer: https://coinmarketcap.com/
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
+x-request-id: [X-Request-ID]
 ```
 
 The response is a JSON object with the following structure:
@@ -253,23 +256,24 @@ The response is a JSON object with the following structure:
 
 Request URL with curl:
 
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/funding-rate/chart?range=24h&convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: c368e83c4c2d494daef73d3cff78f501'
+```text
+GET /data-api/v3/funding-rate/chart?range=24h&convertId=2781 HTTP/2
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Cache-Control: no-cache
+Origin: https://coinmarketcap.com/
+Platform: web
+Priority: u=0, i
+Referer: https://coinmarketcap.com/
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
+x-request-id: [X-Request-ID]
 ```
 
 The response is a JSON object with the following structure:
@@ -320,23 +324,24 @@ The response is a JSON object with the following structure:
 
 Request URL with curl:
 
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v4/volmex-implied-volatility/chart?range=24h&convertId=2781' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 1a3939786c7c4c61a4689db451e51c0e'
+```text
+GET /data-api/v4/volmex-implied-volatility/chart?range=24h&convertId=2781 HTTP/2
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Cache-Control: no-cache
+Origin: https://coinmarketcap.com/
+Platform: web
+Priority: u=0, i
+Referer: https://coinmarketcap.com/
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
+x-request-id: [X-Request-ID]
 ```
 
 The response is a JSON object with the following structure:

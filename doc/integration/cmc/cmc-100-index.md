@@ -59,23 +59,24 @@ The response is a JSON object with the following structure:
 
 Request URL with curl:
 
-```bash
-curl 'https://api.coinmarketcap.com/data-api/v3/top100/historical/chart?range=24h' \
-  -H 'accept: application/json, text/plain, */*' \
-  -H 'accept-language: en-US,en;q=0.9' \
-  -H 'cache-control: no-cache' \
-  -H 'origin: https://coinmarketcap.com' \
-  -H 'platform: web' \
-  -H 'priority: u=1, i' \
-  -H 'referer: https://coinmarketcap.com/' \
-  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'sec-fetch-dest: empty' \
-  -H 'sec-fetch-mode: cors' \
-  -H 'sec-fetch-site: same-site' \
-  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \
-  -H 'x-request-id: 84728ca380b840dda5501e24d9460948'
+```text
+GET /data-api/v3/top100/historical/chart?range=24h HTTP/2
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Cache-Control: no-cache
+Origin: https://coinmarketcap.com/
+Platform: web
+Priority: u=0, i
+Referer: https://coinmarketcap.com/
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+TE: trailers
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:140.0) "Gecko/20100101 Firefox/140.0
+x-request-id: [X-Request-ID]
 ```
 
 The response is a JSON object with the following structure:
