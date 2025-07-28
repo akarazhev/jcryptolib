@@ -219,3 +219,11 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameter to parse:
+
+- `configs`: an array of objects with the following structure:
+  - `name`: the name of the altcoin
+- `points`: an array of objects with the following structure:
+  - `dominance`: an array of market cap proportions
+  - `timestamp`: the timestamp of the data point

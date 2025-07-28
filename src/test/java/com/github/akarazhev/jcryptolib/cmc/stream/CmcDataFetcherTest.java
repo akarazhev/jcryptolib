@@ -384,10 +384,20 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.BD, value.getSource());
+
             assertTrue(value.getData().containsKey(CONFIGS));
-            assertFalse(((List) value.getData().get(CONFIGS)).isEmpty());
+            final var configs = (List<Map<String, Object>>) value.getData().get(CONFIGS);
+            assertFalse(configs.isEmpty());
+            for (final var config : configs) {
+                assertBitcoinDominanceConfig(config);
+            }
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertBitcoinDominancePoint(point);
+            }
         }
     }
 
@@ -896,14 +906,19 @@ final class CmcDataFetcherTest {
         assertTrue(value.containsKey(TIMESTAMP));
     }
 
-    private void assertAltcoinSeasonConfig(final Map<String, Object> dialConfig) {
-        assertTrue(dialConfig.containsKey(START));
-        assertTrue(dialConfig.containsKey(END));
-        assertTrue(dialConfig.containsKey(NAME));
+    private void assertAltcoinSeasonConfig(final Map<String, Object> value) {
+        assertTrue(value.containsKey(START));
+        assertTrue(value.containsKey(END));
+        assertTrue(value.containsKey(NAME));
     }
 
-    private void assertBitcoinDominanceConfig(final Map<String, Object> config) {
-        assertTrue(config.containsKey(NAME));
+    private void assertBitcoinDominanceConfig(final Map<String, Object> value) {
+        assertTrue(value.containsKey(NAME));
+    }
+
+    private void assertBitcoinDominancePoint(final Map<String, Object> value) {
+        assertTrue(value.containsKey(DOMINANCE));
+        assertTrue(value.containsKey(TIMESTAMP));
     }
 
     private void assertBitcoinDominance(final Map<String, Object> value) {
