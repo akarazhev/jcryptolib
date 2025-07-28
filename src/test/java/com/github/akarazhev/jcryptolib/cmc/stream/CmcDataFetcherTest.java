@@ -608,6 +608,7 @@ final class CmcDataFetcherTest {
             final var constituents = ((Map<String, List<Map<String, Object>>>) value.getData().get(CONSTITUENTS));
             assertTrue(constituents.containsKey(CONFIGS));
             final var configs = constituents.get(CONFIGS);
+            assertFalse(configs.isEmpty());
             for (final var config : configs) {
                 assertTrue(config.containsKey(ID));
                 assertCoinMarketCap100Config(config);
@@ -615,12 +616,14 @@ final class CmcDataFetcherTest {
 
             assertTrue(constituents.containsKey(POINTS));
             final var points = constituents.get(POINTS);
+            assertFalse(points.isEmpty());
             for (final var point : points) {
                 assertCoinMarketCap100Point(point);
             }
 
             assertTrue(value.getData().containsKey(VALUES));
             final var vals = (List<Map<String, Object>>) value.getData().get(VALUES);
+            assertFalse(vals.isEmpty());
             for (final var val : vals) {
                 assertCoinMarketCap100Value(val);
             }
