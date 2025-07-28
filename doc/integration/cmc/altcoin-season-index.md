@@ -125,7 +125,7 @@ The response is a JSON object with the following structure:
 }
 ```
 
-List of parameter to parse:
+List of parameters to parse:
 
 - `points`: an array of objects with the following structure:
   - `name`: the name of the altcoin
