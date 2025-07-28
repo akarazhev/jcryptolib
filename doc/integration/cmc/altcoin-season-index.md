@@ -134,11 +134,35 @@ List of parameters to parse:
     - `timestamp`: the timestamp of the data point
 - `historicalValues`: an object with the following structure:
     - `now`: the current altcoin index
+        - `name`: the name of the altcoin
+        - `altcoinIndex`: the altcoin index
+        - `altcoinMarketcap`: the altcoin marketcap
+        - `timestamp`: the timestamp of the data point
     - `yesterday`: the altcoin index yesterday
+        - `name`: the name of the altcoin
+        - `altcoinIndex`: the altcoin index
+        - `altcoinMarketcap`: the altcoin marketcap
+        - `timestamp`: the timestamp of the data point
     - `lastWeek`: the altcoin index last week
+        - `name`: the name of the altcoin
+        - `altcoinIndex`: the altcoin index
+        - `altcoinMarketcap`: the altcoin marketcap
+        - `timestamp`: the timestamp of the data point
     - `lastMonth`: the altcoin index last month
+        - `name`: the name of the altcoin
+        - `altcoinIndex`: the altcoin index
+        - `altcoinMarketcap`: the altcoin marketcap
+        - `timestamp`: the timestamp of the data point
     - `yearlyHigh`: the altcoin index yearly high
+        - `name`: the name of the altcoin
+        - `altcoinIndex`: the altcoin index
+        - `altcoinMarketcap`: the altcoin marketcap
+        - `timestamp`: the timestamp of the data point
     - `yearlyLow`: the altcoin index yearly low
+        - `name`: the name of the altcoin
+        - `altcoinIndex`: the altcoin index
+        - `altcoinMarketcap`: the altcoin marketcap
+        - `timestamp`: the timestamp of the data point
 - `dialConfigs`: an array of objects with the following structure:
     - `start`: the start of the dial
     - `end`: the end of the dial
