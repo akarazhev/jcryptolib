@@ -70,6 +70,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_L
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
@@ -563,16 +564,18 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.CMC100L, value.getSource());
+
             assertTrue(value.getData().containsKey(VALUE_24H_PERCENTAGE_CHANGE));
             assertTrue(value.getData().containsKey(LAST_UPDATE));
             assertTrue(value.getData().containsKey(NEXT_UPDATE));
             assertTrue(value.getData().containsKey(VALUE));
+
             assertTrue(value.getData().containsKey(CONSTITUENTS));
-            Map<String, Object> constituents = (Map<String, Object>) ((List) value.getData().get(CONSTITUENTS)).get(0);
-            assertTrue(constituents.containsKey(WEIGHT));
-            assertTrue(constituents.containsKey(NAME));
-            assertTrue(constituents.containsKey(SYMBOL));
-            assertTrue(constituents.containsKey(URL));
+            final var constituents = (List<Map<String, Object>>) value.getData().get(CONSTITUENTS);
+            assertFalse(constituents.isEmpty());
+            for (final var constituent : constituents) {
+                assertCoinMarketCap100Index(constituent);
+            }
         }
     }
 
@@ -933,5 +936,13 @@ final class CmcDataFetcherTest {
     private void assertBitcoinDominanceYearly(final Map<String, Object> value) {
         assertTrue(value.containsKey(TIMESTAMP));
         assertTrue(value.containsKey(MC_PROPORTION));
+    }
+
+    private void assertCoinMarketCap100Index(final Map<String, Object> value) {
+        assertTrue(value.containsKey(WEIGHT));
+        assertTrue(value.containsKey(ID));
+        assertTrue(value.containsKey(NAME));
+        assertTrue(value.containsKey(SYMBOL));
+        assertTrue(value.containsKey(URL));
     }
 }
