@@ -133,22 +133,22 @@ The response is a JSON object with the following structure:
 List of parameters to parse:
 
 - `configs`: an array of objects with the following structure:
-  - `name`: the name of the altcoin
+    - `name`: the name of the altcoin
 - `dominance`: an array of objects with the following structure:
-  - `mcChangePct30d`: the market cap change percentage in the last 30 days
-  - `mcProportion`: the market cap proportion
+    - `mcChangePct30d`: the market cap change percentage in the last 30 days
+    - `mcProportion`: the market cap proportion
 - `dominanceLastMonth`: an array of objects with the following structure:
-  - `mcProportion`: the market cap proportion
+    - `mcProportion`: the market cap proportion
 - `dominanceLastWeek`: an array of objects with the following structure:
-  - `mcProportion`: the market cap proportion
+    - `mcProportion`: the market cap proportion
 - `dominanceYearlyHigh`: an array of objects with the following structure:
-  - `timestamp`: the timestamp of the data point
-  - `mcProportion`: the market cap proportion
+    - `timestamp`: the timestamp of the data point
+    - `mcProportion`: the market cap proportion
 - `dominanceYearlyLow`: an array of objects with the following structure:
-  - `timestamp`: the timestamp of the data point
-  - `mcProportion`: the market cap proportion
+    - `timestamp`: the timestamp of the data point
+    - `mcProportion`: the market cap proportion
 - `dominanceYesterday`: an array of objects with the following structure:
-  - `mcProportion`: the market cap proportion
+    - `mcProportion`: the market cap proportion
 
 ## Bitcoin Dominance (BD)
 
@@ -223,7 +223,7 @@ The response is a JSON object with the following structure:
 List of parameters to parse:
 
 - `configs`: an array of objects with the following structure:
-  - `name`: the name of the altcoin
+    - `name`: the name of the altcoin
 - `points`: an array of objects with the following structure:
-  - `dominance`: an array of market cap proportions
-  - `timestamp`: the timestamp of the data point
+    - `dominance`: an array of market cap proportions
+    - `timestamp`: the timestamp of the data point

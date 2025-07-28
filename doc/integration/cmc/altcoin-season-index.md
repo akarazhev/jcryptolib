@@ -128,18 +128,18 @@ The response is a JSON object with the following structure:
 List of parameters to parse:
 
 - `points`: an array of objects with the following structure:
-  - `name`: the name of the altcoin
-  - `altcoinIndex`: the altcoin index
-  - `altcoinMarketcap`: the altcoin marketcap
-  - `timestamp`: the timestamp of the data point
+    - `name`: the name of the altcoin
+    - `altcoinIndex`: the altcoin index
+    - `altcoinMarketcap`: the altcoin marketcap
+    - `timestamp`: the timestamp of the data point
 - `historicalValues`: an object with the following structure:
-  - `now`: the current altcoin index
-  - `yesterday`: the altcoin index yesterday
-  - `lastWeek`: the altcoin index last week
-  - `lastMonth`: the altcoin index last month
-  - `yearlyHigh`: the altcoin index yearly high
-  - `yearlyLow`: the altcoin index yearly low
+    - `now`: the current altcoin index
+    - `yesterday`: the altcoin index yesterday
+    - `lastWeek`: the altcoin index last week
+    - `lastMonth`: the altcoin index last month
+    - `yearlyHigh`: the altcoin index yearly high
+    - `yearlyLow`: the altcoin index yearly low
 - `dialConfigs`: an array of objects with the following structure:
-  - `start`: the start of the dial
-  - `end`: the end of the dial
-  - `name`: the name of the dial
+    - `start`: the start of the dial
+    - `end`: the end of the dial
+    - `name`: the name of the dial
