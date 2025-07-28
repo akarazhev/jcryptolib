@@ -63,12 +63,15 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H_REPORTED;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_LAST_MONTH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_LAST_WEEK;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_DOMINANCE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_DOMINANCE_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_DOMINANCE_YESTERDAY;
@@ -251,9 +254,15 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.AS, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
-            assertAltcoinSeasonValue(((List<Map<String, Object>>) value.getData().get(POINTS)).get(0));
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertAltcoinSeasonValue(point);
+            }
+
+            assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
             final var historicalValues = (Map<String, Object>) value.getData().get(HISTORICAL_VALUES);
             assertTrue(historicalValues.containsKey(NOW));
             assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(NOW));
@@ -267,6 +276,13 @@ final class CmcDataFetcherTest {
             assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YEARLY_HIGH));
             assertTrue(historicalValues.containsKey(YEARLY_LOW));
             assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YEARLY_LOW));
+
+            assertTrue(value.getData().containsKey(DIAL_CONFIGS));
+            final var dialConfigs = (List<Map<String, Object>>) value.getData().get(DIAL_CONFIGS);
+            assertFalse(dialConfigs.isEmpty());
+            for (final var dialConfig : dialConfigs) {
+                assertAltcoinSeasonConfig(dialConfig);
+            }
         }
     }
 
@@ -841,5 +857,11 @@ final class CmcDataFetcherTest {
         assertTrue(value.containsKey(ALTCOIN_INDEX));
         assertTrue(value.containsKey(ALTCOIN_MARKET_CAP2));
         assertTrue(value.containsKey(TIMESTAMP));
+    }
+
+    private void assertAltcoinSeasonConfig(final Map<String, Object> dialConfig) {
+        assertTrue(dialConfig.containsKey(START));
+        assertTrue(dialConfig.containsKey(END));
+        assertTrue(dialConfig.containsKey(NAME));
     }
 }

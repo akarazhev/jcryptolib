@@ -36,6 +36,7 @@ public final class Constants {
 
         public static final String DATA_LIST = "dataList";
         public static final String DIAL_CONFIG = "dialConfig";
+        public static final String DIAL_CONFIGS = "dialConfigs";
         public static final String HISTORICAL_VALUES = "historicalValues";
         public static final String POINTS = "points";
         public static final String CONFIGS = "configs";
@@ -111,5 +112,7 @@ public final class Constants {
         public static final String URL = "url";
         public static final String TIMESTAMP = "timestamp";
         public static final String ALTCOIN_INDEX = "altcoinIndex";
+        public static final String START = "start";
+        public static final String END = "end";
     }
 }
