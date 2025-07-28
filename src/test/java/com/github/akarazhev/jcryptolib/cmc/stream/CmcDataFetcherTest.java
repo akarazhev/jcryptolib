@@ -54,6 +54,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CMC_USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COINS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONSTITUENTS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CRYPTO_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEFI_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEFI_MARKET_CAP;
@@ -73,6 +74,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_Y
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_DOMINANCE;
@@ -601,10 +603,27 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.CMC100, value.getSource());
+
             assertTrue(value.getData().containsKey(CONSTITUENTS));
-            assertFalse(((Map) value.getData().get(CONSTITUENTS)).isEmpty());
+            final var constituents = ((Map<String, List<Map<String, Object>>>) value.getData().get(CONSTITUENTS));
+            assertTrue(constituents.containsKey(CONFIGS));
+            final var configs = constituents.get(CONFIGS);
+            for (final var config : configs) {
+                assertTrue(config.containsKey(ID));
+                assertCoinMarketCap100Config(config);
+            }
+
+            assertTrue(constituents.containsKey(POINTS));
+            final var points = constituents.get(POINTS);
+            for (final var point : points) {
+                assertCoinMarketCap100Point(point);
+            }
+
             assertTrue(value.getData().containsKey(VALUES));
-            assertFalse(((List) value.getData().get(VALUES)).isEmpty());
+            final var vals = (List<Map<String, Object>>) value.getData().get(VALUES);
+            for (final var val : vals) {
+                assertCoinMarketCap100Value(val);
+            }
         }
     }
 
@@ -944,5 +963,26 @@ final class CmcDataFetcherTest {
         assertTrue(value.containsKey(NAME));
         assertTrue(value.containsKey(SYMBOL));
         assertTrue(value.containsKey(URL));
+    }
+
+    private void assertCoinMarketCap100Point(final Map<String, Object> value) {
+        assertTrue(value.containsKey(TIMESTAMP));
+        final var points = ((List<Map<String, Object>>) value.get(POINTS));
+        for (final var point : points) {
+            assertTrue(point.containsKey(CRYPTO_ID));
+            assertCoinMarketCap100Config(point);
+            assertTrue(point.containsKey(WEIGHT));
+        }
+    }
+
+    private void assertCoinMarketCap100Config(final Map<String, Object> value) {
+        assertTrue(value.containsKey(NAME));
+        assertTrue(value.containsKey(SLUG));
+        assertTrue(value.containsKey(SYMBOL));
+    }
+
+    private void assertCoinMarketCap100Value(final Map<String, Object> value) {
+        assertTrue(value.containsKey(TIMESTAMP));
+        assertTrue(value.containsKey(VALUE));
     }
 }

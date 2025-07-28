@@ -355,3 +355,23 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `constituents`: an object with the following structure:
+    - `configs`: an array of objects with the following structure:
+        - `id`: the ID of the crypto
+        - `name`: the name of the crypto
+        - `slug`: the slug of the crypto
+        - `symbol`: the symbol of the crypto
+    - `points`: an array of objects with the following structure:
+        - `timestamp`: the timestamp of the data point
+        - `points`: an array of objects with the following structure:
+            - `cryptoId`: the crypto ID
+            - `name`: the name of the crypto
+            - `slug`: the slug of the crypto
+            - `symbol`: the symbol of the crypto
+            - `weight`: the weight of the crypto
+- `values`: an array of objects with the following structure:
+    - `timestamp`: the timestamp of the data point
+    - `value`: the value of the data point

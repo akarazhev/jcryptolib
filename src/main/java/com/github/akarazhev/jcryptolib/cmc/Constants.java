@@ -117,5 +117,7 @@ public final class Constants {
         public static final String MC_CHANGE_PCT_30D = "mcChangePct30d";
         public static final String MC_PROPORTION = "mcProportion";
         public static final String ID = "id";
+        public static final String CRYPTO_ID = "cryptoId";
+        public static final String SLUG = "slug";
     }
 }
