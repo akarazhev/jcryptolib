@@ -70,6 +70,8 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_L
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_DOMINANCE;
@@ -140,10 +142,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveCryptoMarketCap() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.CMC)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -172,10 +174,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveCryptoEFTsNetFlow() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.ETF_NF)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -203,10 +205,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveFearAndGreed() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.FG)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -234,10 +236,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveAltcoinSeason() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.AS)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -259,23 +261,23 @@ final class CmcDataFetcherTest {
             final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
             assertFalse(points.isEmpty());
             for (final var point : points) {
-                assertAltcoinSeasonValue(point);
+                assertAltcoinSeason(point);
             }
 
             assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
             final var historicalValues = (Map<String, Object>) value.getData().get(HISTORICAL_VALUES);
             assertTrue(historicalValues.containsKey(NOW));
-            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(NOW));
+            assertAltcoinSeason((Map<String, Object>) historicalValues.get(NOW));
             assertTrue(historicalValues.containsKey(YESTERDAY));
-            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YESTERDAY));
+            assertAltcoinSeason((Map<String, Object>) historicalValues.get(YESTERDAY));
             assertTrue(historicalValues.containsKey(LAST_WEEK));
-            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(LAST_WEEK));
+            assertAltcoinSeason((Map<String, Object>) historicalValues.get(LAST_WEEK));
             assertTrue(historicalValues.containsKey(LAST_MONTH));
-            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(LAST_MONTH));
+            assertAltcoinSeason((Map<String, Object>) historicalValues.get(LAST_MONTH));
             assertTrue(historicalValues.containsKey(YEARLY_HIGH));
-            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YEARLY_HIGH));
+            assertAltcoinSeason((Map<String, Object>) historicalValues.get(YEARLY_HIGH));
             assertTrue(historicalValues.containsKey(YEARLY_LOW));
-            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YEARLY_LOW));
+            assertAltcoinSeason((Map<String, Object>) historicalValues.get(YEARLY_LOW));
 
             assertTrue(value.getData().containsKey(DIAL_CONFIGS));
             final var dialConfigs = (List<Map<String, Object>>) value.getData().get(DIAL_CONFIGS);
@@ -288,10 +290,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveBitcoinDominanceOverview() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.BDO)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -308,29 +310,64 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.BDO, value.getSource());
+
             assertTrue(value.getData().containsKey(CONFIGS));
-            assertFalse(((List) value.getData().get(CONFIGS)).isEmpty());
+            final var configs = (List<Map<String, Object>>) value.getData().get(CONFIGS);
+            assertFalse(configs.isEmpty());
+            for (final var config : configs) {
+                assertBitcoinDominanceConfig(config);
+            }
+
             assertTrue(value.getData().containsKey(DOMINANCE));
-            assertFalse(((List) value.getData().get(DOMINANCE)).isEmpty());
+            final var dominance = (List<Map<String, Object>>) value.getData().get(DOMINANCE);
+            assertFalse(dominance.isEmpty());
+            for (final var dominanceValue : dominance) {
+                assertBitcoinDominance(dominanceValue);
+            }
+
             assertTrue(value.getData().containsKey(DOMINANCE_LAST_MONTH));
-            assertFalse(((List) value.getData().get(DOMINANCE_LAST_MONTH)).isEmpty());
+            final var dominanceLastMonth = (List<Map<String, Object>>) value.getData().get(DOMINANCE_LAST_MONTH);
+            assertFalse(dominanceLastMonth.isEmpty());
+            for (final var dominanceValue : dominanceLastMonth) {
+                assertBitcoinDominanceLast(dominanceValue);
+            }
+
             assertTrue(value.getData().containsKey(DOMINANCE_LAST_WEEK));
-            assertFalse(((List) value.getData().get(DOMINANCE_LAST_WEEK)).isEmpty());
+            final var dominanceLastWeek = (List<Map<String, Object>>) value.getData().get(DOMINANCE_LAST_WEEK);
+            assertFalse(dominanceLastWeek.isEmpty());
+            for (final var dominanceValue : dominanceLastWeek) {
+                assertBitcoinDominanceLast(dominanceValue);
+            }
+
             assertTrue(value.getData().containsKey(DOMINANCE_YEARLY_HIGH));
-            assertFalse(((List) value.getData().get(DOMINANCE_YEARLY_HIGH)).isEmpty());
+            final var dominanceYearlyHigh = (List<Map<String, Object>>) value.getData().get(DOMINANCE_YEARLY_HIGH);
+            assertFalse(dominanceYearlyHigh.isEmpty());
+            for (final var dominanceValue : dominanceYearlyHigh) {
+                assertBitcoinDominanceYearly(dominanceValue);
+            }
+
             assertTrue(value.getData().containsKey(DOMINANCE_YEARLY_LOW));
-            assertFalse(((List) value.getData().get(DOMINANCE_YEARLY_LOW)).isEmpty());
+            final var dominanceYearlyLow = (List<Map<String, Object>>) value.getData().get(DOMINANCE_YEARLY_LOW);
+            assertFalse(dominanceYearlyLow.isEmpty());
+            for (final var dominanceValue : dominanceYearlyLow) {
+                assertBitcoinDominanceYearly(dominanceValue);
+            }
+
             assertTrue(value.getData().containsKey(DOMINANCE_YESTERDAY));
-            assertFalse(((List) value.getData().get(DOMINANCE_YESTERDAY)).isEmpty());
+            final var dominanceYesterday = (List<Map<String, Object>>) value.getData().get(DOMINANCE_YESTERDAY);
+            assertFalse(dominanceYesterday.isEmpty());
+            for (final var dominanceValue : dominanceYesterday) {
+                assertBitcoinDominanceLast(dominanceValue);
+            }
         }
     }
 
     @Test
     public void shouldReceiveBitcoinDominance() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.BD)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -356,10 +393,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveMarketCycleLatest() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.MCL)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -386,10 +423,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceivePuellMultiple() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.PM)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -413,10 +450,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveIndicators() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.IND)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -442,10 +479,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceivePiCycleTop() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.PCT)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -469,10 +506,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveBitcoinRainbowPrice() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.BRP)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -496,10 +533,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveCoinMarketCap100IndexLatest() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.CMC100L)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -531,10 +568,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveCoinMarketCap100Index() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.CMC100)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -560,10 +597,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveCryptoSpotVolume() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.CSV)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -589,10 +626,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveOpenInterestOverview() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.OIO)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -626,10 +663,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveOpenInterest() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.OI)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -655,10 +692,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveDerivativesVolume() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.DV)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -684,10 +721,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveFundingRates() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.FR)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -713,10 +750,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveVolmexImpliedVolatility() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.VIV)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -742,10 +779,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveFearAndGreedLatest() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.FGL)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -770,10 +807,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveFearAndGreedHistory() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.FGH)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -798,10 +835,10 @@ final class CmcDataFetcherTest {
 
     @Test
     public void shouldReceiveGlobalMetricsLatest() {
-        final var config = new DataConfig.Builder()
+        final var dataConfig = new DataConfig.Builder()
                 .type(Type.GML)
                 .build();
-        final var consumer = DataConsumer.create(client, config);
+        final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
         Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
         assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
@@ -852,7 +889,7 @@ final class CmcDataFetcherTest {
         }
     }
 
-    private void assertAltcoinSeasonValue(final Map<String, Object> value) {
+    private void assertAltcoinSeason(final Map<String, Object> value) {
         assertTrue(value.containsKey(NAME));
         assertTrue(value.containsKey(ALTCOIN_INDEX));
         assertTrue(value.containsKey(ALTCOIN_MARKET_CAP2));
@@ -863,5 +900,23 @@ final class CmcDataFetcherTest {
         assertTrue(dialConfig.containsKey(START));
         assertTrue(dialConfig.containsKey(END));
         assertTrue(dialConfig.containsKey(NAME));
+    }
+
+    private void assertBitcoinDominanceConfig(final Map<String, Object> config) {
+        assertTrue(config.containsKey(NAME));
+    }
+
+    private void assertBitcoinDominance(final Map<String, Object> value) {
+        assertTrue(value.containsKey(MC_CHANGE_PCT_30D));
+        assertTrue(value.containsKey(MC_PROPORTION));
+    }
+
+    private void assertBitcoinDominanceLast(final Map<String, Object> value) {
+        assertTrue(value.containsKey(MC_PROPORTION));
+    }
+
+    private void assertBitcoinDominanceYearly(final Map<String, Object> value) {
+        assertTrue(value.containsKey(TIMESTAMP));
+        assertTrue(value.containsKey(MC_PROPORTION));
     }
 }

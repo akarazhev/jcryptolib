@@ -114,5 +114,7 @@ public final class Constants {
         public static final String ALTCOIN_INDEX = "altcoinIndex";
         public static final String START = "start";
         public static final String END = "end";
+        public static final String MC_CHANGE_PCT_30D = "mcChangePct30d";
+        public static final String MC_PROPORTION = "mcProportion";
     }
 }
