@@ -59,11 +59,11 @@ List of parameters to parse:
 
 - `value`: the value of the index
 - `constituents`: an array of objects with the following structure:
-  - `weight`: the weight of the constituent
-  - `id`: the id of the constituent
-  - `name`: the name of the constituent
-  - `symbol`: the symbol of the constituent
-  - `url`: the url of the constituent
+    - `weight`: the weight of the constituent
+    - `id`: the id of the constituent
+    - `name`: the name of the constituent
+    - `symbol`: the symbol of the constituent
+    - `url`: the url of the constituent
 - `value_24h_percentage_change`: the value of the index change in the last 24 hours
 - `last_update`: the last update of the index
 - `next_update`: the next update of the index
