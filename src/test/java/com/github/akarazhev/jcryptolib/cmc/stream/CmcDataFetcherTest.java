@@ -42,7 +42,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.AGGREGATION;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_INDEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_MARKET_CAP;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_MARKET_CAP2;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_VOLUME_24H_REPORTED;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE;
@@ -61,7 +63,6 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H_REPORTED;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_LAST_MONTH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_LAST_WEEK;
@@ -94,7 +95,6 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SYMBOL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.THIRTY_DAYS_PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIMESTAMP;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOP_CRYPTOS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_BTC_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_ETH_VALUE;
@@ -253,12 +253,20 @@ final class CmcDataFetcherTest {
             assertEquals(Source.AS, value.getSource());
             assertTrue(value.getData().containsKey(POINTS));
             assertFalse(((List) value.getData().get(POINTS)).isEmpty());
-            assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
-            assertFalse(((Map) value.getData().get(HISTORICAL_VALUES)).isEmpty());
-            assertTrue(value.getData().containsKey(DIAL_CONFIGS));
-            assertFalse(((List) value.getData().get(DIAL_CONFIGS)).isEmpty());
-            assertTrue(value.getData().containsKey(TOP_CRYPTOS));
-            assertFalse(((List) value.getData().get(TOP_CRYPTOS)).isEmpty());
+            assertAltcoinSeasonValue(((List<Map<String, Object>>) value.getData().get(POINTS)).get(0));
+            final var historicalValues = (Map<String, Object>) value.getData().get(HISTORICAL_VALUES);
+            assertTrue(historicalValues.containsKey(NOW));
+            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(NOW));
+            assertTrue(historicalValues.containsKey(YESTERDAY));
+            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YESTERDAY));
+            assertTrue(historicalValues.containsKey(LAST_WEEK));
+            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(LAST_WEEK));
+            assertTrue(historicalValues.containsKey(LAST_MONTH));
+            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(LAST_MONTH));
+            assertTrue(historicalValues.containsKey(YEARLY_HIGH));
+            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YEARLY_HIGH));
+            assertTrue(historicalValues.containsKey(YEARLY_LOW));
+            assertAltcoinSeasonValue((Map<String, Object>) historicalValues.get(YEARLY_LOW));
         }
     }
 
@@ -826,5 +834,12 @@ final class CmcDataFetcherTest {
             assertTrue(usdQuote.containsKey(ALTCOIN_VOLUME_24H_REPORTED));
             assertTrue(usdQuote.containsKey(ALTCOIN_MARKET_CAP));
         }
+    }
+
+    private void assertAltcoinSeasonValue(final Map<String, Object> value) {
+        assertTrue(value.containsKey(NAME));
+        assertTrue(value.containsKey(ALTCOIN_INDEX));
+        assertTrue(value.containsKey(ALTCOIN_MARKET_CAP2));
+        assertTrue(value.containsKey(TIMESTAMP));
     }
 }

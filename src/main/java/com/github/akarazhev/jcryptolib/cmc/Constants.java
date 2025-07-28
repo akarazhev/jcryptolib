@@ -38,8 +38,6 @@ public final class Constants {
         public static final String DIAL_CONFIG = "dialConfig";
         public static final String HISTORICAL_VALUES = "historicalValues";
         public static final String POINTS = "points";
-        public static final String DIAL_CONFIGS = "dialConfigs";
-        public static final String TOP_CRYPTOS = "topCryptos";
         public static final String CONFIGS = "configs";
         public static final String DOMINANCE = "dominance";
         public static final String DOMINANCE_LAST_MONTH = "dominanceLastMonth";
@@ -103,6 +101,7 @@ public final class Constants {
         public static final String ALTCOIN_VOLUME_24H = "altcoin_volume_24h";
         public static final String ALTCOIN_VOLUME_24H_REPORTED = "altcoin_volume_24h_reported";
         public static final String ALTCOIN_MARKET_CAP = "altcoin_market_cap";
+        public static final String ALTCOIN_MARKET_CAP2 = "altcoinMarketcap";
         public static final String VALUE_24H_PERCENTAGE_CHANGE = "value_24h_percentage_change";
         public static final String LAST_UPDATE = "last_update";
         public static final String NEXT_UPDATE = "next_update";
@@ -111,5 +110,6 @@ public final class Constants {
         public static final String SYMBOL = "symbol";
         public static final String URL = "url";
         public static final String TIMESTAMP = "timestamp";
+        public static final String ALTCOIN_INDEX = "altcoinIndex";
     }
 }
