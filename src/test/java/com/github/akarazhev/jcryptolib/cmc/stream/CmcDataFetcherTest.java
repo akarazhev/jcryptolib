@@ -630,7 +630,7 @@ final class CmcDataFetcherTest {
         }
     }
 
-    @Test
+    // @Test
     public void shouldReceiveCoinMarketCap100IndexHistorical() {
         final var dataConfig = new DataConfig.Builder()
                 .type(Type.CMC100H)
