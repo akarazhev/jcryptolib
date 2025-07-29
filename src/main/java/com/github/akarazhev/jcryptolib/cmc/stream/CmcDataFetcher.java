@@ -41,9 +41,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,6 +67,8 @@ import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERRO
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_MESSAGE_SUCCESS;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.STATUS;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.STATUS_CODE_OK;
+import static com.github.akarazhev.jcryptolib.util.TimeUtils.todayInUtc;
+import static com.github.akarazhev.jcryptolib.util.TimeUtils.tomorrowInUtc;
 
 final class CmcDataFetcher implements DataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(CmcDataFetcher.class);
@@ -114,13 +113,11 @@ final class CmcDataFetcher implements DataFetcher {
             } else if (ETF_NF.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoEftNetFlowRequest(DAYS_30), type, Source.ETF_NF);
             } else if (FG.equals(type)) {
-                final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
-                final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
+                final var end = tomorrowInUtc();
                 final var start = end - TimeUnit.DAYS.toSeconds(FG_PERIOD_DAYS);
                 fetch(CmcRequestBuilder.buildFearGreedRequest(USD_ID, start, end), type, Source.FG);
             } else if (AS.equals(type)) {
-                final var startOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault());
-                final var end = startOfDay.withZoneSameInstant(ZoneOffset.UTC).toEpochSecond();
+                final var end = tomorrowInUtc();
                 final var start = end - TimeUnit.DAYS.toSeconds(AS_PERIOD_DAYS);
                 fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(USD_ID, start, end), type, Source.AS);
             } else if (Type.BDO.equals(type)) {
@@ -168,7 +165,7 @@ final class CmcDataFetcher implements DataFetcher {
     private void fetchCmc100IndexHistorical() {
         if (!emitter.isCancelled()) {
             var isMoreAvailable = true;
-            var timeEnd = LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC);
+            var timeEnd = todayInUtc();
             while (isMoreAvailable && !emitter.isCancelled()) {
                 try {
                     final var request = CmcRequestBuilder.buildCoinMarketCap100IndexHistoricalRequest(config.getApiKey(),
