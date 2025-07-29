@@ -141,6 +141,12 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.CMC100.getUrl() + url), UUID.randomUUID());
     }
 
+    public static HttpRequest buildCoinMarketCap100IndexHistoricalRequest(final String apiKey, final long timeEnd,
+                                                                          final int count) {
+        final var url = String.format("?interval=daily&time_end=%d&count=%d", timeEnd, count);
+        return buildRequest(URI.create(Type.CMC100H.getUrl() + url), apiKey);
+    }
+
     public static HttpRequest buildCryptoSpotVolumeRequest(final int convertId, final Range range) {
         final var url = String.format("?" + RANGE + "=%s&" + CONVERT_ID + "=%d", range.getValue(), convertId);
         return buildRequest(URI.create(Type.CSV.getUrl() + url), UUID.randomUUID());

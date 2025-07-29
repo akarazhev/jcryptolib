@@ -37,6 +37,8 @@ final class Constants {
         static final int FG_PERIOD_DAYS = 30;
         static final int AS_PERIOD_DAYS = 7;
         static final int USD_ID = 2781;
+        static final int MAX_CMC_100_INDEX_ITEMS = 10;
+        static final int MAX_FEAR_GREED_ITEMS = 500;
     }
 
     final static class Request {

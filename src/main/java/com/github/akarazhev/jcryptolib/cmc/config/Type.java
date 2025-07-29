@@ -41,6 +41,7 @@ public enum Type {
     BRP(Constants.BitcoinRainbowPrice.TYPE, Constants.BitcoinRainbowPrice.URL),
     CMC100(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL),
     CMC100L(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL_LATEST),
+    CMC100H(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL_HISTORICAL),
     CSV(Constants.CryptoSpotVolume.TYPE, Constants.CryptoSpotVolume.URL),
     OIO(Constants.OpenInterestOverview.TYPE, Constants.OpenInterestOverview.URL),
     OI(Constants.OpenInterest.TYPE, Constants.OpenInterest.URL),

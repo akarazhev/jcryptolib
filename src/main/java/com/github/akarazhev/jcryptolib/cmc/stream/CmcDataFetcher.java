@@ -58,6 +58,8 @@ import static com.github.akarazhev.jcryptolib.cmc.config.Type.ETF_NF;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.FG;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.AS_PERIOD_DAYS;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.FG_PERIOD_DAYS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.MAX_CMC_100_INDEX_ITEMS;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.MAX_FEAR_GREED_ITEMS;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.DATA;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Response.ERROR_CODE;
@@ -139,6 +141,8 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexLatestRequest(config.getApiKey()), type, Source.CMC100L);
             } else if (Type.CMC100.equals(type)) {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), type, Source.CMC100);
+            } else if (Type.CMC100H.equals(type)) {
+                fetchCmc100IndexHistorical();
             } else if (Type.CSV.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(USD_ID, HOURS_24), type, Source.CSV);
             } else if (Type.OIO.equals(type)) {
@@ -161,14 +165,52 @@ final class CmcDataFetcher implements DataFetcher {
         });
     }
 
+    private void fetchCmc100IndexHistorical() {
+        if (!emitter.isCancelled()) {
+            var isMoreAvailable = true;
+            var timeEnd = LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC);
+            while (isMoreAvailable && !emitter.isCancelled()) {
+                try {
+                    final var request = CmcRequestBuilder.buildCoinMarketCap100IndexHistoricalRequest(config.getApiKey(),
+                            timeEnd, MAX_CMC_100_INDEX_ITEMS);
+                    final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    if (response.statusCode() == STATUS_CODE_OK) {
+                        final var result = getResultAsList(response.uri(), response.body());
+                        if (result == null || result.isEmpty()) {
+                            isMoreAvailable = false;
+                        } else {
+                            result.forEach(value -> {
+                                LOGGER.debug("Fetched '{}' message: {}", Type.CMC100H.getType(), value);
+                                emitter.onNext(Payload.of(Provider.CMC, Source.CMC100H, value));
+                            });
+
+                            if (result.size() < MAX_CMC_100_INDEX_ITEMS) {
+                                isMoreAvailable = false;
+                            } else {
+                                timeEnd -= TimeUnit.DAYS.toSeconds(MAX_CMC_100_INDEX_ITEMS);
+                            }
+                        }
+                    } else {
+                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.CMC100H.getType(), response.statusCode());
+                        isMoreAvailable = false;
+                    }
+                } catch (final Exception e) {
+                    LOGGER.error("Failed to fetch '{}' data", Type.CMC100H.getType(), e);
+                    emitter.onError(e);
+                    isMoreAvailable = false;
+                }
+            }
+        }
+    }
+
     private void fetchFearGreedHistorical() {
         if (!emitter.isCancelled()) {
             var start = 1;
             var isMoreAvailable = true;
-            final var limit = 500;
             while (isMoreAvailable && !emitter.isCancelled()) {
                 try {
-                    final var request = CmcRequestBuilder.buildFearGreedHistoricalRequest(config.getApiKey(), start, limit);
+                    final var request = CmcRequestBuilder.buildFearGreedHistoricalRequest(config.getApiKey(), start,
+                            MAX_FEAR_GREED_ITEMS);
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == STATUS_CODE_OK) {
                         final var result = getResultAsList(response.uri(), response.body());
@@ -179,11 +221,11 @@ final class CmcDataFetcher implements DataFetcher {
                                 LOGGER.debug("Fetched '{}' message: {}", Type.FGH.getType(), value);
                                 emitter.onNext(Payload.of(Provider.CMC, Source.FGH, value));
                             });
-                            LOGGER.info(result.toString());
-                            if (result.size() < limit) {
+
+                            if (result.size() < MAX_FEAR_GREED_ITEMS) {
                                 isMoreAvailable = false;
                             } else {
-                                start += limit;
+                                start += MAX_FEAR_GREED_ITEMS;
                             }
                         }
                     } else {
