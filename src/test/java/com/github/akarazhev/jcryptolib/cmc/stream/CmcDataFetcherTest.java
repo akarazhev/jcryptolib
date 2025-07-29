@@ -631,6 +631,41 @@ final class CmcDataFetcherTest {
     }
 
     @Test
+    public void shouldReceiveCoinMarketCap100IndexHistorical() {
+        final var dataConfig = new DataConfig.Builder()
+                .type(Type.CMC100H)
+                .build();
+        final var consumer = DataConsumer.create(client, dataConfig);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.CMC100H, value.getSource());
+
+            assertTrue(value.getData().containsKey(UPDATE_TIME));
+            assertTrue(value.getData().containsKey(VALUE));
+
+            assertTrue(value.getData().containsKey(CONSTITUENTS));
+            final var constituents = (List<Map<String, Object>>) value.getData().get(CONSTITUENTS);
+            assertFalse(constituents.isEmpty());
+            for (final var constituent : constituents) {
+                assertCoinMarketCap100IndexHistory(constituent);
+            }
+        }
+    }
+
+    @Test
     public void shouldReceiveCryptoSpotVolume() {
         final var dataConfig = new DataConfig.Builder()
                 .type(Type.CSV)
@@ -966,6 +1001,11 @@ final class CmcDataFetcherTest {
         assertTrue(value.containsKey(NAME));
         assertTrue(value.containsKey(SYMBOL));
         assertTrue(value.containsKey(URL));
+    }
+
+    private void assertCoinMarketCap100IndexHistory(final Map<String, Object> value) {
+        assertTrue(value.containsKey(WEIGHT));
+        assertTrue(value.containsKey(ID));
     }
 
     private void assertCoinMarketCap100Point(final Map<String, Object> value) {

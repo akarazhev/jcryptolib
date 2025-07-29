@@ -66,7 +66,10 @@ import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEG
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CATEGORY_ALL;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CONVERT_ID;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.CONVERT_ID_API;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.COUNT;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.DAILY;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.END;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.INTERVAL;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.LIMIT;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.RANGE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.SORT_BY;
@@ -74,6 +77,7 @@ import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.SORT_
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.SORT_TYPE;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.SORT_TYPE_ASC;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.START;
+import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.Request.TIME_END;
 
 final class CmcRequestBuilder {
 
@@ -143,7 +147,8 @@ final class CmcRequestBuilder {
 
     public static HttpRequest buildCoinMarketCap100IndexHistoricalRequest(final String apiKey, final long timeEnd,
                                                                           final int count) {
-        final var url = String.format("?interval=daily&time_end=%d&count=%d", timeEnd, count);
+        final var url = String.format("?" + INTERVAL + "=" + DAILY + "&" + TIME_END + "=%d&" + COUNT + "=%d", timeEnd,
+                count);
         return buildRequest(URI.create(Type.CMC100H.getUrl() + url), apiKey);
     }
 

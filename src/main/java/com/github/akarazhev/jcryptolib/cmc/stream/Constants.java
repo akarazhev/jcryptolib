@@ -58,6 +58,10 @@ final class Constants {
         static final String SORT_TYPE = "sortType";
         static final String SORT_TYPE_ASC = "asc";
         static final String LIMIT = "limit";
+        static final String INTERVAL = "interval";
+        static final String DAILY = "daily";
+        static final String TIME_END = "time_end";
+        static final String COUNT = "count";
     }
 
     final static class Response {
