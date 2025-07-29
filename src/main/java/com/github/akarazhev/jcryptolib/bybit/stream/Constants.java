@@ -29,6 +29,14 @@ final class Constants {
         throw new UnsupportedOperationException();
     }
 
+    final static class RestApi {
+        private RestApi() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final int MAX_LIMIT = 1000;
+    }
+
     final static class Request {
         private Request() {
             throw new UnsupportedOperationException();

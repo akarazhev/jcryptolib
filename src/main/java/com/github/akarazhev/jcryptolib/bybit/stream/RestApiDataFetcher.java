@@ -58,6 +58,7 @@ import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RE
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_CODE_CAMEL_CASE;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.RET_MSG;
 import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.Response.STATUS_CODE_OK;
+import static com.github.akarazhev.jcryptolib.bybit.stream.Constants.RestApi.MAX_LIMIT;
 
 final class RestApiDataFetcher implements DataFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiDataFetcher.class);
@@ -107,11 +108,10 @@ final class RestApiDataFetcher implements DataFetcher {
     private void fetch(final String url, final Map<RequestKey, RequestValue> params) {
         if (!emitter.isCancelled()) {
             var page = 1;
-            var limit = 1000;
             var isMoreAvailable = true;
             while (isMoreAvailable && !emitter.isCancelled()) {
                 try {
-                    final var request = createRequest(getUri(url, params, page, limit));
+                    final var request = createRequest(getUri(url, params, page));
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == STATUS_CODE_OK) {
                         final var result = getResult(response.body());
@@ -122,7 +122,7 @@ final class RestApiDataFetcher implements DataFetcher {
                                 LOGGER.debug("Fetched message: {}", value);
                                 emitter.onNext(Payload.of(Provider.BYBIT, Source.RAPI, value));
                             });
-                            if (result.size() < limit) {
+                            if (result.size() < MAX_LIMIT) {
                                 isMoreAvailable = false;
                             } else {
                                 page++;
@@ -167,8 +167,7 @@ final class RestApiDataFetcher implements DataFetcher {
         return URI.create(url);
     }
 
-    private URI getUri(final String url, final Map<RequestKey, RequestValue> params,
-                       final int page, final int limit) {
+    private URI getUri(final String url, final Map<RequestKey, RequestValue> params, final int page) {
         if (params == null || params.isEmpty()) {
             return URI.create(url);
         }
@@ -185,8 +184,8 @@ final class RestApiDataFetcher implements DataFetcher {
             urlString.append("&").append(PAGE).append("=").append(page);
         }
 
-        if (limit >= 0) {
-            urlString.append("&").append(LIMIT).append("=").append(limit);
+        if (MAX_LIMIT >= 0) {
+            urlString.append("&").append(LIMIT).append("=").append(MAX_LIMIT);
         }
 
         return URI.create(urlString.toString());
