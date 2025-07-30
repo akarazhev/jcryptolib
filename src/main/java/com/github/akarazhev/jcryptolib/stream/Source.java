@@ -41,7 +41,7 @@ public enum Source {
     ETF_NF,
     PCT,
     BRP,
-    CMC100,
+    CMC100H,
     CMC100_API_PRO_L,
     CMC100_API_PRO_H,
     CSV,

@@ -39,7 +39,7 @@ public enum Type {
     ETF_NF(Constants.CryptoEFTsNetFlow.TYPE, Constants.CryptoEFTsNetFlow.URL),
     PCT(Constants.PiCycleTop.TYPE, Constants.PiCycleTop.URL),
     BRP(Constants.BitcoinRainbowPrice.TYPE, Constants.BitcoinRainbowPrice.URL),
-    CMC100(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL),
+    CMC100H(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL_H),
     CMC100_API_PRO_L(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL_API_PRO_L),
     CMC100_API_PRO_H(Constants.CoinMarketCap100Index.TYPE, Constants.CoinMarketCap100Index.URL_API_PRO_H),
     CSV(Constants.CryptoSpotVolume.TYPE, Constants.CryptoSpotVolume.URL),

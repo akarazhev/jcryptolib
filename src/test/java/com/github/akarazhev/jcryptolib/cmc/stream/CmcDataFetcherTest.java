@@ -582,9 +582,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveCoinMarketCap100Index() {
+    public void shouldReceiveCoinMarketCap100IndexHistory() {
         final var dataConfig = new DataConfig.Builder()
-                .type(Type.CMC100)
+                .type(Type.CMC100H)
                 .build();
         final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -602,7 +602,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.CMC100, value.getSource());
+            assertEquals(Source.CMC100H, value.getSource());
 
             assertTrue(value.getData().containsKey(CONSTITUENTS));
             final var constituents = ((Map<String, List<Map<String, Object>>>) value.getData().get(CONSTITUENTS));
