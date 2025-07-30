@@ -545,9 +545,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveCoinMarketCap100IndexLatest() {
+    public void shouldReceiveCoinMarketCap100IndexApiProLatest() {
         final var dataConfig = new DataConfig.Builder()
-                .type(Type.CMC100L)
+                .type(Type.CMC100_API_PRO_L)
                 .build();
         final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -565,7 +565,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.CMC100L, value.getSource());
+            assertEquals(Source.CMC100_API_PRO_L, value.getSource());
 
             assertTrue(value.getData().containsKey(VALUE_24H_PERCENTAGE_CHANGE));
             assertTrue(value.getData().containsKey(LAST_UPDATE));
@@ -631,9 +631,9 @@ final class CmcDataFetcherTest {
     }
 
     // @Test
-    public void shouldReceiveCoinMarketCap100IndexHistorical() {
+    public void shouldReceiveCoinMarketCap100IndexApiProHistorical() {
         final var dataConfig = new DataConfig.Builder()
-                .type(Type.CMC100H)
+                .type(Type.CMC100_API_PRO_H)
                 .build();
         final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -651,7 +651,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.CMC100H, value.getSource());
+            assertEquals(Source.CMC100_API_PRO_H, value.getSource());
 
             assertTrue(value.getData().containsKey(UPDATE_TIME));
             assertTrue(value.getData().containsKey(VALUE));
@@ -848,9 +848,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveFearAndGreedLatest() {
+    public void shouldReceiveFearAndGreedApiProLatest() {
         final var dataConfig = new DataConfig.Builder()
-                .type(Type.FGL)
+                .type(Type.FG_API_PRO_L)
                 .build();
         final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -868,7 +868,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.FGL, value.getSource());
+            assertEquals(Source.FG_API_PRO_L, value.getSource());
             assertTrue(value.getData().containsKey(VALUE));
             assertTrue(value.getData().containsKey(UPDATE_TIME));
             assertTrue(value.getData().containsKey(VALUE_CLASSIFICATION));
@@ -876,9 +876,9 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveFearAndGreedHistory() {
+    public void shouldReceiveFearAndGreedApiProHistory() {
         final var dataConfig = new DataConfig.Builder()
-                .type(Type.FGH)
+                .type(Type.FG_API_PRO_H)
                 .build();
         final var consumer = DataConsumer.create(client, dataConfig);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -896,7 +896,7 @@ final class CmcDataFetcherTest {
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
-            assertEquals(Source.FGH, value.getSource());
+            assertEquals(Source.FG_API_PRO_H, value.getSource());
             assertTrue(value.getData().containsKey(VALUE));
             assertTrue(value.getData().containsKey(TIMESTAMP));
             assertTrue(value.getData().containsKey(VALUE_CLASSIFICATION));

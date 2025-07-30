@@ -134,11 +134,12 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildPiCycleTopIndicatorRequest(USD_ID, DAYS_30), type, Source.PCT);
             } else if (Type.BRP.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinRainbowPriceRequest(USD_ID, DAYS_30), type, Source.BRP);
-            } else if (Type.CMC100L.equals(type)) {
-                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexLatestRequest(config.getApiKey()), type, Source.CMC100L);
+            } else if (Type.CMC100_API_PRO_L.equals(type)) {
+                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexApiProLatestRequest(config.getApiKey()), type,
+                        Source.CMC100_API_PRO_L);
             } else if (Type.CMC100.equals(type)) {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexRequest(HOURS_24), type, Source.CMC100);
-            } else if (Type.CMC100H.equals(type)) {
+            } else if (Type.CMC100_API_PRO_H.equals(type)) {
                 fetchCmc100IndexHistorical();
             } else if (Type.CSV.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoSpotVolumeRequest(USD_ID, HOURS_24), type, Source.CSV);
@@ -152,9 +153,9 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildFundingRatesRequest(USD_ID, HOURS_24), type, Source.FR);
             } else if (Type.VIV.equals(type)) {
                 fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), type, Source.VIV);
-            } else if (Type.FGL.equals(type)) {
-                fetch(CmcRequestBuilder.buildFearGreedLatestRequest(config.getApiKey()), type, Source.FGL);
-            } else if (Type.FGH.equals(type)) {
+            } else if (Type.FG_API_PRO_L.equals(type)) {
+                fetch(CmcRequestBuilder.buildFearGreedApiProLatestRequest(config.getApiKey()), type, Source.FG_API_PRO_L);
+            } else if (Type.FG_API_PRO_H.equals(type)) {
                 fetchFearGreedHistorical();
             } else if (Type.GML.equals(type)) {
                 fetch(CmcRequestBuilder.buildGlobalMetricsLatestRequest(config.getApiKey(), USD_ID), type, Source.GML);
@@ -168,7 +169,7 @@ final class CmcDataFetcher implements DataFetcher {
             var timeEnd = todayInUtc();
             while (isMoreAvailable && !emitter.isCancelled()) {
                 try {
-                    final var request = CmcRequestBuilder.buildCoinMarketCap100IndexHistoricalRequest(config.getApiKey(),
+                    final var request = CmcRequestBuilder.buildCoinMarketCap100IndexApiProHistoricalRequest(config.getApiKey(),
                             timeEnd, MAX_CMC_100_INDEX_ITEMS);
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == STATUS_CODE_OK) {
@@ -177,8 +178,8 @@ final class CmcDataFetcher implements DataFetcher {
                             isMoreAvailable = false;
                         } else {
                             result.forEach(value -> {
-                                LOGGER.debug("Fetched '{}' message: {}", Type.CMC100H.getType(), value);
-                                emitter.onNext(Payload.of(Provider.CMC, Source.CMC100H, value));
+                                LOGGER.debug("Fetched '{}' message: {}", Type.CMC100_API_PRO_H.getType(), value);
+                                emitter.onNext(Payload.of(Provider.CMC, Source.CMC100_API_PRO_H, value));
                             });
 
                             if (result.size() < MAX_CMC_100_INDEX_ITEMS) {
@@ -188,11 +189,11 @@ final class CmcDataFetcher implements DataFetcher {
                             }
                         }
                     } else {
-                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.CMC100H.getType(), response.statusCode());
+                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.CMC100_API_PRO_H.getType(), response.statusCode());
                         isMoreAvailable = false;
                     }
                 } catch (final Exception e) {
-                    LOGGER.error("Failed to fetch '{}' data", Type.CMC100H.getType(), e);
+                    LOGGER.error("Failed to fetch '{}' data", Type.CMC100_API_PRO_H.getType(), e);
                     emitter.onError(e);
                     isMoreAvailable = false;
                 }
@@ -206,7 +207,7 @@ final class CmcDataFetcher implements DataFetcher {
             var isMoreAvailable = true;
             while (isMoreAvailable && !emitter.isCancelled()) {
                 try {
-                    final var request = CmcRequestBuilder.buildFearGreedHistoricalRequest(config.getApiKey(), start,
+                    final var request = CmcRequestBuilder.buildFearGreedApiProHistoricalRequest(config.getApiKey(), start,
                             MAX_FEAR_GREED_ITEMS);
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == STATUS_CODE_OK) {
@@ -215,8 +216,8 @@ final class CmcDataFetcher implements DataFetcher {
                             isMoreAvailable = false;
                         } else {
                             result.forEach(value -> {
-                                LOGGER.debug("Fetched '{}' message: {}", Type.FGH.getType(), value);
-                                emitter.onNext(Payload.of(Provider.CMC, Source.FGH, value));
+                                LOGGER.debug("Fetched '{}' message: {}", Type.FG_API_PRO_H.getType(), value);
+                                emitter.onNext(Payload.of(Provider.CMC, Source.FG_API_PRO_H, value));
                             });
 
                             if (result.size() < MAX_FEAR_GREED_ITEMS) {
@@ -226,11 +227,11 @@ final class CmcDataFetcher implements DataFetcher {
                             }
                         }
                     } else {
-                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.FGH.getType(), response.statusCode());
+                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.FG_API_PRO_H.getType(), response.statusCode());
                         isMoreAvailable = false;
                     }
                 } catch (final Exception e) {
-                    LOGGER.error("Failed to fetch '{}' data", Type.FGH.getType(), e);
+                    LOGGER.error("Failed to fetch '{}' data", Type.FG_API_PRO_H.getType(), e);
                     emitter.onError(e);
                     isMoreAvailable = false;
                 }

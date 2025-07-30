@@ -136,8 +136,8 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.BRP.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildCoinMarketCap100IndexLatestRequest(final String apiKey) {
-        return buildRequest(URI.create(Type.CMC100L.getUrl()), apiKey);
+    public static HttpRequest buildCoinMarketCap100IndexApiProLatestRequest(final String apiKey) {
+        return buildRequest(URI.create(Type.CMC100_API_PRO_L.getUrl()), apiKey);
     }
 
     public static HttpRequest buildCoinMarketCap100IndexRequest(final Range range) {
@@ -145,11 +145,11 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.CMC100.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildCoinMarketCap100IndexHistoricalRequest(final String apiKey, final long timeEnd,
+    public static HttpRequest buildCoinMarketCap100IndexApiProHistoricalRequest(final String apiKey, final long timeEnd,
                                                                           final int count) {
         final var url = String.format("?" + INTERVAL + "=" + DAILY + "&" + TIME_END + "=%d&" + COUNT + "=%d", timeEnd,
                 count);
-        return buildRequest(URI.create(Type.CMC100H.getUrl() + url), apiKey);
+        return buildRequest(URI.create(Type.CMC100_API_PRO_H.getUrl() + url), apiKey);
     }
 
     public static HttpRequest buildCryptoSpotVolumeRequest(final int convertId, final Range range) {
@@ -182,13 +182,13 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.VIV.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildFearGreedLatestRequest(final String apiKey) {
-        return buildRequest(URI.create(Type.FGL.getUrl()), apiKey);
+    public static HttpRequest buildFearGreedApiProLatestRequest(final String apiKey) {
+        return buildRequest(URI.create(Type.FG_API_PRO_L.getUrl()), apiKey);
     }
 
-    public static HttpRequest buildFearGreedHistoricalRequest(final String apiKey, final int start, final int limit) {
+    public static HttpRequest buildFearGreedApiProHistoricalRequest(final String apiKey, final int start, final int limit) {
         final var url = String.format("?" + START + "=%s&" + LIMIT + "=%d", start, limit);
-        return buildRequest(URI.create(Type.FGH.getUrl() + url), apiKey);
+        return buildRequest(URI.create(Type.FG_API_PRO_H.getUrl() + url), apiKey);
     }
 
     public static HttpRequest buildGlobalMetricsLatestRequest(final String apiKey, final int convertId) {
