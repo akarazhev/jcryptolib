@@ -164,6 +164,7 @@ final class Constants {
         }
 
         static final String TYPE = "CoinMarketCap 100 Index";
+        static final String URL_L = "https://api.coinmarketcap.com/data-api/v3/top100/supplement";
         static final String URL_H = "https://api.coinmarketcap.com/data-api/v3/top100/historical/chart";
         static final String URL_API_PRO_L = "https://pro-api.coinmarketcap.com/v3/index/cmc100-latest";
         static final String URL_API_PRO_H = "https://pro-api.coinmarketcap.com/v3/index/cmc100-historical";

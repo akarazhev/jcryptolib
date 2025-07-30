@@ -55,6 +55,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COINS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONSTITUENTS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CRYPTO_ID;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CURRENT_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEFI_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEFI_MARKET_CAP;
@@ -71,9 +72,14 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_L
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
@@ -100,6 +106,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_MARKET_CAP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_VOLUME_24H_REPORTED;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SUMMARY_DATA;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SYMBOL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.THIRTY_DAYS_PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIMESTAMP;
@@ -582,6 +589,59 @@ final class CmcDataFetcherTest {
     }
 
     @Test
+    public void shouldReceiveCoinMarketCap100IndexLatest() {
+        final var dataConfig = new DataConfig.Builder()
+                .type(Type.CMC100L)
+                .build();
+        final var consumer = DataConsumer.create(client, dataConfig);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            assertEquals(Provider.CMC, value.getProvider());
+            assertEquals(Source.CMC100L, value.getSource());
+
+            assertTrue(value.getData().containsKey(SUMMARY_DATA));
+            final var summaryData = (Map<String, Object>) value.getData().get(SUMMARY_DATA);
+            assertFalse(summaryData.isEmpty());
+
+            assertTrue(summaryData.containsKey(CURRENT_VALUE));
+            final var currentValue = (Map<String, Object>) summaryData.get(CURRENT_VALUE);
+            assertFalse(currentValue.isEmpty());
+            assertTrue(currentValue.containsKey(NAME));
+            assertTrue(currentValue.containsKey(VALUE));
+            assertTrue(currentValue.containsKey(PERCENT_CHANGE));
+
+            assertTrue(summaryData.containsKey(HISTORICAL_VALUES));
+            final var historicalValues = (Map<String, Object>) summaryData.get(HISTORICAL_VALUES);
+            assertFalse(historicalValues.isEmpty());
+            assertTrue(historicalValues.containsKey(NAME));
+            assertTrue(historicalValues.containsKey(YESTERDAY));
+            assertTrue(historicalValues.containsKey(LAST_WEEK));
+            assertTrue(historicalValues.containsKey(LAST_MONTH));
+
+            assertTrue(summaryData.containsKey(YEARLY_PERFORMANCE));
+            final var yearlyPerformance = (Map<String, Object>) summaryData.get(YEARLY_PERFORMANCE);
+            assertFalse(yearlyPerformance.isEmpty());
+            assertTrue(yearlyPerformance.containsKey(NAME));
+            assertTrue(yearlyPerformance.containsKey(HIGH));
+            assertTrue(yearlyPerformance.containsKey(HIGH_TIMESTAMP));
+            assertTrue(yearlyPerformance.containsKey(LOW));
+            assertTrue(yearlyPerformance.containsKey(LOW_TIMESTAMP));
+        }
+    }
+
+    @Test
     public void shouldReceiveCoinMarketCap100IndexHistory() {
         final var dataConfig = new DataConfig.Builder()
                 .type(Type.CMC100H)
@@ -946,6 +1006,7 @@ final class CmcDataFetcherTest {
             assertTrue(value.getData().containsKey(QUOTE));
             assertTrue(((Map) value.getData().get(QUOTE)).containsKey(CMC_USD_ID));
             Map<String, Object> usdQuote = (Map<String, Object>) ((Map) value.getData().get(QUOTE)).get(CMC_USD_ID);
+            assertFalse(usdQuote.isEmpty());
             assertTrue(usdQuote.containsKey(TOTAL_MARKET_CAP));
             assertTrue(usdQuote.containsKey(TOTAL_MARKET_CAP_YESTERDAY));
             assertTrue(usdQuote.containsKey(TOTAL_MARKET_CAP_YESTERDAY_PERCENTAGE_CHANGE));
@@ -1011,6 +1072,7 @@ final class CmcDataFetcherTest {
     private void assertCoinMarketCap100Point(final Map<String, Object> value) {
         assertTrue(value.containsKey(TIMESTAMP));
         final var points = ((List<Map<String, Object>>) value.get(POINTS));
+        assertFalse(points.isEmpty());
         for (final var point : points) {
             assertTrue(point.containsKey(CRYPTO_ID));
             assertCoinMarketCap100Config(point);

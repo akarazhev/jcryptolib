@@ -119,5 +119,12 @@ public final class Constants {
         public static final String ID = "id";
         public static final String CRYPTO_ID = "cryptoId";
         public static final String SLUG = "slug";
+        public static final String SUMMARY_DATA = "summaryData";
+        public static final String CURRENT_VALUE = "currentValue";
+        public static final String PERCENT_CHANGE = "percentChange";
+        public static final String HIGH = "high";
+        public static final String HIGH_TIMESTAMP = "highTimestamp";
+        public static final String LOW = "low";
+        public static final String LOW_TIMESTAMP = "lowTimestamp";
     }
 }

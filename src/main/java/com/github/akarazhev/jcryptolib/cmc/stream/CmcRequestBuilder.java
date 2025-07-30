@@ -140,6 +140,10 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.CMC100_API_PRO_L.getUrl()), apiKey);
     }
 
+    public static HttpRequest buildCoinMarketCap100IndexLatestRequest(final Range range) {
+        return buildRequest(URI.create(Type.CMC100L.getUrl()), UUID.randomUUID());
+    }
+
     public static HttpRequest buildCoinMarketCap100IndexHistoryRequest(final Range range) {
         final var url = String.format("?" + RANGE + "=%s", range.getValue());
         return buildRequest(URI.create(Type.CMC100H.getUrl() + url), UUID.randomUUID());

@@ -137,6 +137,8 @@ final class CmcDataFetcher implements DataFetcher {
             } else if (Type.CMC100_API_PRO_L.equals(type)) {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexApiProLatestRequest(config.getApiKey()), type,
                         Source.CMC100_API_PRO_L);
+            } else if (Type.CMC100L.equals(type)) {
+                fetch(CmcRequestBuilder.buildCoinMarketCap100IndexLatestRequest(HOURS_24), type, Source.CMC100L);
             } else if (Type.CMC100H.equals(type)) {
                 fetch(CmcRequestBuilder.buildCoinMarketCap100IndexHistoryRequest(HOURS_24), type, Source.CMC100H);
             } else if (Type.CMC100_API_PRO_H.equals(type)) {
