@@ -94,6 +94,45 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `now`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `openInterest`: the open interest of futures
+        - `chg`: the change of open interest of futures
+    - `perpetuals`: an object with the following structure:
+        - `openInterest`: the open interest of perpetuals
+        - `chg`: the change of open interest of perpetuals
+- `yesterday`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `openInterest`: the open interest of futures
+    - `perpetuals`: an object with the following structure:
+        - `openInterest`: the open interest of perpetuals
+- `lastWeek`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `openInterest`: the open interest of futures
+    - `perpetuals`: an object with the following structure:
+        - `openInterest`: the open interest of perpetuals
+- `lastMonth`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `openInterest`: the open interest of futures
+    - `perpetuals`: an object with the following structure:
+        - `openInterest`: the open interest of perpetuals
+- `yearlyHigh`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `openInterest`: the open interest of futures
+        - `timestamp`: the timestamp of the open interest of futures
+    - `perpetuals`: an object with the following structure:
+        - `openInterest`: the open interest of perpetuals
+        - `timestamp`: the timestamp of the open interest of perpetuals
+- `yearlyLow`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `openInterest`: the open interest of futures
+        - `timestamp`: the timestamp of the open interest of futures
+    - `perpetuals`: an object with the following structure:
+        - `openInterest`: the open interest of perpetuals
+        - `timestamp`: the timestamp of the open interest of perpetuals
+
 ## Open Interest (OI)
 
 Request URL with curl:

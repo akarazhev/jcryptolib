@@ -50,6 +50,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_VOL
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CHG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CMC_USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COINS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONFIGS;
@@ -72,6 +73,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_L
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.FUTURES;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
@@ -79,7 +81,9 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.OPEN_INTEREST;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERPETUALS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
@@ -776,18 +780,96 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.OIO, value.getSource());
+
             assertTrue(value.getData().containsKey(NOW));
-            assertFalse(((Map) value.getData().get(NOW)).isEmpty());
+            final var now = (Map<String, Object>) value.getData().get(NOW);
+            assertFalse(now.isEmpty());
+
+            assertTrue(now.containsKey(FUTURES));
+            var futures = (Map<String, Object>) now.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(OPEN_INTEREST));
+            assertTrue(futures.containsKey(CHG));
+
+            assertTrue(now.containsKey(PERPETUALS));
+            var perpetuals = (Map<String, Object>) now.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(OPEN_INTEREST));
+            assertTrue(perpetuals.containsKey(CHG));
+
             assertTrue(value.getData().containsKey(YESTERDAY));
-            assertFalse(((Map) value.getData().get(YESTERDAY)).isEmpty());
+            final var yesterday = (Map<String, Object>) value.getData().get(YESTERDAY);
+            assertFalse(yesterday.isEmpty());
+
+            assertTrue(yesterday.containsKey(FUTURES));
+            futures = (Map<String, Object>) yesterday.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(OPEN_INTEREST));
+
+            assertTrue(yesterday.containsKey(PERPETUALS));
+            perpetuals = (Map<String, Object>) yesterday.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(OPEN_INTEREST));
+
             assertTrue(value.getData().containsKey(LAST_WEEK));
-            assertFalse(((Map) value.getData().get(LAST_WEEK)).isEmpty());
+            final var lastWeek = (Map<String, Object>) value.getData().get(LAST_WEEK);
+            assertFalse(lastWeek.isEmpty());
+
+            assertTrue(lastWeek.containsKey(FUTURES));
+            futures = (Map<String, Object>) lastWeek.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(OPEN_INTEREST));
+
+            assertTrue(lastWeek.containsKey(PERPETUALS));
+            perpetuals = (Map<String, Object>) lastWeek.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(OPEN_INTEREST));
+
             assertTrue(value.getData().containsKey(LAST_MONTH));
-            assertFalse(((Map) value.getData().get(LAST_MONTH)).isEmpty());
+            final var lastMonth = (Map<String, Object>) value.getData().get(LAST_MONTH);
+            assertFalse(lastMonth.isEmpty());
+
+            assertTrue(lastMonth.containsKey(FUTURES));
+            futures = (Map<String, Object>) lastMonth.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(OPEN_INTEREST));
+
+            assertTrue(lastMonth.containsKey(PERPETUALS));
+            perpetuals = (Map<String, Object>) lastMonth.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(OPEN_INTEREST));
+
             assertTrue(value.getData().containsKey(YEARLY_HIGH));
-            assertFalse(((Map) value.getData().get(YEARLY_HIGH)).isEmpty());
+            final var yearlyHigh = (Map<String, Object>) value.getData().get(YEARLY_HIGH);
+            assertFalse(yearlyHigh.isEmpty());
+
+            assertTrue(yearlyHigh.containsKey(FUTURES));
+            futures = (Map<String, Object>) yearlyHigh.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(OPEN_INTEREST));
+            assertTrue(futures.containsKey(TIMESTAMP));
+
+            assertTrue(yearlyHigh.containsKey(PERPETUALS));
+            perpetuals = (Map<String, Object>) yearlyHigh.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(OPEN_INTEREST));
+            assertTrue(perpetuals.containsKey(TIMESTAMP));
+
             assertTrue(value.getData().containsKey(YEARLY_LOW));
-            assertFalse(((Map) value.getData().get(YEARLY_LOW)).isEmpty());
+            final var yearlyLow = (Map<String, Object>) value.getData().get(YEARLY_LOW);
+            assertFalse(yearlyLow.isEmpty());
+
+            assertTrue(yearlyLow.containsKey(FUTURES));
+            futures = (Map<String, Object>) yearlyLow.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(OPEN_INTEREST));
+            assertTrue(futures.containsKey(TIMESTAMP));
+
+            assertTrue(yearlyLow.containsKey(PERPETUALS));
+            perpetuals = (Map<String, Object>) yearlyLow.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(OPEN_INTEREST));
+            assertTrue(perpetuals.containsKey(TIMESTAMP));
         }
     }
 

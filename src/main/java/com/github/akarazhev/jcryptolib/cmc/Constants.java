@@ -126,5 +126,10 @@ public final class Constants {
         public static final String HIGH_TIMESTAMP = "highTimestamp";
         public static final String LOW = "low";
         public static final String LOW_TIMESTAMP = "lowTimestamp";
+        public static final String FUTURES = "futures";
+        public static final String OPEN_INTEREST = "openInterest";
+        public static final String CHG = "chg";
+        public static final String PERPETUALS = "perpetuals";
+
     }
 }
