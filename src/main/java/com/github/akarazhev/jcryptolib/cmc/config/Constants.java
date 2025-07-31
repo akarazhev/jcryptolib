@@ -54,7 +54,7 @@ final class Constants {
         }
 
         static final String TYPE = "Global Metrics";
-        static final String URL = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest";
+        static final String URL_API_PRO_L = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest";
     }
 
     final static class FearAndGreed {

@@ -25,7 +25,7 @@
 package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Type {
-    GML(Constants.GlobalMetrics.TYPE, Constants.GlobalMetrics.URL),
+    GM_API_PRO_L(Constants.GlobalMetrics.TYPE, Constants.GlobalMetrics.URL_API_PRO_L),
     FG(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL),
     FG_API_PRO_L(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_L),
     FG_API_PRO_H(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_H),

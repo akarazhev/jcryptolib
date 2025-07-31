@@ -159,8 +159,9 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildFearGreedApiProLatestRequest(config.getApiKey()), type, Source.FG_API_PRO_L);
             } else if (Type.FG_API_PRO_H.equals(type)) {
                 fetchFearGreedHistorical();
-            } else if (Type.GML.equals(type)) {
-                fetch(CmcRequestBuilder.buildGlobalMetricsLatestRequest(config.getApiKey(), USD_ID), type, Source.GML);
+            } else if (Type.GM_API_PRO_L.equals(type)) {
+                fetch(CmcRequestBuilder.buildGlobalMetricsApiProLatestRequest(config.getApiKey(), USD_ID), type,
+                        Source.GM_API_PRO_L);
             }
         });
     }

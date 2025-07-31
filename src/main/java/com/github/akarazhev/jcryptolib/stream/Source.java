@@ -27,7 +27,7 @@ package com.github.akarazhev.jcryptolib.stream;
 public enum Source {
     WS,
     RAPI,
-    GML,
+    GM_API_PRO_L,
     FG,
     FG_API_PRO_L,
     FG_API_PRO_H,
