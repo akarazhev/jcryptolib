@@ -409,6 +409,18 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `coins`: an array of objects with the following structure:
+    - `coinId`: the coin id
+    - `coinName`: the coin name
+    - `coinSlug`: the coin slug
+- `points`: an array of objects with the following structure:
+    - `marketcap`: the marketcap
+    - `marketFundingRate`: the market funding rate
+    - `cryptoFundingRate`: the crypto funding rate
+    - `timestamp`: the timestamp of the data point
+
 ## Volmex Implied Volatility (VIV)
 
 Request URL with curl:

@@ -134,5 +134,10 @@ public final class Constants {
         public static final String DEX = "dex";
         public static final String MARKET_CAP = "marketcap";
         public static final String PERCENTAGE = "percentage";
+        public static final String COIN_ID = "coinId";
+        public static final String COIN_NAME = "coinName";
+        public static final String COIN_SLUG = "coinSlug";
+        public static final String MARKET_FUNDING_RATE = "marketFundingRate";
+        public static final String CRYPTO_FUNDING_RATE = "cryptoFundingRate";
     }
 }

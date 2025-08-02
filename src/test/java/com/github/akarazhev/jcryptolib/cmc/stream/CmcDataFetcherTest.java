@@ -54,8 +54,12 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CHG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CMC_USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COINS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COIN_ID;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COIN_NAME;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COIN_SLUG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CONSTITUENTS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CRYPTO_FUNDING_RATE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CRYPTO_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CURRENT_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DATA_LIST;
@@ -82,6 +86,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_CAP;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_FUNDING_RATE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.OPEN_INTEREST;
@@ -1033,10 +1038,25 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.FR, value.getSource());
+
             assertTrue(value.getData().containsKey(COINS));
-            assertFalse(((List) value.getData().get(COINS)).isEmpty());
+            final var coins = (List<Map<String, Object>>) value.getData().get(COINS);
+            assertFalse(coins.isEmpty());
+            for (final var coin : coins) {
+                assertTrue(coin.containsKey(COIN_ID));
+                assertTrue(coin.containsKey(COIN_NAME));
+                assertTrue(coin.containsKey(COIN_SLUG));
+            }
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(MARKET_CAP));
+                assertTrue(point.containsKey(MARKET_FUNDING_RATE));
+                assertTrue(point.containsKey(CRYPTO_FUNDING_RATE));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
         }
     }
 
