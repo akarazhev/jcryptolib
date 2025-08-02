@@ -50,6 +50,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_VOL
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CHG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CMC_USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COINS;
@@ -65,6 +66,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEFI_VOLUME
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H_REPORTED;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE;
@@ -79,9 +81,11 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH_TIMEST
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTAMP;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_CAP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.OPEN_INTEREST;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERPETUALS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
@@ -895,10 +899,42 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.OI, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(FUTURES));
+                assertTrue(point.containsKey(PERPETUALS));
+                assertTrue(point.containsKey(CEX));
+                assertTrue(point.containsKey(DEX));
+                assertTrue(point.containsKey(MARKET_CAP));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
+
             assertTrue(value.getData().containsKey(OVERVIEW));
-            assertFalse(((Map) value.getData().get(OVERVIEW)).isEmpty());
+            final var overview = (Map<String, Object>) value.getData().get(OVERVIEW);
+            assertFalse(overview.isEmpty());
+
+            assertTrue(overview.containsKey(CEX));
+            final var cex = (Map<String, Object>) overview.get(CEX);
+            assertFalse(cex.isEmpty());
+            assertTrue(cex.containsKey(VALUE));
+            assertTrue(cex.containsKey(PERCENTAGE));
+            assertTrue(cex.containsKey(CHG));
+
+            assertTrue(overview.containsKey(DEX));
+            final var dex = (Map<String, Object>) overview.get(DEX);
+            assertFalse(dex.isEmpty());
+            assertTrue(dex.containsKey(VALUE));
+            assertTrue(dex.containsKey(PERCENTAGE));
+            assertTrue(dex.containsKey(CHG));
+
+            assertTrue(overview.containsKey(MARKET_CAP));
+            final var marketcap = (Map<String, Object>) overview.get(MARKET_CAP);
+            assertFalse(marketcap.isEmpty());
+            assertTrue(marketcap.containsKey(VALUE));
+            assertTrue(marketcap.containsKey(CHG));
         }
     }
 

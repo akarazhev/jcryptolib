@@ -208,6 +208,28 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `points`: an array of objects with the following structure:
+    - `futures`: the open interest of futures
+    - `perpetuals`: the open interest of perpetuals
+    - `cex`: the open interest of cex
+    - `dex`: the open interest of dex
+    - `marketcap`: the open interest of marketcap
+    - `timestamp`: the timestamp of the data point
+- `overview`: an object with the following structure:
+    - `cex`: an object with the following structure:
+        - `value`: the open interest of cex
+        - `percentage`: the percentage of cex
+        - `chg`: the change of cex
+    - `dex`: an object with the following structure:
+        - `value`: the open interest of dex
+        - `percentage`: the percentage of dex
+        - `chg`: the change of dex
+    - `marketcap`: an object with the following structure:
+        - `value`: the open interest of marketcap
+        - `chg`: the change of marketcap
+
 ## Derivatives Volume (DV)
 
 Request URL with curl:

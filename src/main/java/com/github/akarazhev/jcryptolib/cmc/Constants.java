@@ -130,6 +130,9 @@ public final class Constants {
         public static final String OPEN_INTEREST = "openInterest";
         public static final String CHG = "chg";
         public static final String PERPETUALS = "perpetuals";
-
+        public static final String CEX = "cex";
+        public static final String DEX = "dex";
+        public static final String MARKET_CAP = "marketcap";
+        public static final String PERCENTAGE = "percentage";
     }
 }
