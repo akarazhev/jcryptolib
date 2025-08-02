@@ -313,6 +313,34 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `points`: an array of objects with the following structure:
+    - `futures`: the volume of futures
+    - `perpetuals`: the volume of perpetuals
+    - `cex`: the volume of cex
+    - `dex`: the volume of dex
+    - `marketcap`: the volume of marketcap
+    - `timestamp`: the timestamp of the data point
+- `overview`: an object with the following structure:
+    - `futures`: an object with the following structure:
+        - `value`: the volume of futures
+        - `chg`: the change of futures
+    - `perpetuals`: an object with the following structure:
+        - `value`: the volume of perpetuals
+        - `chg`: the change of perpetuals
+    - `marketcap`: an object with the following structure:
+        - `value`: the volume of marketcap
+        - `chg`: the change of marketcap
+    - `cex`: an object with the following structure:
+        - `value`: the volume of cex
+        - `percentage`: the percentage of cex
+        - `chg`: the change of cex
+    - `dex`: an object with the following structure:
+        - `value`: the volume of dex
+        - `percentage`: the percentage of dex
+        - `chg`: the change of dex
+
 ## Funding Rates (FR)
 
 Request URL with curl:

@@ -960,10 +960,54 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.DV, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(FUTURES));
+                assertTrue(point.containsKey(PERPETUALS));
+                assertTrue(point.containsKey(CEX));
+                assertTrue(point.containsKey(DEX));
+                assertTrue(point.containsKey(MARKET_CAP));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
+
             assertTrue(value.getData().containsKey(OVERVIEW));
-            assertFalse(((Map) value.getData().get(OVERVIEW)).isEmpty());
+            final var overview = (Map<String, Object>) value.getData().get(OVERVIEW);
+            assertFalse(overview.isEmpty());
+
+            assertTrue(overview.containsKey(CEX));
+            final var cex = (Map<String, Object>) overview.get(CEX);
+            assertFalse(cex.isEmpty());
+            assertTrue(cex.containsKey(VALUE));
+            assertTrue(cex.containsKey(PERCENTAGE));
+            assertTrue(cex.containsKey(CHG));
+
+            assertTrue(overview.containsKey(DEX));
+            final var dex = (Map<String, Object>) overview.get(DEX);
+            assertFalse(dex.isEmpty());
+            assertTrue(dex.containsKey(VALUE));
+            assertTrue(dex.containsKey(PERCENTAGE));
+            assertTrue(dex.containsKey(CHG));
+
+            assertTrue(overview.containsKey(MARKET_CAP));
+            final var marketcap = (Map<String, Object>) overview.get(MARKET_CAP);
+            assertFalse(marketcap.isEmpty());
+            assertTrue(marketcap.containsKey(VALUE));
+            assertTrue(marketcap.containsKey(CHG));
+
+            assertTrue(overview.containsKey(FUTURES));
+            final var futures = (Map<String, Object>) overview.get(FUTURES);
+            assertFalse(futures.isEmpty());
+            assertTrue(futures.containsKey(VALUE));
+            assertTrue(futures.containsKey(CHG));
+
+            assertTrue(overview.containsKey(PERPETUALS));
+            final var perpetuals = (Map<String, Object>) overview.get(PERPETUALS);
+            assertFalse(perpetuals.isEmpty());
+            assertTrue(perpetuals.containsKey(VALUE));
+            assertTrue(perpetuals.containsKey(CHG));
         }
     }
 
