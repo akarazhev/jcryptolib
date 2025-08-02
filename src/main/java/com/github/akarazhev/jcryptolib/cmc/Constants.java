@@ -139,5 +139,7 @@ public final class Constants {
         public static final String COIN_SLUG = "coinSlug";
         public static final String MARKET_FUNDING_RATE = "marketFundingRate";
         public static final String CRYPTO_FUNDING_RATE = "cryptoFundingRate";
+        public static final String BITCOIN = "bitcoin";
+        public static final String ETHEREUM = "ethereum";
     }
 }

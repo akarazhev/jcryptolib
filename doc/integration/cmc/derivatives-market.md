@@ -489,3 +489,21 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `overview`: an object with the following structure:
+    - `marketcap`: an object with the following structure:
+        - `value`: the marketcap
+        - `chg`: the change in the marketcap
+    - `bitcoin`: an object with the following structure:
+        - `value`: the bitcoin price
+        - `chg`: the change in the bitcoin price
+    - `ethereum`: an object with the following structure:
+        - `value`: the ethereum price
+        - `chg`: the change in the ethereum price
+- `points`: an array of objects with the following structure:
+    - `marketcap`: the marketcap
+    - `bitcoin`: the bitcoin price
+    - `ethereum`: the ethereum price
+    - `timestamp`: the timestamp of the data point

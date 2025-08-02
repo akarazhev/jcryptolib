@@ -47,6 +47,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_MAR
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_MARKET_CAP2;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ALTCOIN_VOLUME_24H_REPORTED;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BITCOIN;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_YESTERDAY;
@@ -79,6 +80,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_L
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETHEREUM;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.FUTURES;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH_TIMESTAMP;
@@ -1082,10 +1084,38 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.VIV, value.getSource());
+
             assertTrue(value.getData().containsKey(OVERVIEW));
-            assertFalse(((Map) value.getData().get(OVERVIEW)).isEmpty());
+            final var overview = (Map<String, Object>) value.getData().get(OVERVIEW);
+            assertFalse(overview.isEmpty());
+
+            assertTrue(overview.containsKey(MARKET_CAP));
+            final var marketcap = (Map<String, Object>) overview.get(MARKET_CAP);
+            assertFalse(marketcap.isEmpty());
+            assertTrue(marketcap.containsKey(VALUE));
+            assertTrue(marketcap.containsKey(CHG));
+
+            assertTrue(overview.containsKey(BITCOIN));
+            final var bitcoin = (Map<String, Object>) overview.get(BITCOIN);
+            assertFalse(bitcoin.isEmpty());
+            assertTrue(bitcoin.containsKey(VALUE));
+            assertTrue(bitcoin.containsKey(CHG));
+
+            assertTrue(overview.containsKey(ETHEREUM));
+            final var ethereum = (Map<String, Object>) overview.get(ETHEREUM);
+            assertFalse(ethereum.isEmpty());
+            assertTrue(ethereum.containsKey(VALUE));
+            assertTrue(ethereum.containsKey(CHG));
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(MARKET_CAP));
+                assertTrue(point.containsKey(BITCOIN));
+                assertTrue(point.containsKey(ETHEREUM));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
         }
     }
 
