@@ -32,6 +32,7 @@ import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.NAME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.POOL_END;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.POOL_START;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.PROJECT_START_TIME;
+import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.PUBLISH_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RETURN_COIN;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.RETURN_COIN_ICON;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.REWARD_END_TIME;
@@ -226,6 +227,7 @@ final class BybitDataFetcherTest {
             assertEquals(Source.BYS, value.getSource());
             assertTrue(value.getData().containsKey(COIN_ICON));
             assertTrue(value.getData().containsKey(COIN_NAME));
+            assertTrue(value.getData().containsKey(PUBLISH_TIME));
         }
     }
 

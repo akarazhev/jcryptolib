@@ -1,4 +1,4 @@
-# ByStarter
+# ByStarter (BYS)
 
 Your Head Start to Next-Level Web3 Innovations.
 
@@ -40,6 +40,10 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `projectCount`: the number of projects
 
 ## Current Events
 
@@ -104,6 +108,16 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `coinIcon`: the coin icon
+- `coinName`: the coin name
+- `projectIntro`: the project introduction
+- `periodList`: an array of objects with the following structure:
+    - `saleStartTime`: the sale start time
+    - `saleEndTime`: the sale end time
+    - `publishTime`: the publishing time
 
 ## Past Events
 
@@ -172,3 +186,9 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `coinIcon`: the coin icon
+- `coinName`: the coin name
+- `publishTime`: the publishing time
