@@ -41,6 +41,10 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `projects`: the number of projects
+
 ## Current Events
 
 Request API with headers:
