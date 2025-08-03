@@ -76,7 +76,6 @@ public final class Constants {
         public static final String AIRDROP_END_TIME = "airdropEndTime";
         public static final String POOL_END = "poolEnd";
         public static final String POOL_START = "poolStart";
-        public static final String SYSTEM_TIME = "systemTime";
         public static final String TOKEN_ID = "tokenId";
     }
 }

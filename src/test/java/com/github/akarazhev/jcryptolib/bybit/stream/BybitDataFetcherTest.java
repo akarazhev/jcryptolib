@@ -43,7 +43,6 @@ import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_BEG
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_END_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_POOL_LIST;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.START_TIME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SYSTEM_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TITLE;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOKEN_ICON;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOKEN_ID;
@@ -252,10 +251,10 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.ADH, value.getSource());
+
             assertTrue(value.getData().containsKey(AIRDROP_END_TIME));
             assertTrue(value.getData().containsKey(POOL_END));
             assertTrue(value.getData().containsKey(POOL_START));
-            assertTrue(value.getData().containsKey(SYSTEM_TIME));
             assertTrue(value.getData().containsKey(TOKEN_ICON));
             assertTrue(value.getData().containsKey(TOKEN_ID));
         }

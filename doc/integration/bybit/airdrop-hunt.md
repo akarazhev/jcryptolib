@@ -81,6 +81,14 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `airdropEndTime`: the airdrop end time of the data point
+- `poolEnd`: the pool end of the data point
+- `poolStart`: the pool start of the data point
+- `tokenIcon`: the token icon of the data point
+- `tokenId`: the token id of the data point
+
 ## Past Events
 
 Request API with headers:
@@ -190,3 +198,11 @@ The response is a JSON object with the following structure:
   "time_now": "1753108645.969664"
 }
 ```
+
+List of parameters to parse:
+
+- `airdropEndTime`: the airdrop end time of the data point
+- `poolEnd`: the pool end of the data point
+- `poolStart`: the pool start of the data point
+- `tokenIcon`: the token icon of the data point
+- `tokenId`: the token id of the data point
