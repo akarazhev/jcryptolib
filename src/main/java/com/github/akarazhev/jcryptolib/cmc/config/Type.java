@@ -34,7 +34,7 @@ public enum Type {
     BD(Constants.BitcoinDominance.TYPE, Constants.BitcoinDominance.URL),
     MCL(Constants.MarketCycleLatest.TYPE, Constants.MarketCycleLatest.URL),
     PM(Constants.PuellMultiple.TYPE, Constants.PuellMultiple.URL),
-    IND(Constants.Indicators.TYPE, Constants.Indicators.URL),
+    IND(Constants.MarketCycleTopIndicators.TYPE, Constants.MarketCycleTopIndicators.URL),
     CMC(Constants.CryptoMarketCap.TYPE, Constants.CryptoMarketCap.URL),
     ETF_NF(Constants.CryptoEFTsNetFlow.TYPE, Constants.CryptoEFTsNetFlow.URL),
     PCT(Constants.PiCycleTop.TYPE, Constants.PiCycleTop.URL),

@@ -113,12 +113,12 @@ final class Constants {
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/market-cycles/puell-multiple";
     }
 
-    final static class Indicators {
-        private Indicators() {
+    final static class MarketCycleTopIndicators {
+        private MarketCycleTopIndicators() {
             throw new UnsupportedOperationException();
         }
 
-        static final String TYPE = "Indicators";
+        static final String TYPE = "Market Cycle Top Indicators";
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/market-cycles/indicators";
     }
 

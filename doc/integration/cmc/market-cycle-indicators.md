@@ -1,6 +1,6 @@
-# Crypto Market Cycle Indicators
+# Market Cycle Indicators
 
-## Crypto Market Cycle Top Indicators (IND)
+## Market Cycle Top Indicators (IND)
 
 Request URL with curl:
 
@@ -64,6 +64,20 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `indicators` - an array of objects with the following structure:
+    - `indicatorName` - the name of the indicator
+    - `time` - the time of the indicator
+    - `currentValue` - the current value of the indicator
+    - `targetValue` - the target value of the indicator
+    - `comparisonType` - the comparison type of the indicator
+    - `percentChange24h` - the percent change of the indicator
+    - `hitStatus` - the hit status of the indicator
+    - `index` - the index of the indicator
+- `totalHitCount` - the total number of hit indicators
+- `triggeredCount` - the number of triggered indicators
 
 ## Market Cycle Latest (MCL)
 

@@ -463,7 +463,7 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveIndicators() {
+    public void shouldReceiveMarketCycleTopIndicators() {
         final var dataConfig = new DataConfig.Builder()
                 .type(Type.IND)
                 .build();
