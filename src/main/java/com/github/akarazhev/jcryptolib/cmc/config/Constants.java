@@ -57,23 +57,23 @@ final class Constants {
         static final String URL_API_PRO_L = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest";
     }
 
-    final static class FearAndGreed {
-        private FearAndGreed() {
+    final static class FearAndGreedIndex {
+        private FearAndGreedIndex() {
             throw new UnsupportedOperationException();
         }
 
-        static final String TYPE = "Fear and Greed";
+        static final String TYPE = "Fear and Greed Index";
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/fear-greed/chart";
         static final String URL_API_PRO_L = "https://pro-api.coinmarketcap.com/v3/fear-and-greed/latest";
         static final String URL_API_PRO_H = "https://pro-api.coinmarketcap.com/v3/fear-and-greed/historical";
     }
 
-    final static class AltcoinSeason {
-        private AltcoinSeason() {
+    final static class AltcoinSeasonIndex {
+        private AltcoinSeasonIndex() {
             throw new UnsupportedOperationException();
         }
 
-        static final String TYPE = "Altcoin Season";
+        static final String TYPE = "Altcoin Season Index";
         static final String URL = "https://api.coinmarketcap.com/data-api/v3/altcoin-season/chart";
     }
 

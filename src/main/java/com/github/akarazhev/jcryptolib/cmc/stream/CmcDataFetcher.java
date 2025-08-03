@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.akarazhev.jcryptolib.cmc.config.Range.DAYS_30;
 import static com.github.akarazhev.jcryptolib.cmc.config.Range.HOURS_24;
-import static com.github.akarazhev.jcryptolib.cmc.config.Type.AS;
+import static com.github.akarazhev.jcryptolib.cmc.config.Type.ASI;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.CMC;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.ETF_NF;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.FGI;
@@ -116,10 +116,10 @@ final class CmcDataFetcher implements DataFetcher {
                 final var end = tomorrowInUtc();
                 final var start = end - TimeUnit.DAYS.toSeconds(FG_PERIOD_DAYS);
                 fetch(CmcRequestBuilder.buildFearGreedIndexRequest(USD_ID, start, end), type, Source.FGI);
-            } else if (AS.equals(type)) {
+            } else if (ASI.equals(type)) {
                 final var end = tomorrowInUtc();
                 final var start = end - TimeUnit.DAYS.toSeconds(AS_PERIOD_DAYS);
-                fetch(CmcRequestBuilder.buildAltcoinSeasonRequest(USD_ID, start, end), type, Source.AS);
+                fetch(CmcRequestBuilder.buildAltcoinSeasonIndexRequest(USD_ID, start, end), type, Source.ASI);
             } else if (Type.BDO.equals(type)) {
                 fetch(CmcRequestBuilder.buildBitcoinDominanceOverviewRequest(), type, Source.BDO);
             } else if (Type.BD.equals(type)) {

@@ -96,9 +96,9 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.FGI.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildAltcoinSeasonRequest(final int convertId, final long start, final long end) {
+    public static HttpRequest buildAltcoinSeasonIndexRequest(final int convertId, final long start, final long end) {
         final var url = String.format("?" + START + "=%d&" + END + "=%d&" + CONVERT_ID + "=%d", start, end, convertId);
-        return buildRequest(URI.create(Type.AS.getUrl() + url), UUID.randomUUID());
+        return buildRequest(URI.create(Type.ASI.getUrl() + url), UUID.randomUUID());
     }
 
     public static HttpRequest buildBitcoinDominanceOverviewRequest() {

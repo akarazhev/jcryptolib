@@ -26,10 +26,10 @@ package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Type {
     GM_API_PRO_L(Constants.GlobalMetrics.TYPE, Constants.GlobalMetrics.URL_API_PRO_L),
-    FGI(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL),
-    FGI_API_PRO_L(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_L),
-    FGI_API_PRO_H(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_H),
-    AS(Constants.AltcoinSeason.TYPE, Constants.AltcoinSeason.URL),
+    FGI(Constants.FearAndGreedIndex.TYPE, Constants.FearAndGreedIndex.URL),
+    FGI_API_PRO_L(Constants.FearAndGreedIndex.TYPE, Constants.FearAndGreedIndex.URL_API_PRO_L),
+    FGI_API_PRO_H(Constants.FearAndGreedIndex.TYPE, Constants.FearAndGreedIndex.URL_API_PRO_H),
+    ASI(Constants.AltcoinSeasonIndex.TYPE, Constants.AltcoinSeasonIndex.URL),
     BDO(Constants.BitcoinDominanceOverview.TYPE, Constants.BitcoinDominanceOverview.URL),
     BD(Constants.BitcoinDominance.TYPE, Constants.BitcoinDominance.URL),
     MCL(Constants.MarketCycleLatest.TYPE, Constants.MarketCycleLatest.URL),

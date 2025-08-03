@@ -31,7 +31,7 @@ public enum Source {
     FGI,
     FGI_API_PRO_L,
     FGI_API_PRO_H,
-    AS,
+    ASI,
     BDO,
     BD,
     MCL,
