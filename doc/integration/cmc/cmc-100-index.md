@@ -1,4 +1,4 @@
-# CMC100 Index
+# CoinMarketCap100 Index
 
 API endpoints for CoinMarketCap100 Index. This category currently includes 2 endpoints:
 
