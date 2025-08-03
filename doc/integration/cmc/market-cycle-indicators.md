@@ -193,6 +193,13 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `points` - an array of objects with the following structure:
+    - `puellMultiple` - the Puell Multiple
+    - `btcUsdPrice` - the BTC/USD price
+    - `timestamp` - the timestamp
+
 ## Pi Cycle Top Indicator (PCT)
 
 Request URL with curl:

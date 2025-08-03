@@ -52,6 +52,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINAN
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_YESTERDAY;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_PRICE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_USD_PRICE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CHG;
@@ -471,8 +472,15 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.PM, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(PUELL_MULTIPLE));
+                assertTrue(point.containsKey(BTC_USD_PRICE));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
         }
     }
 
