@@ -93,6 +93,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HOLD_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.INDEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.INDICATOR_NAME;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LAYERS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MA110;
@@ -553,7 +554,7 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceiveBitcoinRainbowPrice() {
+    public void shouldReceiveBitcoinRainbowPriceChartIndicator() {
         final var dataConfig = new DataConfig.Builder()
                 .type(Type.BRP)
                 .build();
@@ -574,8 +575,13 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.BRP, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertPiCycleBottomIndicator(point);
+            }
         }
     }
 
@@ -1420,6 +1426,11 @@ final class CmcDataFetcherTest {
         assertTrue(value.containsKey(MA110));
         assertTrue(value.containsKey(MA350MU2));
         assertTrue(value.containsKey(PRICE));
+        assertTrue(value.containsKey(TIMESTAMP));
+    }
+
+    private void assertPiCycleBottomIndicator(final Map<String, Object> value) {
+        assertTrue(value.containsKey(LAYERS));
         assertTrue(value.containsKey(TIMESTAMP));
     }
 }

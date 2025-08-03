@@ -158,5 +158,6 @@ public final class Constants {
         public static final String SELL_COUNT = "sellCount";
         public static final String BTC_USD_PRICE = "btcUsdPrice";
         public static final String PRICE = "price";
+        public static final String LAYERS = "layers";
     }
 }

@@ -336,3 +336,10 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `points` - an array of objects with the following structure:
+    - `layers` - an array of layers
+    - `btcUsdPrice` - the price (can be null)
+    - `timestamp` - the timestamp
