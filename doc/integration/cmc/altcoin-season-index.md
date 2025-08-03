@@ -1,4 +1,4 @@
-# Altcoin Season Index (AS)
+# Altcoin Season (AS)
 
 Request URL with curl:
 

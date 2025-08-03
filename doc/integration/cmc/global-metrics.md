@@ -1,6 +1,7 @@
 # Global Metrics
 
 API endpoints for global aggregate market data. This category currently includes 2 endpoints:
+
 - /v1/global-metrics/quotes/latest - Latest global metrics
 - /v1/global-metrics/quotes/historical - Historical global metrics
 

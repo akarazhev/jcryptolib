@@ -1,11 +1,11 @@
-# CMC Crypto Fear and Greed
+# Fear and Greed Index
 
 API endpoints for cryptocurrencies. This category currently includes 2 endpoints:
 
 - /v3/fear-and-greed/latest - Latest CMC Crypto Fear and Greed Index
 - /v3/fear-and-greed/historical - Historical CMC Crypto Fear and Greed Index
 
-## Latest CMC Crypto Fear and Greed Index Api Pro (FG_API_PRO_L)
+## Latest Fear and Greed Index Api Pro (FGI_API_PRO_L)
 
 Request API with headers:
 
@@ -41,7 +41,7 @@ List of parameters to parse:
 - `update_time`: the timestamp of the update
 - `value_classification`: the classification of the index
 
-## Historical CMC Crypto Fear and Greed Index Api Pro (FG_API_PRO_H)
+## Historical Fear and Greed Index Api Pro (FGI_API_PRO_H)
 
 Request API with headers:
 
@@ -85,7 +85,7 @@ List of parameters to parse:
 - `value`: the value of the index
 - `value_classification`: the classification of the index
 
-## CMC Crypto Fear and Greed Index (FG)
+## Fear and Greed Index (FGI)
 
 Request URL with curl:
 
