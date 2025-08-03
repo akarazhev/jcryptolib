@@ -5,7 +5,7 @@ API endpoints for cryptocurrencies. This category currently includes 2 endpoints
 - /v3/fear-and-greed/latest - Latest CMC Crypto Fear and Greed Index
 - /v3/fear-and-greed/historical - Historical CMC Crypto Fear and Greed Index
 
-## Latest CMC Crypto Fear and Greed Index (FGL)
+## Latest CMC Crypto Fear and Greed Index Api Pro (FG_API_PRO_L)
 
 Request API with headers:
 
@@ -35,7 +35,13 @@ The response is a JSON object with the following structure:
 }
 ```
 
-## Historical CMC Crypto Fear and Greed Index (FGH)
+List of parameters to parse:
+
+- `value`: the value of the index
+- `update_time`: the timestamp of the update
+- `value_classification`: the classification of the index
+
+## Historical CMC Crypto Fear and Greed Index Api Pro (FG_API_PRO_H)
 
 Request API with headers:
 
@@ -72,6 +78,12 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `timestamp`: the timestamp of the data point
+- `value`: the value of the index
+- `value_classification`: the classification of the index
 
 ## CMC Crypto Fear and Greed Index (FG)
 
@@ -188,3 +200,41 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `dataList`: an array of objects with the following structure:
+    - `score`: the score of the data point
+    - `name`: the name of the data point
+    - `timestamp`: the timestamp of the data point
+    - `btcPrice`: the BTC price of the data point
+    - `btcVolume`: the BTC volume of the data point
+- `dialConfig`: an array of objects with the following structure:
+    - `start`: the start of the dial
+    - `end`: the end of the dial
+    - `name`: the name of the dial
+- `historicalValues`: an object with the following structure:
+    - `now`: an object with the following structure:
+        - `score`: the score of the data point
+        - `name`: the name of the data point
+        - `timestamp`: the timestamp of the data point
+    - `yesterday`: an object with the following structure:
+        - `score`: the score of the data point
+        - `name`: the name of the data point
+        - `timestamp`: the timestamp of the data point
+    - `lastWeek`: an object with the following structure:
+        - `score`: the score of the data point
+        - `name`: the name of the data point
+        - `timestamp`: the timestamp of the data point
+    - `lastMonth`: an object with the following structure:
+        - `score`: the score of the data point
+        - `name`: the name of the data point
+        - `timestamp`: the timestamp of the data point
+    - `yearlyHigh`: an object with the following structure:
+        - `score`: the score of the data point
+        - `name`: the name of the data point
+        - `timestamp`: the timestamp of the data point
+    - `yearlyLow`: an object with the following structure:
+        - `score`: the score of the data point
+        - `name`: the name of the data point
+        - `timestamp`: the timestamp of the data point
