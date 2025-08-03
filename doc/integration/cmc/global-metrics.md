@@ -4,7 +4,7 @@ API endpoints for global aggregate market data. This category currently includes
 - /v1/global-metrics/quotes/latest - Latest global metrics
 - /v1/global-metrics/quotes/historical - Historical global metrics
 
-## Latest CMC Crypto Fear and Greed Index (GML)
+## Latest Global Metrics Api Pro (GM_API_PRO_L)
 
 Request API with headers:
 
@@ -92,3 +92,34 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `btc_dominance`: the BTC dominance of the data point
+- `eth_dominance`: the ETH dominance of the data point
+- `btc_dominance_yesterday`: the BTC dominance yesterday of the data point
+- `eth_dominance_yesterday`: the ETH dominance yesterday of the data point
+- `eth_dominance_24h_percentage_change`: the ETH dominance 24h percentage change of the data point
+- `btc_dominance_24h_percentage_change`: the BTC dominance 24h percentage change of the data point
+- `defi_volume_24h`: the DeFi volume 24h of the data point
+- `defi_volume_24h_reported`: the DeFi volume reported 24h of the data point
+- `defi_market_cap`: the DeFi market cap of the data point
+- `defi_24h_percentage_change`: the DeFi 24h percentage change of the data point
+- `stablecoin_volume_24h`: the stablecoin volume 24h of the data point
+- `stablecoin_volume_24h_reported`: the stablecoin volume reported 24h of the data point
+- `stablecoin_market_cap`: the stablecoin market cap of the data point
+- `stablecoin_24h_percentage_change`: the stablecoin 24h percentage change of the data point
+- `derivatives_volume_24h`: the derivatives volume 24h of the data point
+- `derivatives_volume_24h_reported`: the derivatives volume reported 24h of the data point
+- `derivatives_24h_percentage_change`: the derivatives 24h percentage change of the data point
+- `last_updated`: the last updated of the data point
+- `total_market_cap`: the total market cap of the data point
+- `total_market_cap_yesterday`: the total market cap yesterday of the data point
+- `total_market_cap_yesterday_percentage_change`: the total market cap yesterday percentage change of the data point
+- `total_volume_24h`: the total volume 24h of the data point
+- `total_volume_24h_reported`: the total volume reported 24h of the data point
+- `total_volume_24h_yesterday`: the total volume 24h yesterday of the data point
+- `total_volume_24h_yesterday_percentage_change`: the total volume 24h yesterday percentage change of the data point
+- `altcoin_volume_24h`: the altcoin volume 24h of the data point
+- `altcoin_volume_24h_reported`: the altcoin volume reported 24h of the data point
+- `altcoin_market_cap`: the altcoin market cap of the data point

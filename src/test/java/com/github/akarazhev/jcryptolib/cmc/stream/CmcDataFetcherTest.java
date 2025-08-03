@@ -1248,6 +1248,7 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.GM_API_PRO_L, value.getSource());
+
             assertTrue(value.getData().containsKey(BTC_DOMINANCE));
             assertTrue(value.getData().containsKey(ETH_DOMINANCE));
             assertTrue(value.getData().containsKey(ETH_DOMINANCE_YESTERDAY));
@@ -1266,9 +1267,12 @@ final class CmcDataFetcherTest {
             assertTrue(value.getData().containsKey(DERIVATIVES_VOLUME_24H_REPORTED));
             assertTrue(value.getData().containsKey(DERIVATIVES_24H_PERCENTAGE_CHANGE));
             assertTrue(value.getData().containsKey(LAST_UPDATED));
+
             assertTrue(value.getData().containsKey(QUOTE));
-            assertTrue(((Map) value.getData().get(QUOTE)).containsKey(CMC_USD_ID));
-            Map<String, Object> usdQuote = (Map<String, Object>) ((Map) value.getData().get(QUOTE)).get(CMC_USD_ID);
+            final var quote = (Map<String, Object>) value.getData().get(QUOTE);
+            assertFalse(quote.isEmpty());
+            assertTrue(quote.containsKey(CMC_USD_ID));
+            Map<String, Object> usdQuote = (Map<String, Object>) quote.get(CMC_USD_ID);
             assertFalse(usdQuote.isEmpty());
             assertTrue(usdQuote.containsKey(TOTAL_MARKET_CAP));
             assertTrue(usdQuote.containsKey(TOTAL_MARKET_CAP_YESTERDAY));
