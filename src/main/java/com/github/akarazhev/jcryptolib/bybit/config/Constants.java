@@ -79,7 +79,7 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
-        static final String TYPE = "ByVotes";
+        static final String TYPE = "ByVotes Spot";
         static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=1";
         static final String PAST_LIST_URL = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=2";
     }

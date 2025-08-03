@@ -1,4 +1,4 @@
-# ByVotes Spot
+# ByVotes Spot (BYV)
 
 Hold USDT, USDC, USDE, USDD, DAI, or CUSD to be able to vote for your favorite tokens and stand to win airdrops.
 
