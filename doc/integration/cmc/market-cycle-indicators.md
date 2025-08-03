@@ -129,6 +129,17 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `puellMultiple` - the Puell Multiple
+- `piCycleTop` - the top of the PI cycle
+    - `ma110` - the MA110
+    - `ma350mu2` - the MA350Mu2
+- `likelihood` - the likelihood
+    - `totalCount` - the total count
+    - `holdCount` - the hold count
+    - `sellCount` - the sell count
+
 ## Puell Multiple (PM)
 
 Request URL with curl:

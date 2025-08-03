@@ -88,11 +88,14 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.FUTURES;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH_TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIT_STATUS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HOLD_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.INDEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.INDICATOR_NAME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTAMP;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MA110;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MA350MU2;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_CAP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_FUNDING_RATE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
@@ -103,6 +106,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHA
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERPETUALS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SCORE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SELL_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
@@ -137,6 +141,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_BTC_VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_ETH_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_HIT_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_MARKET_CAP;
@@ -427,11 +432,20 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.MCL, value.getSource());
+
             assertTrue(value.getData().containsKey(PUELL_MULTIPLE));
             assertTrue(value.getData().containsKey(PI_CYCLE_TOP));
-            assertFalse(((Map) value.getData().get(PI_CYCLE_TOP)).isEmpty());
+            final var piCycleTop = (Map<String, Object>) value.getData().get(PI_CYCLE_TOP);
+            assertFalse(piCycleTop.isEmpty());
+            assertTrue(piCycleTop.containsKey(MA110));
+            assertTrue(piCycleTop.containsKey(MA350MU2));
+
             assertTrue(value.getData().containsKey(LIKELIHOOD));
-            assertFalse(((Map) value.getData().get(LIKELIHOOD)).isEmpty());
+            final var likelihood = (Map<String, Object>) value.getData().get(LIKELIHOOD);
+            assertFalse(likelihood.isEmpty());
+            assertTrue(likelihood.containsKey(TOTAL_COUNT));
+            assertTrue(likelihood.containsKey(HOLD_COUNT));
+            assertTrue(likelihood.containsKey(SELL_COUNT));
         }
     }
 

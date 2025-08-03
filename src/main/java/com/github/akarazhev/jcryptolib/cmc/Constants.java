@@ -151,5 +151,10 @@ public final class Constants {
         public static final String PERCENT_CHANGE_24H = "percentChange24h";
         public static final String HIT_STATUS = "hitStatus";
         public static final String INDEX = "index";
+        public static final String MA110 = "ma110";
+        public static final String MA350MU2 = "ma350mu2";
+        public static final String TOTAL_COUNT = "totalCount";
+        public static final String HOLD_COUNT = "holdCount";
+        public static final String SELL_COUNT = "sellCount";
     }
 }
