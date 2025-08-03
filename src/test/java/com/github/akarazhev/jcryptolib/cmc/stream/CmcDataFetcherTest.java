@@ -285,8 +285,17 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.ETF_NF, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(VALUE));
+                assertTrue(point.containsKey(BTC_VALUE));
+                assertTrue(point.containsKey(ETH_VALUE));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
+
             assertTrue(value.getData().containsKey(AGGREGATION));
             assertTrue(value.getData().containsKey(TOTAL));
             assertTrue(value.getData().containsKey(TOTAL_BTC_VALUE));

@@ -172,3 +172,15 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `points` - an array of objects with the following structure:
+    - `value` - the value
+    - `btcValue` - the value in BTC
+    - `ethValue` - the value in ETH
+    - `timestamp` - the timestamp
+- `aggregation` - the aggregation type
+- `total` - the total value
+- `totalBtcValue` - the total value in BTC
+- `totalEthValue` - the total value in ETH
