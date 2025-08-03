@@ -25,15 +25,15 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Type {
-    LPD(Constants.LaunchPad.TYPE, new String[]{Constants.LaunchPad.PROJECT_URL, Constants.LaunchPad.CURRENT_LIST}),
-    MD(Constants.MegaDrop.TYPE, new String[]{Constants.MegaDrop.CURRENT_LIST}),
-    LPL(Constants.LaunchPool.TYPE, new String[]{Constants.LaunchPool.PROJECT_URL, Constants.LaunchPool.CURRENT_LIST}),
-    BYV(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.CURRENT_LIST}),
-    BYVP(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.PAST_LIST}),
-    BYS(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.CURRENT_LIST}),
-    BYSP(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.PAST_LIST}),
-    ADH(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.CURRENT_LIST}),
-    ADHP(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.PAST_LIST});
+    LPD(Constants.LaunchPad.TYPE, new String[]{Constants.LaunchPad.PROJECT_URL, Constants.LaunchPad.CURRENT_LIST_URL}),
+    MD(Constants.MegaDrop.TYPE, new String[]{Constants.MegaDrop.CURRENT_LIST_URL}),
+    LPL(Constants.LaunchPool.TYPE, new String[]{Constants.LaunchPool.PROJECT_URL, Constants.LaunchPool.CURRENT_LIST_URL}),
+    BYV(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.CURRENT_LIST_URL}),
+    BYVP(Constants.ByVotes.TYPE, new String[]{Constants.ByVotes.PAST_LIST_URL}),
+    BYS(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.CURRENT_LIST_URL}),
+    BYSP(Constants.ByStarter.TYPE, new String[]{Constants.ByStarter.PROJECT_URL, Constants.ByStarter.PAST_LIST_URL}),
+    ADH(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.CURRENT_LIST_URL}),
+    ADHP(Constants.AirdropHunt.TYPE, new String[]{Constants.AirdropHunt.PROJECT_URL, Constants.AirdropHunt.PAST_LIST_URL});
 
     private final String type;
     private final String[] urls;

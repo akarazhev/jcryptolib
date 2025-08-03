@@ -52,7 +52,7 @@ final class Constants {
 
         static final String TYPE = "Launchpad";
         static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/activity/v2/project/ongoing/list";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/activity/v2/project/finished/list";
+        static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/activity/v2/project/finished/list";
     }
 
     final static class MegaDrop {
@@ -61,7 +61,7 @@ final class Constants {
         }
 
         static final String TYPE = "Mega Drop";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList";
+        static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/megadrop/v1/prizePool/tokenList";
     }
 
     final static class LaunchPool {
@@ -71,7 +71,7 @@ final class Constants {
 
         static final String TYPE = "Launch Pool";
         static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/launchpool/v1/home";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/launchpool/v1/history";
+        static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/launchpool/v1/history";
     }
 
     final static class ByVotes {
@@ -80,8 +80,8 @@ final class Constants {
         }
 
         static final String TYPE = "ByVotes";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=1";
-        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=2";
+        static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=1";
+        static final String PAST_LIST_URL = "https://www.bybit.com/x-api/spot/api/vote/v2/projectList?type=2";
     }
 
     final static class ByStarter {
@@ -91,8 +91,8 @@ final class Constants {
 
         static final String TYPE = "ByStarter";
         static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/by-starter/v1/bystarter/overview";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/by-starter/v3/project/current";
-        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/by-starter/v2/project/previously";
+        static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/by-starter/v3/project/current";
+        static final String PAST_LIST_URL = "https://www.bybit.com/x-api/spot/api/by-starter/v2/project/previously";
     }
 
     final static class AirdropHunt {
@@ -102,8 +102,8 @@ final class Constants {
 
         static final String TYPE = "Airdrop Hunt";
         static final String PROJECT_URL = "https://www.bybit.com/x-api/spot/api/airdrop-splash/v1/project/home";
-        static final String CURRENT_LIST = "https://www.bybit.com/x-api/spot/api/airdrop-splash/v1/project/list?requestCategory=0";
-        static final String PAST_LIST = "https://www.bybit.com/x-api/spot/api/airdrop-splash/v1/project/list?requestCategory=2";
+        static final String CURRENT_LIST_URL = "https://www.bybit.com/x-api/spot/api/airdrop-splash/v1/project/list?requestCategory=0";
+        static final String PAST_LIST_URL = "https://www.bybit.com/x-api/spot/api/airdrop-splash/v1/project/list?requestCategory=2";
     }
 
     final static class Announcements {
