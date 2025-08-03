@@ -255,6 +255,14 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `points` - an array of objects with the following structure:
+    - `ma110` - the MA110
+    - `ma350mu2` - the MA350mu2
+    - `price` - the price
+    - `timestamp` - the timestamp
+
 ## Bitcoin Rainbow Price Chart Indicator (BRPC)
 
 Request URL with curl:

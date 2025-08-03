@@ -106,6 +106,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERPETUALS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PRICE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SCORE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SELL_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
@@ -520,7 +521,7 @@ final class CmcDataFetcherTest {
     }
 
     @Test
-    public void shouldReceivePiCycleTop() {
+    public void shouldReceivePiCycleTopIndicator() {
         final var dataConfig = new DataConfig.Builder()
                 .type(Type.PCT)
                 .build();
@@ -541,8 +542,13 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.PCT, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertPiCycleTopIndicator(point);
+            }
         }
     }
 
@@ -1408,5 +1414,12 @@ final class CmcDataFetcherTest {
         assertTrue(value.containsKey(PERCENT_CHANGE_24H));
         assertTrue(value.containsKey(HIT_STATUS));
         assertTrue(value.containsKey(INDEX));
+    }
+
+    private void assertPiCycleTopIndicator(final Map<String, Object> value) {
+        assertTrue(value.containsKey(MA110));
+        assertTrue(value.containsKey(MA350MU2));
+        assertTrue(value.containsKey(PRICE));
+        assertTrue(value.containsKey(TIMESTAMP));
     }
 }
