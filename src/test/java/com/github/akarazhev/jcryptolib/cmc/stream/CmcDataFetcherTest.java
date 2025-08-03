@@ -56,6 +56,9 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_USD_PRI
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX_CHG;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX_PERCENTAGE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX_VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CHG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CMC_USD_ID;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.COINS;
@@ -77,6 +80,9 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DERIVATIVES_VOLUME_24H_REPORTED;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEX;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEX_CHG;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEX_PERCENTAGE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DEX_VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIG;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DIAL_CONFIGS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE;
@@ -155,6 +161,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_HIT_C
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_MARKET_CAP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_MARKET_CAP_YESTERDAY;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_MARKET_CAP_YESTERDAY_PERCENTAGE_CHANGE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_VOLUME_24H;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_VOLUME_24H_REPORTED;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL_VOLUME_24H_YESTERDAY;
@@ -838,10 +845,28 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.CSV, value.getSource());
-            assertTrue(value.getData().containsKey(OVER_VIEW));
-            assertFalse(((Map) value.getData().get(OVER_VIEW)).isEmpty());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(TOTAL_VOLUME));
+                assertTrue(point.containsKey(CEX_VOLUME));
+                assertTrue(point.containsKey(CEX_PERCENTAGE));
+                assertTrue(point.containsKey(DEX_VOLUME));
+                assertTrue(point.containsKey(DEX_PERCENTAGE));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
+
+            assertTrue(value.getData().containsKey(OVER_VIEW));
+            final var overview = (Map<String, Object>) value.getData().get(OVER_VIEW);
+            assertFalse(overview.isEmpty());
+            assertTrue(overview.containsKey(CEX_VOLUME));
+            assertTrue(overview.containsKey(CEX_CHG));
+            assertTrue(overview.containsKey(CEX_PERCENTAGE));
+            assertTrue(overview.containsKey(DEX_VOLUME));
+            assertTrue(overview.containsKey(DEX_CHG));
+            assertTrue(overview.containsKey(DEX_PERCENTAGE));
         }
     }
 

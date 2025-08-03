@@ -165,5 +165,12 @@ public final class Constants {
         public static final String ETH_VALUE = "ethValue";
         public static final String STABLE_VALUE = "stableValue";
         public static final String OTHER_VALUE = "otherValue";
+        public static final String TOTAL_VOLUME = "totalVolume";
+        public static final String CEX_VOLUME = "cexVolume";
+        public static final String CEX_PERCENTAGE = "cexPercentage";
+        public static final String DEX_VOLUME = "dexVolume";
+        public static final String DEX_PERCENTAGE = "dexPercentage";
+        public static final String CEX_CHG = "cexChg";
+        public static final String DEX_CHG = "dexChg";
     }
 }

@@ -66,3 +66,20 @@ The response is a JSON object with the following structure:
   }
 }
 ```
+
+List of parameters to parse:
+
+- `points` - an array of objects with the following structure:
+    - `timestamp` - the timestamp of the data point
+    - `totalVolume` - the total volume of the data point
+    - `cexVolume` - the CEX volume of the data point
+    - `cexPercentage` - the CEX percentage of the data point
+    - `dexVolume` - the DEX volume of the data point
+    - `dexPercentage` - the DEX percentage of the data point
+- `overView` - an object with the following structure:
+    - `cexVolume` - the CEX volume of the data point
+    - `cexChg` - the CEX change of the data point
+    - `cexPercentage` - the CEX percentage of the data point
+    - `dexVolume` - the DEX volume of the data point
+    - `dexChg` - the DEX change of the data point
+    - `dexPercentage` - the DEX percentage of the data point
