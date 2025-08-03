@@ -141,5 +141,8 @@ public final class Constants {
         public static final String CRYPTO_FUNDING_RATE = "cryptoFundingRate";
         public static final String BITCOIN = "bitcoin";
         public static final String ETHEREUM = "ethereum";
+        public static final String SCORE = "score";
+        public static final String BTC_PRICE = "btcPrice";
+        public static final String BTC_VOLUME = "btcVolume";
     }
 }
