@@ -1,4 +1,4 @@
-# Airdrop Hunt
+# Airdrop Hunt (ADHP)
 
 Perform Tasks for a Chance to Win Tokens!
 
