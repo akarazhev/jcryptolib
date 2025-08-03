@@ -133,6 +133,7 @@ public final class Constants {
         public static final String CEX = "cex";
         public static final String DEX = "dex";
         public static final String MARKET_CAP = "marketcap";
+        public static final String MARKET_CAP2 = "marketCap";
         public static final String PERCENTAGE = "percentage";
         public static final String COIN_ID = "coinId";
         public static final String COIN_NAME = "coinName";
@@ -159,5 +160,10 @@ public final class Constants {
         public static final String BTC_USD_PRICE = "btcUsdPrice";
         public static final String PRICE = "price";
         public static final String LAYERS = "layers";
+        public static final String VOLUME = "volume";
+        public static final String BTC_VALUE = "btcValue";
+        public static final String ETH_VALUE = "ethValue";
+        public static final String STABLE_VALUE = "stableValue";
+        public static final String OTHER_VALUE = "otherValue";
     }
 }

@@ -86,6 +86,34 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `points` - an array of objects with the following structure:
+    - `marketCap` - the market cap
+    - `volume` - the volume
+    - `btcValue` - the value in BTC
+    - `ethValue` - the value in ETH
+    - `stableValue` - the value in stable coins
+    - `otherValue` - the value in other coins
+    - `timestamp` - the timestamp
+- `historicalValues` - an object with the following structure:
+    - `now` - an object with the following structure:
+        - `marketCap` - the market cap
+    - `yesterday` - an object with the following structure:
+        - `marketCap` - the market cap
+    - `lastWeek` - an object with the following structure:
+        - `marketCap` - the market cap
+    - `lastMonth` - an object with the following structure:
+        - `marketCap` - the market cap
+- `yearlyPerformance` - an object with the following structure:
+    - `high` - an object with the following structure:
+        - `marketCap` - the market cap
+        - `timestamp` - the timestamp
+    - `low` - an object with the following structure:
+        - `marketCap` - the market cap
+        - `timestamp` - the timestamp
+- `thirtyDaysPercentage` - the percentage change in the last 30 days
+
 ## Crypto ETFs Net Flow (ETF_NF)
 
 Request URL with curl:

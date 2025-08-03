@@ -53,6 +53,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINAN
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_DOMINANCE_YESTERDAY;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_PRICE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_USD_PRICE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.BTC_VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CEX;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CHG;
@@ -85,6 +86,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_Y
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YEARLY_LOW;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.DOMINANCE_YESTERDAY;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETHEREUM;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.FUTURES;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH_TIMESTAMP;
@@ -99,10 +101,12 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW_TIMESTA
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MA110;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MA350MU2;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_CAP;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_CAP2;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_FUNDING_RATE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_CHANGE_PCT_30D;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MC_PROPORTION;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.OPEN_INTEREST;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.OTHER_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PERCENT_CHANGE_24H;
@@ -111,6 +115,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.PRICE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SCORE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SELL_COUNT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SLUG;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLE_VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.START;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.END;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.ETH_DOMINANCE;
@@ -161,6 +166,7 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUES;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE_24H_PERCENTAGE_CHANGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE_CLASSIFICATION;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VOLUME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.WEIGHT;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.YEARLY_LOW;
@@ -205,13 +211,55 @@ final class CmcDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.CMC, value.getProvider());
             assertEquals(Source.CMC, value.getSource());
+
             assertTrue(value.getData().containsKey(POINTS));
-            assertFalse(((List) value.getData().get(POINTS)).isEmpty());
+            final var points = (List<Map<String, Object>>) value.getData().get(POINTS);
+            assertFalse(points.isEmpty());
+            for (final var point : points) {
+                assertTrue(point.containsKey(MARKET_CAP2));
+                assertTrue(point.containsKey(VOLUME));
+                assertTrue(point.containsKey(BTC_VALUE));
+                assertTrue(point.containsKey(ETH_VALUE));
+                assertTrue(point.containsKey(STABLE_VALUE));
+                assertTrue(point.containsKey(OTHER_VALUE));
+                assertTrue(point.containsKey(TIMESTAMP));
+            }
+
             assertTrue(value.getData().containsKey(HISTORICAL_VALUES));
-            assertFalse(((Map) value.getData().get(HISTORICAL_VALUES)).isEmpty());
+            final var historicalValues = (Map<String, Object>) value.getData().get(HISTORICAL_VALUES);
+            assertFalse(historicalValues.isEmpty());
+
+            final var now = (Map<String, Object>) historicalValues.get(NOW);
+            assertFalse(now.isEmpty());
+            assertTrue(now.containsKey(MARKET_CAP2));
+
+            final var yesterday = (Map<String, Object>) historicalValues.get(YESTERDAY);
+            assertFalse(yesterday.isEmpty());
+            assertTrue(yesterday.containsKey(MARKET_CAP2));
+
+            final var lastWeek = (Map<String, Object>) historicalValues.get(LAST_WEEK);
+            assertFalse(lastWeek.isEmpty());
+            assertTrue(lastWeek.containsKey(MARKET_CAP2));
+
+            final var lastMonth = (Map<String, Object>) historicalValues.get(LAST_MONTH);
+            assertFalse(lastMonth.isEmpty());
+            assertTrue(lastMonth.containsKey(MARKET_CAP2));
+
             assertTrue(value.getData().containsKey(YEARLY_PERFORMANCE));
-            assertFalse(((Map) value.getData().get(YEARLY_PERFORMANCE)).isEmpty());
-            assertTrue(value.getData().containsKey(THIRTY_DAYS_PERCENTAGE));
+            final var yearlyPerformance = (Map<String, Object>) value.getData().get(YEARLY_PERFORMANCE);
+            assertFalse(yearlyPerformance.isEmpty());
+
+            assertTrue(yearlyPerformance.containsKey(HIGH));
+            final var high = (Map<String, Object>) yearlyPerformance.get(HIGH);
+            assertFalse(high.isEmpty());
+            assertTrue(high.containsKey(MARKET_CAP2));
+            assertTrue(high.containsKey(TIMESTAMP));
+
+            assertTrue(yearlyPerformance.containsKey(LOW));
+            final var low = (Map<String, Object>) yearlyPerformance.get(LOW);
+            assertFalse(low.isEmpty());
+            assertTrue(low.containsKey(MARKET_CAP2));
+            assertTrue(low.containsKey(TIMESTAMP));
         }
     }
 
