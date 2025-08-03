@@ -144,5 +144,12 @@ public final class Constants {
         public static final String SCORE = "score";
         public static final String BTC_PRICE = "btcPrice";
         public static final String BTC_VOLUME = "btcVolume";
+        public static final String INDICATOR_NAME = "indicatorName";
+        public static final String TIME = "time";
+        public static final String TARGET_VALUE = "targetValue";
+        public static final String COMPARISON_TYPE = "comparisonType";
+        public static final String PERCENT_CHANGE_24H = "percentChange24h";
+        public static final String HIT_STATUS = "hitStatus";
+        public static final String INDEX = "index";
     }
 }

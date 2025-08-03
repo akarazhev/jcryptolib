@@ -52,7 +52,7 @@ import static com.github.akarazhev.jcryptolib.cmc.config.Range.HOURS_24;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.AS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.CMC;
 import static com.github.akarazhev.jcryptolib.cmc.config.Type.ETF_NF;
-import static com.github.akarazhev.jcryptolib.cmc.config.Type.FG;
+import static com.github.akarazhev.jcryptolib.cmc.config.Type.FGI;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.AS_PERIOD_DAYS;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.FG_PERIOD_DAYS;
 import static com.github.akarazhev.jcryptolib.cmc.stream.Constants.CMC.MAX_CMC_100_INDEX_ITEMS;
@@ -112,10 +112,10 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildCryptoMarketCapRequest(USD_ID, DAYS_30), type, Source.CMC);
             } else if (ETF_NF.equals(type)) {
                 fetch(CmcRequestBuilder.buildCryptoEftNetFlowRequest(DAYS_30), type, Source.ETF_NF);
-            } else if (FG.equals(type)) {
+            } else if (FGI.equals(type)) {
                 final var end = tomorrowInUtc();
                 final var start = end - TimeUnit.DAYS.toSeconds(FG_PERIOD_DAYS);
-                fetch(CmcRequestBuilder.buildFearGreedRequest(USD_ID, start, end), type, Source.FG);
+                fetch(CmcRequestBuilder.buildFearGreedIndexRequest(USD_ID, start, end), type, Source.FGI);
             } else if (AS.equals(type)) {
                 final var end = tomorrowInUtc();
                 final var start = end - TimeUnit.DAYS.toSeconds(AS_PERIOD_DAYS);
@@ -155,10 +155,11 @@ final class CmcDataFetcher implements DataFetcher {
                 fetch(CmcRequestBuilder.buildFundingRatesRequest(USD_ID, HOURS_24), type, Source.FR);
             } else if (Type.VIV.equals(type)) {
                 fetch(CmcRequestBuilder.buildVolmexImpliedVolatilityRequest(USD_ID, HOURS_24), type, Source.VIV);
-            } else if (Type.FG_API_PRO_L.equals(type)) {
-                fetch(CmcRequestBuilder.buildFearGreedApiProLatestRequest(config.getApiKey()), type, Source.FG_API_PRO_L);
-            } else if (Type.FG_API_PRO_H.equals(type)) {
-                fetchFearGreedHistorical();
+            } else if (Type.FGI_API_PRO_L.equals(type)) {
+                fetch(CmcRequestBuilder.buildFearGreedIndexApiProLatestRequest(config.getApiKey()), type,
+                        Source.FGI_API_PRO_L);
+            } else if (Type.FGI_API_PRO_H.equals(type)) {
+                fetchFearGreedIndexHistorical();
             } else if (Type.GM_API_PRO_L.equals(type)) {
                 fetch(CmcRequestBuilder.buildGlobalMetricsApiProLatestRequest(config.getApiKey(), USD_ID), type,
                         Source.GM_API_PRO_L);
@@ -204,13 +205,13 @@ final class CmcDataFetcher implements DataFetcher {
         }
     }
 
-    private void fetchFearGreedHistorical() {
+    private void fetchFearGreedIndexHistorical() {
         if (!emitter.isCancelled()) {
             var start = 1;
             var isMoreAvailable = true;
             while (isMoreAvailable && !emitter.isCancelled()) {
                 try {
-                    final var request = CmcRequestBuilder.buildFearGreedApiProHistoricalRequest(config.getApiKey(), start,
+                    final var request = CmcRequestBuilder.buildFearGreedIndexApiProHistoricalRequest(config.getApiKey(), start,
                             MAX_FEAR_GREED_ITEMS);
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                     if (response.statusCode() == STATUS_CODE_OK) {
@@ -219,8 +220,8 @@ final class CmcDataFetcher implements DataFetcher {
                             isMoreAvailable = false;
                         } else {
                             result.forEach(value -> {
-                                LOGGER.debug("Fetched '{}' message: {}", Type.FG_API_PRO_H.getType(), value);
-                                emitter.onNext(Payload.of(Provider.CMC, Source.FG_API_PRO_H, value));
+                                LOGGER.debug("Fetched '{}' message: {}", Type.FGI_API_PRO_H.getType(), value);
+                                emitter.onNext(Payload.of(Provider.CMC, Source.FGI_API_PRO_H, value));
                             });
 
                             if (result.size() < MAX_FEAR_GREED_ITEMS) {
@@ -230,11 +231,11 @@ final class CmcDataFetcher implements DataFetcher {
                             }
                         }
                     } else {
-                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.FG_API_PRO_H.getType(), response.statusCode());
+                        LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.FGI_API_PRO_H.getType(), response.statusCode());
                         isMoreAvailable = false;
                     }
                 } catch (final Exception e) {
-                    LOGGER.error("Failed to fetch '{}' data", Type.FG_API_PRO_H.getType(), e);
+                    LOGGER.error("Failed to fetch '{}' data", Type.FGI_API_PRO_H.getType(), e);
                     emitter.onError(e);
                     isMoreAvailable = false;
                 }

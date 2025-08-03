@@ -26,9 +26,9 @@ package com.github.akarazhev.jcryptolib.cmc.config;
 
 public enum Type {
     GM_API_PRO_L(Constants.GlobalMetrics.TYPE, Constants.GlobalMetrics.URL_API_PRO_L),
-    FG(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL),
-    FG_API_PRO_L(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_L),
-    FG_API_PRO_H(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_H),
+    FGI(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL),
+    FGI_API_PRO_L(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_L),
+    FGI_API_PRO_H(Constants.FearAndGreed.TYPE, Constants.FearAndGreed.URL_API_PRO_H),
     AS(Constants.AltcoinSeason.TYPE, Constants.AltcoinSeason.URL),
     BDO(Constants.BitcoinDominanceOverview.TYPE, Constants.BitcoinDominanceOverview.URL),
     BD(Constants.BitcoinDominance.TYPE, Constants.BitcoinDominance.URL),

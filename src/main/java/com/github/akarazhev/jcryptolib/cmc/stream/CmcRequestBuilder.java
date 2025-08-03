@@ -91,9 +91,9 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.ETF_NF.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildFearGreedRequest(final int convertId, final long start, final long end) {
+    public static HttpRequest buildFearGreedIndexRequest(final int convertId, final long start, final long end) {
         final var url = String.format("?" + START + "=%d&" + END + "=%d&" + CONVERT_ID + "=%d", start, end, convertId);
-        return buildRequest(URI.create(Type.FG.getUrl() + url), UUID.randomUUID());
+        return buildRequest(URI.create(Type.FGI.getUrl() + url), UUID.randomUUID());
     }
 
     public static HttpRequest buildAltcoinSeasonRequest(final int convertId, final long start, final long end) {
@@ -186,13 +186,13 @@ final class CmcRequestBuilder {
         return buildRequest(URI.create(Type.VIV.getUrl() + url), UUID.randomUUID());
     }
 
-    public static HttpRequest buildFearGreedApiProLatestRequest(final String apiKey) {
-        return buildRequest(URI.create(Type.FG_API_PRO_L.getUrl()), apiKey);
+    public static HttpRequest buildFearGreedIndexApiProLatestRequest(final String apiKey) {
+        return buildRequest(URI.create(Type.FGI_API_PRO_L.getUrl()), apiKey);
     }
 
-    public static HttpRequest buildFearGreedApiProHistoricalRequest(final String apiKey, final int start, final int limit) {
+    public static HttpRequest buildFearGreedIndexApiProHistoricalRequest(final String apiKey, final int start, final int limit) {
         final var url = String.format("?" + START + "=%s&" + LIMIT + "=%d", start, limit);
-        return buildRequest(URI.create(Type.FG_API_PRO_H.getUrl() + url), apiKey);
+        return buildRequest(URI.create(Type.FGI_API_PRO_H.getUrl() + url), apiKey);
     }
 
     public static HttpRequest buildGlobalMetricsApiProLatestRequest(final String apiKey, final int convertId) {
