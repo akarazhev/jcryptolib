@@ -51,7 +51,6 @@ public final class Constants {
         public static final String STAKE_BEGIN_TIME = "stakeBeginTime";
         public static final String STAKE_END_TIME = "stakeEndTime";
         public static final String TRADE_BEGIN_TIME = "tradeBeginTime";
-        public static final String STAKE_POOL_LIST = "stakePoolList";
         public static final String NAME = "name";
         public static final String TITLE = "title";
         public static final String ICON = "icon";

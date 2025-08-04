@@ -42,7 +42,6 @@ import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SNAPSHOT_
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.SNAPSHOT_START_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_BEGIN_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_END_TIME;
-import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.STAKE_POOL_LIST;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.START_TIME;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TITLE;
 import static com.github.akarazhev.jcryptolib.bybit.Constants.Response.TOKEN_ICON;
@@ -123,6 +122,7 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.LPL, value.getSource());
+
             assertTrue(value.getData().containsKey(RETURN_COIN));
             assertTrue(value.getData().containsKey(RETURN_COIN_ICON));
             assertTrue(value.getData().containsKey(DESC));
@@ -132,7 +132,6 @@ final class BybitDataFetcherTest {
             assertTrue(value.getData().containsKey(STAKE_BEGIN_TIME));
             assertTrue(value.getData().containsKey(STAKE_END_TIME));
             assertTrue(value.getData().containsKey(TRADE_BEGIN_TIME));
-            assertTrue(value.getData().containsKey(STAKE_POOL_LIST));
         }
     }
 

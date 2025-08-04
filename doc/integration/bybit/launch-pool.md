@@ -1,4 +1,4 @@
-# Launchpool
+# Launchpool (LPL)
 
 Earn new tokens by staking crypto on Bybit.
 
@@ -40,6 +40,10 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `totalProjects`: the number of projects
 
 ## Current Events
 
@@ -358,3 +362,15 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `returnCoin`: the reward coin
+- `returnCoinIcon`: the reward coin icon
+- `desc`: the pool description
+- `website`: the pool website
+- `whitepaper`: the pool whitepaper
+- `rules`: the pool rules
+- `stakeBeginTime`: the start time of the pool
+- `stakeEndTime`: the end time of the pool
+- `tradeBeginTime`: the start time of the trading
