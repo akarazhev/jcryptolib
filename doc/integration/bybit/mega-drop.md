@@ -1,4 +1,4 @@
-# Bybit Megadrop
+# Bybit Megadrop (MD)
 
 Buy Earn products on Bybit to win points and share the new token prize pool.
 
@@ -52,3 +52,12 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `tokenName`: the token name
+- `tokenIcon`: the token icon
+- `startTime`: the start time of the pool
+- `endTime`: the end time of the pool
+- `claimStartTime`: the start time of the claim
+- `claimEndTime`: the end time of the claim
