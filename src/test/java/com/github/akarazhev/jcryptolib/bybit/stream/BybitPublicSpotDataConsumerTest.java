@@ -146,6 +146,7 @@ final class BybitPublicSpotDataConsumerTest {
         final var config = new DataConfig.Builder()
                 .streamType(StreamType.PTST)
                 .topic(Topic.PUBLIC_TRADE_BTC_USDT)
+                .topic(Topic.PUBLIC_TRADE_ETH_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -163,7 +164,9 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.PUBLIC_TRADE_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+            final var topic = value.getData().get(Constants.TOPIC_FIELD);
+            assertTrue(Topic.PUBLIC_TRADE_BTC_USDT.toString().equals(topic) ||
+                    Topic.PUBLIC_TRADE_ETH_USDT.toString().equals(topic));
         }
     }
 
