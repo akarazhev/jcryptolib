@@ -25,8 +25,14 @@
 package com.github.akarazhev.jcryptolib.bybit.config;
 
 public enum Topic {
-    // BTC and USDT
+    // Order book: BTC
     ORDER_BOOK_1_BTC_USDT(Constants.Topic.ORDER_BOOK_1_BTC_USDT),
+    ORDER_BOOK_50_BTC_USDT(Constants.Topic.ORDER_BOOK_50_BTC_USDT),
+    ORDER_BOOK_200_BTC_USDT(Constants.Topic.ORDER_BOOK_200_BTC_USDT),
+    // Order book: ETH
+    ORDER_BOOK_1_ETH_USDT(Constants.Topic.ORDER_BOOK_1_ETH_USDT),
+    ORDER_BOOK_50_ETH_USDT(Constants.Topic.ORDER_BOOK_50_ETH_USDT),
+    ORDER_BOOK_200_ETH_USDT(Constants.Topic.ORDER_BOOK_200_ETH_USDT),
     PUBLIC_TRADE_BTC_USDT(Constants.Topic.PUBLIC_TRADE_BTC_USDT),
     TICKERS_BTC_USDT(Constants.Topic.TICKERS_BTC_USDT),
     KLINE_1_BTC_USDT(Constants.Topic.KLINE_1_BTC_USDT),
