@@ -193,6 +193,7 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.BYV, value.getSource());
+
             assertTrue(value.getData().containsKey(COIN));
             assertTrue(value.getData().containsKey(ICON));
             assertTrue(value.getData().containsKey(VOTE_START_TIME));
@@ -225,6 +226,7 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.BYS, value.getSource());
+
             assertTrue(value.getData().containsKey(COIN_ICON));
             assertTrue(value.getData().containsKey(COIN_NAME));
             assertTrue(value.getData().containsKey(PUBLISH_TIME));

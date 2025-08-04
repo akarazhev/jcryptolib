@@ -36,6 +36,16 @@ The response is a JSON object with the following structure:
 }
 ```
 
+List of parameters to parse:
+
+- `coin`
+- `icon`
+- `voteStartTime`
+- `voteEndTime`
+- `rewardStartTime`
+- `rewardEndTime`
+- `introduceContent`
+
 ## Past Events
 
 Request API with headers:
@@ -137,3 +147,13 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `coin`
+- `icon`
+- `voteStartTime`
+- `voteEndTime`
+- `rewardStartTime`
+- `rewardEndTime`
+- `introduceContent`
