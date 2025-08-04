@@ -158,6 +158,7 @@ final class BybitDataFetcherTest {
         for (final var value : testSubscriber.values()) {
             assertEquals(Provider.BYBIT, value.getProvider());
             assertEquals(Source.LPD, value.getSource());
+
             assertTrue(value.getData().containsKey(NAME));
             assertTrue(value.getData().containsKey(TITLE));
             assertTrue(value.getData().containsKey(ICON));

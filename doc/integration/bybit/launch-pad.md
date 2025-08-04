@@ -1,4 +1,4 @@
-# Launchpad
+# Launchpad (LPD)
 
 Gain early access to tokens from promising projects directly on Bybit
 
@@ -41,6 +41,10 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `totalProjects`: the number of projects
 
 ## Current Events
 
@@ -166,3 +170,16 @@ The response is a JSON object with the following structure:
   "success": true
 }
 ```
+
+List of parameters to parse:
+
+- `name`: the name of the launchpad
+- `title`: the title of the launchpad
+- `icon`: the icon of the launchpad
+- `startTime`: the start time of the launchpad
+- `endTime`: the end time of the launchpad
+- `snapshotStartTime`: the snapshot start time of the launchpad
+- `snapshotEndTime`: the snapshot end time of the launchpad
+- `allocationStartTime`: the allocation start time of the launchpad
+- `allocationEndTime`: the allocation end time of the launchpad
+- `projectStartTime`: the project start time of the launchpad
