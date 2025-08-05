@@ -305,7 +305,9 @@ final class BybitPublicLinearDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.ALL_LIQUIDATION_BTC_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+            final var topic = value.getData().get(Constants.TOPIC_FIELD);
+            assertTrue(Topic.ALL_LIQUIDATION_BTC_USDT.toString().equals(topic) ||
+                    Topic.ALL_LIQUIDATION_ETH_USDT.toString().equals(topic));
         }
     }
 
@@ -314,6 +316,7 @@ final class BybitPublicLinearDataConsumerTest {
         final var config = new DataConfig.Builder()
                 .streamType(StreamType.PTL)
                 .topic(Topic.INSURANCE_USDT)
+                .topic(Topic.INSURANCE_USDC)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -330,7 +333,37 @@ final class BybitPublicLinearDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.INSURANCE_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+            final var topic = value.getData().get(Constants.TOPIC_FIELD);
+            assertTrue(Topic.INSURANCE_USDT.toString().equals(topic) ||
+                    Topic.INSURANCE_USDC.toString().equals(topic));
+        }
+    }
+
+    @Test
+    public void shouldReceivePriceLimitDataConsumer() {
+        final var config = new DataConfig.Builder()
+                .streamType(StreamType.PTL)
+                .topic(Topic.PRICE_LIMIT_BTC_USDT)
+                .topic(Topic.PRICE_LIMIT_ETH_USDT)
+                .build();
+        final var consumer = DataConsumer.create(client, config);
+        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
+        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
+        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
+
+        testSubscriber.assertNoErrors();
+        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
+
+        testSubscriber.cancel();
+        TestUtils.sleep(1000);
+        final var countAfterCancel = testSubscriber.values().size();
+        TestUtils.sleep(1000);
+
+        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
+        for (final var value : testSubscriber.values()) {
+            final var topic = value.getData().get(Constants.TOPIC_FIELD);
+            assertTrue(Topic.PRICE_LIMIT_BTC_USDT.toString().equals(topic) ||
+                    Topic.PRICE_LIMIT_ETH_USDT.toString().equals(topic));
         }
     }
 }

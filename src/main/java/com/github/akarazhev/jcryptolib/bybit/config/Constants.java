@@ -204,6 +204,7 @@ final class Constants {
         static final String ALL_LIQUIDATION_BTC_USDT = "allLiquidation.BTCUSDT";
         static final String ALL_LIQUIDATION_ETH_USDT = "allLiquidation.ETHUSDT";
         static final String INSURANCE_USDT = "insurance.USDT";
+        static final String INSURANCE_USDC = "insurance.USDC";
         static final String ORDER = "order";
         static final String ORDER_BOOK_25_SOL_USDT = "orderbook.25.SOLUSDT_SOL/USDT";
         static final String PUBLIC_TRADE_SOL_USDT = "publicTrade.SOLUSDT_SOL/USDT";

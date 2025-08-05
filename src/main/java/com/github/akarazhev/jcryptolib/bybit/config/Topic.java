@@ -52,8 +52,9 @@ public enum Topic {
     // Price Limit
     PRICE_LIMIT_BTC_USDT(Constants.Topic.PRICE_LIMIT_BTC_USDT),
     PRICE_LIMIT_ETH_USDT(Constants.Topic.PRICE_LIMIT_ETH_USDT),
-    // USDT
+    // Insurance
     INSURANCE_USDT(Constants.Topic.INSURANCE_USDT),
+    INSURANCE_USDC(Constants.Topic.INSURANCE_USDC),
     // Order
     ORDER(Constants.Topic.ORDER),
     // SOL and USDT
