@@ -186,6 +186,8 @@ final class Constants {
         static final String ORDER_BOOK_1_BTC_USDT = "orderbook.1.BTCUSDT";
         static final String ORDER_BOOK_50_BTC_USDT = "orderbook.50.BTCUSDT";
         static final String ORDER_BOOK_200_BTC_USDT = "orderbook.200.BTCUSDT";
+        static final String ORDER_BOOK_RPI_BTC_USDT = "orderbook.rpi.BTCUSDT";
+        static final String ORDER_BOOK_RPI_ETH_USDT = "orderbook.rpi.ETHUSDT";
         static final String ORDER_BOOK_1_ETH_USDT = "orderbook.1.ETHUSDT";
         static final String ORDER_BOOK_50_ETH_USDT = "orderbook.50.ETHUSDT";
         static final String ORDER_BOOK_200_ETH_USDT = "orderbook.200.ETHUSDT";
