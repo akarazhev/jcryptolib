@@ -255,10 +255,11 @@ final class BybitPublicSpotDataConsumerTest {
     }
 
     @Test
-    public void shouldReceiveLTKlineDataConsumer() {
+    public void shouldReceivePriceLimitDataConsumer() {
         final var config = new DataConfig.Builder()
                 .streamType(StreamType.PTST)
-                .topic(Topic.KLINE_LT_5_EOS3L_USDT)
+                .topic(Topic.PRICE_LIMIT_BTC_USDT)
+                .topic(Topic.PRICE_LIMIT_ETH_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -275,57 +276,9 @@ final class BybitPublicSpotDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.KLINE_LT_5_EOS3L_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
-        }
-    }
-
-    @Test
-    public void shouldReceiveLTTickerDataConsumer() {
-        final var config = new DataConfig.Builder()
-                .streamType(StreamType.PTST)
-                .topic(Topic.TICKERS_LT_EOS3L_USDT)
-                .build();
-        final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
-        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
-
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.TICKERS_LT_EOS3L_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
-        }
-    }
-
-    @Test
-    public void shouldReceiveLTNavDataConsumer() {
-        final var config = new DataConfig.Builder()
-                .streamType(StreamType.PTST)
-                .topic(Topic.LT_EOS3L_USDT)
-                .build();
-        final var consumer = DataConsumer.create(client, config);
-        final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
-        Flowable.create(consumer, BackpressureStrategy.BUFFER).subscribe(testSubscriber);
-        assertFalse(TestUtils.await(testSubscriber, 3, TimeUnit.SECONDS), "Should not receive any messages");
-
-        testSubscriber.assertNoErrors();
-        assertFalse(testSubscriber.values().isEmpty(), "Should receive at least one message");
-
-        testSubscriber.cancel();
-        TestUtils.sleep(1000);
-        final var countAfterCancel = testSubscriber.values().size();
-        TestUtils.sleep(1000);
-
-        assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
-        for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.LT_EOS3L_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+            final var topic = value.getData().get(Constants.TOPIC_FIELD);
+            assertTrue(Topic.PRICE_LIMIT_BTC_USDT.toString().equals(topic) ||
+                    Topic.PRICE_LIMIT_ETH_USDT.toString().equals(topic));
         }
     }
 }

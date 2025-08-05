@@ -45,6 +45,9 @@ public enum Topic {
     KLINE_1_BTC_USDT(Constants.Topic.KLINE_1_BTC_USDT),
     KLINE_1_ETH_USDT(Constants.Topic.KLINE_1_ETH_USDT),
     ALL_LIQUIDATION_BTC_USDT(Constants.Topic.ALL_LIQUIDATION_BTC_USDT),
+    // Price Limit
+    PRICE_LIMIT_BTC_USDT(Constants.Topic.PRICE_LIMIT_BTC_USDT),
+    PRICE_LIMIT_ETH_USDT(Constants.Topic.PRICE_LIMIT_ETH_USDT),
     // USDT
     INSURANCE_USDT(Constants.Topic.INSURANCE_USDT),
     // Order
@@ -52,11 +55,7 @@ public enum Topic {
     // SOL and USDT
     ORDER_BOOK_25_SOL_USDT(Constants.Topic.ORDER_BOOK_25_SOL_USDT),
     PUBLIC_TRADE_SOL_USDT(Constants.Topic.PUBLIC_TRADE_SOL_USDT),
-    TICKERS_SOL_USDT(Constants.Topic.TICKERS_SOL_USDT),
-    // EOS and USDT
-    KLINE_LT_5_EOS3L_USDT(Constants.Topic.KLINE_LT_5_EOS3L_USDT),
-    TICKERS_LT_EOS3L_USDT(Constants.Topic.TICKERS_LT_EOS3L_USDT),
-    LT_EOS3L_USDT(Constants.Topic.LT_EOS3L_USDT);
+    TICKERS_SOL_USDT(Constants.Topic.TICKERS_SOL_USDT);
 
     private final String topic;
 

@@ -197,6 +197,8 @@ final class Constants {
         static final String TICKERS_ETH_USDT = "tickers.ETHUSDT";
         static final String KLINE_1_BTC_USDT = "kline.1.BTCUSDT";
         static final String KLINE_1_ETH_USDT = "kline.1.ETHUSDT";
+        static final String PRICE_LIMIT_BTC_USDT = "priceLimit.BTCUSDT";
+        static final String PRICE_LIMIT_ETH_USDT = "priceLimit.ETHUSDT";
         static final String ALL_LIQUIDATION_BTC_USDT = "allLiquidation.BTCUSDT";
         static final String INSURANCE_USDT = "insurance.USDT";
         static final String ORDER = "order";
