@@ -41,7 +41,9 @@ public enum Topic {
     // Tickers
     TICKERS_BTC_USDT(Constants.Topic.TICKERS_BTC_USDT),
     TICKERS_ETH_USDT(Constants.Topic.TICKERS_ETH_USDT),
+    // Kline
     KLINE_1_BTC_USDT(Constants.Topic.KLINE_1_BTC_USDT),
+    KLINE_1_ETH_USDT(Constants.Topic.KLINE_1_ETH_USDT),
     ALL_LIQUIDATION_BTC_USDT(Constants.Topic.ALL_LIQUIDATION_BTC_USDT),
     // USDT
     INSURANCE_USDT(Constants.Topic.INSURANCE_USDT),
