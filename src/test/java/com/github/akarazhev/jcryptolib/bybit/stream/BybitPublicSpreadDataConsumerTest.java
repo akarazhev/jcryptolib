@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class BybitPublicSpreadDataConsumerTest {
     private static HttpClient client;
@@ -60,7 +61,8 @@ final class BybitPublicSpreadDataConsumerTest {
     public void shouldReceiveOrderBookDataConsumer() {
         final var config = new DataConfig.Builder()
                 .streamType(StreamType.PTSD)
-                .topic(Topic.ORDER_BOOK_25_SOL_USDT)
+                .topic(Topic.ORDER_BOOK_25_BTC_USDT)
+                .topic(Topic.ORDER_BOOK_25_ETH_USDT)
                 .build();
         final var consumer = DataConsumer.create(client, config);
         final var testSubscriber = new TestSubscriber<Payload<Map<String, Object>>>();
@@ -77,7 +79,9 @@ final class BybitPublicSpreadDataConsumerTest {
 
         assertEquals(countAfterCancel, testSubscriber.values().size(), "No new messages after cancel");
         for (final var value : testSubscriber.values()) {
-            assertEquals(Topic.ORDER_BOOK_25_SOL_USDT.toString(), value.getData().get(Constants.TOPIC_FIELD));
+            final var topic = value.getData().get(Constants.TOPIC_FIELD);
+            assertTrue(Topic.ORDER_BOOK_25_BTC_USDT.toString().equals(topic) ||
+                    Topic.ORDER_BOOK_25_ETH_USDT.toString().equals(topic));
         }
     }
 

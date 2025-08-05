@@ -57,8 +57,9 @@ public enum Topic {
     INSURANCE_USDC(Constants.Topic.INSURANCE_USDC),
     // Order
     ORDER(Constants.Topic.ORDER),
-    // SOL and USDT
-    ORDER_BOOK_25_SOL_USDT(Constants.Topic.ORDER_BOOK_25_SOL_USDT),
+    // Spread
+    ORDER_BOOK_25_BTC_USDT(Constants.Topic.ORDER_BOOK_25_BTC_USDT),
+    ORDER_BOOK_25_ETH_USDT(Constants.Topic.ORDER_BOOK_25_ETH_USDT),
     PUBLIC_TRADE_SOL_USDT(Constants.Topic.PUBLIC_TRADE_SOL_USDT),
     TICKERS_SOL_USDT(Constants.Topic.TICKERS_SOL_USDT);
 

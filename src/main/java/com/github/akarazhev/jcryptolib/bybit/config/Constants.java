@@ -206,7 +206,8 @@ final class Constants {
         static final String INSURANCE_USDT = "insurance.USDT";
         static final String INSURANCE_USDC = "insurance.USDC";
         static final String ORDER = "order";
-        static final String ORDER_BOOK_25_SOL_USDT = "orderbook.25.SOLUSDT_SOL/USDT";
+        static final String ORDER_BOOK_25_BTC_USDT = "orderbook.25.BTCUSDT_BTC/USDT";
+        static final String ORDER_BOOK_25_ETH_USDT = "orderbook.25.ETHUSDT_ETH/USDT";
         static final String PUBLIC_TRADE_SOL_USDT = "publicTrade.SOLUSDT_SOL/USDT";
         static final String TICKERS_SOL_USDT = "tickers.SOLUSDT_SOL/USDT";
         static final String KLINE_LT_5_EOS3L_USDT = "kline_lt.5.EOS3LUSDT";
