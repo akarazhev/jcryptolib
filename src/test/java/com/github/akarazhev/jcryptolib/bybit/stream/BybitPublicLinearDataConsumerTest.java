@@ -200,7 +200,7 @@ final class BybitPublicLinearDataConsumerTest {
     @Test
     public void shouldReceiveTradeDataConsumer() {
         final var config = new DataConfig.Builder()
-                .streamType(StreamType.PTST)
+                .streamType(StreamType.PTL)
                 .topic(Topic.PUBLIC_TRADE_BTC_USDT)
                 .topic(Topic.PUBLIC_TRADE_ETH_USDT)
                 .build();
@@ -229,7 +229,7 @@ final class BybitPublicLinearDataConsumerTest {
     @Test
     public void shouldReceiveTickerDataConsumer() {
         final var config = new DataConfig.Builder()
-                .streamType(StreamType.PTST)
+                .streamType(StreamType.PTL)
                 .topic(Topic.TICKERS_BTC_USDT)
                 .topic(Topic.TICKERS_ETH_USDT)
                 .build();
