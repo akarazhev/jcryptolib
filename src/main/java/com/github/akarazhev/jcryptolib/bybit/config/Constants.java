@@ -208,8 +208,10 @@ final class Constants {
         static final String ORDER = "order";
         static final String ORDER_BOOK_25_BTC_USDT = "orderbook.25.BTCUSDT_BTC/USDT";
         static final String ORDER_BOOK_25_ETH_USDT = "orderbook.25.ETHUSDT_ETH/USDT";
-        static final String PUBLIC_TRADE_SOL_USDT = "publicTrade.SOLUSDT_SOL/USDT";
-        static final String TICKERS_SOL_USDT = "tickers.SOLUSDT_SOL/USDT";
+        static final String PUBLIC_TRADE_BTCUSDT_BTC_USDT = "publicTrade.BTCUSDT_BTC/USDT";
+        static final String PUBLIC_TRADE_ETHUSDT_ETH_USDT = "publicTrade.ETHUSDT_ETH/USDT";
+        static final String TICKERS_BTCUSDT_BTC_USDT = "tickers.BTCUSDT_BTC/USDT";
+        static final String TICKERS_ETHUSDT_ETH_USDT = "tickers.ETHUSDT_ETH/USDT";
         static final String KLINE_LT_5_EOS3L_USDT = "kline_lt.5.EOS3LUSDT";
         static final String TICKERS_LT_EOS3L_USDT = "tickers_lt.EOS3LUSDT";
         static final String LT_EOS3L_USDT = "lt.EOS3LUSDT";

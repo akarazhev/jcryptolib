@@ -43,25 +43,29 @@ public enum Topic {
     // Tickers
     TICKERS_BTC_USDT(Constants.Topic.TICKERS_BTC_USDT),
     TICKERS_ETH_USDT(Constants.Topic.TICKERS_ETH_USDT),
-    // Kline
+    // Klines
     KLINE_1_BTC_USDT(Constants.Topic.KLINE_1_BTC_USDT),
     KLINE_1_ETH_USDT(Constants.Topic.KLINE_1_ETH_USDT),
-    // All liquidation
+    // All liquidations
     ALL_LIQUIDATION_BTC_USDT(Constants.Topic.ALL_LIQUIDATION_BTC_USDT),
     ALL_LIQUIDATION_ETH_USDT(Constants.Topic.ALL_LIQUIDATION_ETH_USDT),
-    // Price Limit
+    // Price Limits
     PRICE_LIMIT_BTC_USDT(Constants.Topic.PRICE_LIMIT_BTC_USDT),
     PRICE_LIMIT_ETH_USDT(Constants.Topic.PRICE_LIMIT_ETH_USDT),
-    // Insurance
+    // Insurances
     INSURANCE_USDT(Constants.Topic.INSURANCE_USDT),
     INSURANCE_USDC(Constants.Topic.INSURANCE_USDC),
-    // Order
+    // Orders
     ORDER(Constants.Topic.ORDER),
-    // Spread
+    // Spread order books
     ORDER_BOOK_25_BTC_USDT(Constants.Topic.ORDER_BOOK_25_BTC_USDT),
     ORDER_BOOK_25_ETH_USDT(Constants.Topic.ORDER_BOOK_25_ETH_USDT),
-    PUBLIC_TRADE_SOL_USDT(Constants.Topic.PUBLIC_TRADE_SOL_USDT),
-    TICKERS_SOL_USDT(Constants.Topic.TICKERS_SOL_USDT);
+    // Spread trades
+    PUBLIC_TRADE_BTCUSDT_BTC_USDT(Constants.Topic.PUBLIC_TRADE_BTCUSDT_BTC_USDT),
+    PUBLIC_TRADE_ETHUSDT_ETH_USDT(Constants.Topic.PUBLIC_TRADE_ETHUSDT_ETH_USDT),
+    // Spread tickers
+    TICKERS_BTCUSDT_BTC_USDT(Constants.Topic.TICKERS_BTCUSDT_BTC_USDT),
+    TICKERS_ETHUSDT_ETH_USDT(Constants.Topic.TICKERS_ETHUSDT_ETH_USDT);
 
     private final String topic;
 
