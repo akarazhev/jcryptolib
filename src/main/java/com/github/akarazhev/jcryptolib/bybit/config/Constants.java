@@ -202,6 +202,7 @@ final class Constants {
         static final String PRICE_LIMIT_BTC_USDT = "priceLimit.BTCUSDT";
         static final String PRICE_LIMIT_ETH_USDT = "priceLimit.ETHUSDT";
         static final String ALL_LIQUIDATION_BTC_USDT = "allLiquidation.BTCUSDT";
+        static final String ALL_LIQUIDATION_ETH_USDT = "allLiquidation.ETHUSDT";
         static final String INSURANCE_USDT = "insurance.USDT";
         static final String ORDER = "order";
         static final String ORDER_BOOK_25_SOL_USDT = "orderbook.25.SOLUSDT_SOL/USDT";

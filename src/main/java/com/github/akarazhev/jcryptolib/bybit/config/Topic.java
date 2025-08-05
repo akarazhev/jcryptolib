@@ -46,7 +46,9 @@ public enum Topic {
     // Kline
     KLINE_1_BTC_USDT(Constants.Topic.KLINE_1_BTC_USDT),
     KLINE_1_ETH_USDT(Constants.Topic.KLINE_1_ETH_USDT),
+    // All liquidation
     ALL_LIQUIDATION_BTC_USDT(Constants.Topic.ALL_LIQUIDATION_BTC_USDT),
+    ALL_LIQUIDATION_ETH_USDT(Constants.Topic.ALL_LIQUIDATION_ETH_USDT),
     // Price Limit
     PRICE_LIMIT_BTC_USDT(Constants.Topic.PRICE_LIMIT_BTC_USDT),
     PRICE_LIMIT_ETH_USDT(Constants.Topic.PRICE_LIMIT_ETH_USDT),
