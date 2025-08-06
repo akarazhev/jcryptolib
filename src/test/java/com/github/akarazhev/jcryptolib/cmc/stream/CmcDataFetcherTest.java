@@ -150,7 +150,6 @@ import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.STABLECOIN_
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SUMMARY_DATA;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.SYMBOL;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TARGET_VALUE;
-import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.THIRTY_DAYS_PERCENTAGE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIME;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIMESTAMP;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TOTAL;
