@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/akarazhev/jcryptolib)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Java cryptocurrency utility library with reactive programming, HTTP support, and modular design that allows easy 
+Java cryptocurrency utility library with reactive programming, HTTP support, and modular design that allows easy
 integration into Java-based trading, analytics, or data ingestion systems.
 
 ---
@@ -31,6 +31,7 @@ integration into Java-based trading, analytics, or data ingestion systems.
 Add the dependency to your Maven project:
 
 ```xml
+
 <dependency>
     <groupId>com.github.akarazhev.jcryptolib</groupId>
     <artifactId>jcryptolib</artifactId>
@@ -45,15 +46,44 @@ Add the dependency to your Maven project:
 ### Example: Subscribing to Data Consumer
 
 ```java
-final var config = new DataConfig.Builder()
-        .type(DataConfig.Type.WEBSOCKET)
-        .isUseAuth(true)
-        .key(key)
-        .secret(secret)
-        .url(url)
-        .topics(topics)
+final var consoleHandler = new DataHandler<Map<String, Object>>() {
+  @Override
+  public void handle(final Payload<Map<String, Object>> payload) {
+    LOGGER.info("{}", payload);
+  }
+
+  @Override
+  public void close() {
+    LOGGER.info("Closing producer...");
+  }
+
+  @Override
+  public void error(Throwable t) {
+    LOGGER.error("Error in producer", t);
+  }
+};
+
+try (final var client = Clients.newHttpClient()) {
+  final var subscriber = BybitSubscriber.create(consoleHandler);
+  final var config = new DataConfig.Builder()
+        .streamType(StreamType.PTST)
+        .topic(Topic.ORDER_BOOK_1_BTC_USDT)
+        .topic(Topic.PUBLIC_TRADE_BTC_USDT)
+        .topic(Topic.TICKERS_BTC_USDT)
+        .topic(Topic.KLINE_1_BTC_USDT)
         .build();
-return Flowable.create(e -> DataConsumer.create(client, config).subscribe(e), BackpressureStrategy.BUFFER);
+  final var publicTestnetSpot = DataStreams.ofBybit(client, config)
+        .filter(BybitFilter.ofFilter())
+        .subscribe(subscriber.onNext(), subscriber.onError(), subscriber.onComplete());
+  
+   Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+     LOGGER.info("Shutting down jcryptolib test...");
+     publicTestnetSpot.dispose();
+     consoleHandler.close();
+   }));
+} catch (final Exception e) {
+  throw new RuntimeException(e);
+}
 ```
 
 ### Configuration
@@ -81,12 +111,35 @@ mvn test
 ## Project Structure
 
 ```
+doc/
+  integration/
+    bybit/
+      airdrop-hunt.md
+      by-starter.md
+      by-votes.md
+      launch-pad.md
+      launch-pool.md
+      mega-drop.md
+    cmc/
+      altcoin-season-index.md
+      bitcoin-dominance.md
+      cmc-100-index.md
+      derivatives-market.md
+      fear-and-greed-index.md
+      global-metrics.md
+      market-cycle-indicator.md
+      market-overview.md
+      spot-market.md
 src/
   main/
     java/
       module-info.java
       com/github/akarazhev/jcryptolib/
         bybit/
+          config/
+          stream/
+        cmc/
+          config/
           stream/
         config/
         stream/
@@ -100,7 +153,11 @@ src/
       com/github/akarazhev/jcryptolib/
         bybit/
           stream/
+        cmc/
+          stream/
         util/  
+    resources/
+      application.properties
 ```
 
 ---
@@ -109,13 +166,13 @@ src/
 
 - [0.0.1](https://github.com/jcryptolib/jcryptolib/releases/tag/v0.0.1) - Initial release that provides a basic set of
   utilities for working with cryptocurrencies:
-  - CMC Market Data: 
-    - Altcoin Season Index, Bitcoin Dominance, CoinMarketCap 100 Index, Derivatives Market, Fear and Greed Index, 
-      Global Metrics, Market Cycle Indicator, Market Overview, Spot Market.
-  - Bybit Activities: 
-    - Airdrop Hunt, ByStarter, ByVotes, Launchpad, Launchpool, Megadrop.
-  - Bybit Trading Data: 
-    - Orderbook, Trade, Ticker, Kline, All Liquidation, Insurance Pool, Order Price Limit, Spread Trading.
+    - CMC Market Data:
+        - Altcoin Season Index, Bitcoin Dominance, CoinMarketCap 100 Index, Derivatives Market, Fear and Greed Index,
+          Global Metrics, Market Cycle Indicator, Market Overview, Spot Market.
+    - Bybit Activities:
+        - Airdrop Hunt, ByStarter, ByVotes, Launchpad, Launchpool, Megadrop.
+    - Bybit Trading Data:
+        - Orderbook, Trade, Ticker, Kline, All Liquidation, Insurance Pool, Order Price Limit, Spread Trading.
 
 ---
 
