@@ -185,12 +185,14 @@ final class Constants {
 
         static final String ORDER_BOOK_1_BTC_USDT = "orderbook.1.BTCUSDT";
         static final String ORDER_BOOK_50_BTC_USDT = "orderbook.50.BTCUSDT";
+        static final String ORDER_BOOK_100_BTC_USDT = "orderbook.100.BTCUSDT";
         static final String ORDER_BOOK_200_BTC_USDT = "orderbook.200.BTCUSDT";
         static final String ORDER_BOOK_500_BTC_USDT = "orderbook.500.BTCUSDT";
         static final String ORDER_BOOK_RPI_BTC_USDT = "orderbook.rpi.BTCUSDT";
         static final String ORDER_BOOK_RPI_ETH_USDT = "orderbook.rpi.ETHUSDT";
         static final String ORDER_BOOK_1_ETH_USDT = "orderbook.1.ETHUSDT";
         static final String ORDER_BOOK_50_ETH_USDT = "orderbook.50.ETHUSDT";
+        static final String ORDER_BOOK_100_ETH_USDT = "orderbook.100.ETHUSDT";
         static final String ORDER_BOOK_200_ETH_USDT = "orderbook.200.ETHUSDT";
         static final String ORDER_BOOK_500_ETH_USDT = "orderbook.500.ETHUSDT";
         static final String PUBLIC_TRADE_BTC_USDT = "publicTrade.BTCUSDT";
@@ -206,8 +208,8 @@ final class Constants {
         static final String INSURANCE_USDT = "insurance.USDT";
         static final String INSURANCE_USDC = "insurance.USDC";
         static final String ORDER = "order";
-        static final String ORDER_BOOK_25_BTC_USDT = "orderbook.25.BTCUSDT_BTC/USDT";
-        static final String ORDER_BOOK_25_ETH_USDT = "orderbook.25.ETHUSDT_ETH/USDT";
+        static final String ORDER_BOOK_25_BTCUSDT_BTC_USDT = "orderbook.25.BTCUSDT_BTC/USDT";
+        static final String ORDER_BOOK_25_ETHUSDT_ETH_USDT = "orderbook.25.ETHUSDT_ETH/USDT";
         static final String PUBLIC_TRADE_BTCUSDT_BTC_USDT = "publicTrade.BTCUSDT_BTC/USDT";
         static final String PUBLIC_TRADE_ETHUSDT_ETH_USDT = "publicTrade.ETHUSDT_ETH/USDT";
         static final String TICKERS_BTCUSDT_BTC_USDT = "tickers.BTCUSDT_BTC/USDT";
