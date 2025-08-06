@@ -115,7 +115,7 @@ src/
   - Bybit Activities: 
     - Airdrop Hunt, ByStarter, ByVotes, Launchpad, Launchpool, Megadrop.
   - Bybit Trading Data: 
-    - Ticker, Kline, Orderbook, All Liquidation.
+    - Orderbook, Trade, Ticker, Kline, All Liquidation, Insurance Pool, Order Price Limit, Spread Trading.
 
 ---
 
