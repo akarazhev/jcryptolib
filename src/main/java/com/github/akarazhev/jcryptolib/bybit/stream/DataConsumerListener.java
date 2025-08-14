@@ -24,6 +24,9 @@
 
 package com.github.akarazhev.jcryptolib.bybit.stream;
 
+import com.github.akarazhev.jcryptolib.resilience.CircuitBreaker;
+import com.github.akarazhev.jcryptolib.resilience.HealthCheck;
+import com.github.akarazhev.jcryptolib.resilience.RateLimiter;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
 import com.github.akarazhev.jcryptolib.stream.Source;
@@ -58,6 +61,10 @@ final class DataConsumerListener implements WebSocket.Listener {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataConsumerListener.class);
     private final HttpClient client;
     private final DataConfig config;
+    private final CircuitBreaker circuitBreaker;
+    private final RateLimiter reconnectLimiter;
+    private final RateLimiter pingLimiter;
+    private final HealthCheck healthCheck;
     private final FlowableEmitter<Payload<Map<String, Object>>> emitter;
     private final StringBuilder buffer = new StringBuilder();
     private final AtomicBoolean isConnecting = new AtomicBoolean(false);
@@ -66,6 +73,20 @@ final class DataConsumerListener implements WebSocket.Listener {
     private final AtomicReference<WebSocket> webSocketRef = new AtomicReference<>();
     private final AtomicReference<Disposable> pingRef = new AtomicReference<>();
 
+    /**
+     * Creates a new Bybit data consumer listener.
+     * <p>
+     * The listener connects to the Bybit WebSocket endpoint, subscribes to topics, and handles
+     * connection, reconnection with exponential backoff, ping/pong, and resource
+     * cleanup.
+     * <p>
+     * When {@link FlowableEmitter#isCancelled()} is true, the subscription is cancelled.
+     *
+     * @param client  HttpClient to use
+     * @param config  Bybit data consumer configuration
+     * @param emitter Flowable emitter
+     * @return Bybit data consumer listener instance
+     */
     public static DataConsumerListener create(final HttpClient client, final DataConfig config,
                                               final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
         return new DataConsumerListener(client, config, emitter);
@@ -76,6 +97,10 @@ final class DataConsumerListener implements WebSocket.Listener {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
+        this.circuitBreaker = new CircuitBreaker(config.getCircuitBreakerThreshold(), config.getCircuitBreakerTimeoutMs());
+        this.reconnectLimiter = new RateLimiter(config.getReconnectRateLimitMs());
+        this.pingLimiter = new RateLimiter(config.getPingIntervalMs());
+        this.healthCheck = new HealthCheck(status -> LOGGER.info("Health status changed: {}", status));
     }
 
     /**
@@ -168,17 +193,21 @@ final class DataConsumerListener implements WebSocket.Listener {
     }
 
     /**
-     * Called when an error occurs during the WebSocket connection.
+     * Handles errors during WebSocket communication.
      * <p>
-     * If the emitter is not cancelled, the method will schedule a reconnection attempt with an
-     * exponential backoff. If the maximum number of reconnection attempts is reached, the method
-     * will propagate an error to the emitter.
-     * <p>
-     * If the emitter is cancelled, the method will stop the ping flow.
+     * This method logs the error, records the failure in the circuit breaker, and updates
+     * the health status to unhealthy. If the emitter has not been cancelled, it schedules
+     * a reconnection attempt. Otherwise, it stops the ping flow, closes the WebSocket,
+     * and sets the connecting flag to false.
+     *
+     * @param webSocket the WebSocket instance that encountered the error
+     * @param error     the exception that was thrown
      */
     @Override
     public void onError(final WebSocket webSocket, final Throwable error) {
         LOGGER.error("WebSocket error", error);
+        circuitBreaker.recordFailure();
+        healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
         if (!emitter.isCancelled()) {
             reconnect();
         } else {
@@ -216,17 +245,27 @@ final class DataConsumerListener implements WebSocket.Listener {
     }
 
     /**
-     * Schedules a reconnection attempt with an exponential backoff.
+     * Schedules a reconnection attempt with exponential backoff.
      * <p>
-     * If the maximum number of reconnection attempts is reached, the method will propagate an
-     * error to the emitter.
+     * If the circuit breaker is open, the method will log an error and set the health status
+     * to unhealthy. If the maximum number of reconnection attempts have been reached, the
+     * method will log an error, set the health status to unhealthy, and propagate an exception
+     * to the emitter if it has not been cancelled. Otherwise, the method will wait for the
+     * calculated delay and schedule a reconnection attempt using the {@link #connect()} method.
      */
     private void reconnect() {
         stopPing();
         closeWebSocket();
         isConnecting.set(false);
+        if (!circuitBreaker.allowRequest()) {
+            LOGGER.error("Circuit breaker OPEN, skipping reconnect.");
+            healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+            return;
+        }
+
         if (reconnectAttempts.incrementAndGet() > config.getMaxReconnectAttempts()) {
             LOGGER.error("Max reconnection attempts ({}) reached", config.getMaxReconnectAttempts());
+            healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
             if (!emitter.isCancelled()) {
                 emitter.onError(new IllegalStateException("Max reconnection attempts reached"));
             }
@@ -242,12 +281,32 @@ final class DataConsumerListener implements WebSocket.Listener {
     }
 
     /**
-     * Connects to the WebSocket and starts listening for messages.
+     * Initiates a WebSocket connection if not already connecting and the emitter is not cancelled.
      * <p>
-     * If the connection fails, the method will schedule a reconnection attempt.
+     * This method checks if the circuit breaker allows the connection request and if the
+     * reconnection rate limit permits it. It handles the connection process, including stopping
+     * any ongoing ping flows and closing existing WebSockets. If connection attempts fail,
+     * it will schedule a reconnection with exponential backoff.
+     * <p>
+     * The method updates the health status based on the success or failure of the connection
+     * and logs the process. It ensures that the connection attempt does not proceed if the
+     * circuit breaker is open or the reconnect rate is limited.
      */
     public void connect() {
         if (!emitter.isCancelled() && isConnecting.compareAndSet(false, true)) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN, skipping connect attempt");
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                isConnecting.set(false);
+                return;
+            }
+
+            if (!reconnectLimiter.tryAcquire()) {
+                LOGGER.warn("Reconnect rate limited.");
+                isConnecting.set(false);
+                return;
+            }
+
             stopPing();
             closeWebSocket();
             try {
@@ -258,15 +317,21 @@ final class DataConsumerListener implements WebSocket.Listener {
                             isConnecting.set(false);
                             if (ex != null) {
                                 LOGGER.error("Failed to connect: {}", ex.getMessage());
+                                circuitBreaker.recordFailure();
+                                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                                 reconnect();
                             } else if (ws != null) {
                                 LOGGER.info("WebSocket connection established");
                                 webSocketRef.set(ws);
+                                circuitBreaker.recordSuccess();
+                                healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                             }
                         });
             } catch (final Exception ex) {
                 isConnecting.set(false);
                 LOGGER.error("Exception during connect: {}", ex.getMessage());
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 reconnect();
             }
         }
@@ -301,9 +366,11 @@ final class DataConsumerListener implements WebSocket.Listener {
                         final var webSocket = webSocketRef.get();
                         if (webSocket != null) {
                             if (!isAwaitingPong.get()) {
-                                webSocket.sendText(Requests.ofPing(), true);
-                                isAwaitingPong.set(true);
-                                LOGGER.trace("Ping sent: {}", Requests.ofPing());
+                                if (pingLimiter.tryAcquire()) {
+                                    webSocket.sendText(Requests.ofPing(), true);
+                                    isAwaitingPong.set(true);
+                                    LOGGER.trace("Ping sent: {}", Requests.ofPing());
+                                }
                             } else {
                                 reconnect();
                             }
@@ -341,6 +408,16 @@ final class DataConsumerListener implements WebSocket.Listener {
         }
     }
 
+    /**
+     * Returns the URI of the WebSocket connection.
+     * <p>
+     * The URI is based on the value of the {@link #config} property.
+     * <p>
+     * This method is thread-safe and can be called from any thread.
+     *
+     * @return the URI of the WebSocket connection
+     * @throws RuntimeException if the URI is invalid
+     */
     private URI getURI() {
         try {
             return new URI(config.getStreamType().getUrl());
