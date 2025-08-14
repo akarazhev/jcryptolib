@@ -66,6 +66,10 @@ public final class AppConfig {
         return Integer.parseInt(get(key));
     }
 
+    public static long getAsLong(final String key) {
+        return Long.parseLong(get(key));
+    }
+
     public static float getAsFloat(final String key) {
         return Float.parseFloat(get(key));
     }
