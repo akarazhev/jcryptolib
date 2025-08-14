@@ -54,6 +54,9 @@ public final class DataConfig {
     private final int maxReconnectIntervalMs;
     private final int pingIntervalMs;
     private final int fetchIntervalMs;
+    private final int circuitBreakerThreshold;
+    private final long circuitBreakerTimeoutMs;
+    private final int reconnectRateLimitMs;
 
     private DataConfig(final Builder builder) {
         this.types = builder.types;
@@ -71,6 +74,9 @@ public final class DataConfig {
         this.maxReconnectIntervalMs = builder.maxReconnectIntervalMs;
         this.pingIntervalMs = builder.pingIntervalMs;
         this.fetchIntervalMs = builder.fetchIntervalMs;
+        this.circuitBreakerThreshold = builder.circuitBreakerThreshold;
+        this.circuitBreakerTimeoutMs = builder.circuitBreakerTimeoutMs;
+        this.reconnectRateLimitMs = builder.reconnectRateLimitMs;
     }
 
     public Set<Type> getTypes() {
@@ -133,6 +139,18 @@ public final class DataConfig {
         return fetchIntervalMs;
     }
 
+    public int getCircuitBreakerThreshold() {
+        return circuitBreakerThreshold;
+    }
+
+    public long getCircuitBreakerTimeoutMs() {
+        return circuitBreakerTimeoutMs;
+    }
+
+    public int getReconnectRateLimitMs() {
+        return reconnectRateLimitMs;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -152,6 +170,9 @@ public final class DataConfig {
                 "\n\tmaxReconnectIntervalMs=" + maxReconnectIntervalMs +
                 "\n\tpingIntervalMs=" + pingIntervalMs +
                 "\n\tfetchIntervalMs=" + fetchIntervalMs +
+                "\n\tcircuitBreakerThreshold=" + circuitBreakerThreshold +
+                "\n\tcircuitBreakerTimeoutMs=" + circuitBreakerTimeoutMs +
+                "\n\treconnectRateLimitMs=" + reconnectRateLimitMs +
                 "\n}";
     }
 
@@ -171,6 +192,9 @@ public final class DataConfig {
         private int maxReconnectIntervalMs = Config.getMaxReconnectIntervalMs();
         private int pingIntervalMs = Config.getPingIntervalMs();
         private int fetchIntervalMs = Config.getFetchIntervalMs();
+        private int circuitBreakerThreshold = Config.getCircuitBreakerThreshold();
+        private long circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
+        private int reconnectRateLimitMs = Config.getReconnectRateLimitMs();
 
         public Builder type(final Type type) {
             this.types.add(type);
@@ -244,6 +268,21 @@ public final class DataConfig {
 
         public Builder fetchIntervalMs(final int fetchIntervalMs) {
             this.fetchIntervalMs = fetchIntervalMs;
+            return this;
+        }
+
+        public Builder circuitBreakerThreshold(final int threshold) {
+            this.circuitBreakerThreshold = threshold;
+            return this;
+        }
+
+        public Builder circuitBreakerTimeoutMs(final long timeoutMs) {
+            this.circuitBreakerTimeoutMs = timeoutMs;
+            return this;
+        }
+
+        public Builder reconnectRateLimitMs(final int rateLimitMs) {
+            this.reconnectRateLimitMs = rateLimitMs;
             return this;
         }
 
