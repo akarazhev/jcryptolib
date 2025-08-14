@@ -41,6 +41,9 @@ final class Constants {
         static final String FETCH_INTERVAL_MS = "bybit.fetch.interval.ms";
         static final String BACKOFF_MULTIPLIER = "bybit.backoff.multiplier";
         static final String MAX_RECONNECT_ATTEMPTS = "bybit.max.reconnect.attempts";
+        static final String CIRCUIT_BREAKER_THRESHOLD = "bybit.circuit.breaker.threshold";
+        static final String CIRCUIT_BREAKER_TIMEOUT_MS = "bybit.circuit.breaker.timeout.ms";
+        static final String RECONNECT_RATE_LIMIT_MS = "bybit.reconnect.rate.limit.ms";
         static final String API_KEY = "bybit.api.key";
         static final String API_SECRET = "bybit.api.secret";
     }
