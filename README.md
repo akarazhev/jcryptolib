@@ -15,6 +15,7 @@ integration into Java-based trading, analytics, or data ingestion systems.
 - **Logging** with SLF4J and Logback
 - **Bybit Exchange Streaming** support
 - Java Platform Module System (JPMS) enabled (`module-info.java`)
+- Production-ready resilience (circuit breaker, rate limiting, health checks)
 - MIT License
 
 ---
@@ -90,6 +91,16 @@ try (final var client = Clients.newHttpClient()) {
 
 You can provide application settings in `src/main/resources/application.properties`.
 
+#### Bybit Resilience Settings
+
+The following properties are available for tuning connection resilience:
+```properties
+bybit.circuit.breaker.threshold=5         # Number of consecutive failures before opening the circuit
+bybit.circuit.breaker.timeout.ms=30000    # Time (ms) to keep the circuit open before retrying
+bybit.reconnect.rate.limit.ms=1000        # Minimum interval (ms) between reconnect attempts
+```
+These settings enable production-grade circuit breaking, rate limiting, and robust reconnection for Bybit data streams.
+
 ---
 
 ## Development
@@ -142,6 +153,7 @@ src/
           config/
           stream/
         config/
+        resilience/
         stream/
         util/
         package-info.java
