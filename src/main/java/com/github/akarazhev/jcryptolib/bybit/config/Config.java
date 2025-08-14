@@ -29,12 +29,15 @@ import com.github.akarazhev.jcryptolib.config.AppConfig;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.API_KEY;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.API_SECRET;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.BACKOFF_MULTIPLIER;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.CIRCUIT_BREAKER_THRESHOLD;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.CIRCUIT_BREAKER_TIMEOUT_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.CONNECT_TIMEOUT_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.FETCH_INTERVAL_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.INITIAL_RECONNECT_INTERVAL_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.MAX_RECONNECT_ATTEMPTS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.MAX_RECONNECT_INTERVAL_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.PING_INTERVAL_MS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.RECONNECT_RATE_LIMIT_MS;
 
 public final class Config {
     private Config() {
@@ -67,6 +70,18 @@ public final class Config {
 
     public static int getFetchIntervalMs() {
         return AppConfig.getAsInt(FETCH_INTERVAL_MS);
+    }
+
+    public static int getCircuitBreakerThreshold() {
+        return AppConfig.getAsInt(CIRCUIT_BREAKER_THRESHOLD);
+    }
+
+    public static long getCircuitBreakerTimeoutMs() {
+        return AppConfig.getAsLong(CIRCUIT_BREAKER_TIMEOUT_MS);
+    }
+
+    public static int getReconnectRateLimitMs() {
+        return AppConfig.getAsInt(RECONNECT_RATE_LIMIT_MS);
     }
 
     public static String getApiKey() {
