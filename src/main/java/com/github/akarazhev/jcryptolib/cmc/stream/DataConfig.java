@@ -34,6 +34,9 @@ public final class DataConfig {
     private final Set<Type> types;
     private final int connectTimeoutMs;
     private final int fetchIntervalMs;
+    private final int circuitBreakerThreshold;
+    private final long circuitBreakerTimeoutMs;
+    private final int rateLimitMs;
     private final String apiKey;
 
     private DataConfig(final Builder builder) {
@@ -44,6 +47,9 @@ public final class DataConfig {
         this.types = builder.types;
         this.connectTimeoutMs = builder.connectTimeoutMs;
         this.fetchIntervalMs = builder.fetchIntervalMs;
+        this.circuitBreakerThreshold = builder.circuitBreakerThreshold;
+        this.circuitBreakerTimeoutMs = builder.circuitBreakerTimeoutMs;
+        this.rateLimitMs = builder.rateLimitMs;
         this.apiKey = builder.apiKey;
     }
 
@@ -59,6 +65,18 @@ public final class DataConfig {
         return fetchIntervalMs;
     }
 
+    public int getCircuitBreakerThreshold() {
+        return circuitBreakerThreshold;
+    }
+
+    public long getCircuitBreakerTimeoutMs() {
+        return circuitBreakerTimeoutMs;
+    }
+
+    public int getRateLimitMs() {
+        return rateLimitMs;
+    }
+
     public String getApiKey() {
         return apiKey;
     }
@@ -67,6 +85,9 @@ public final class DataConfig {
         return "\nCMC Data Config {" +
                 "\n\ttypes=" + types +
                 "\n\tfetchIntervalMs=" + fetchIntervalMs +
+                "\n\tcircuitBreakerThreshold=" + circuitBreakerThreshold +
+                "\n\tcircuitBreakerTimeoutMs=" + circuitBreakerTimeoutMs +
+                "\n\trateLimitMs=" + rateLimitMs +
                 "\n\tconnectTimeoutMs=" + connectTimeoutMs +
                 "\n}";
     }
@@ -76,6 +97,24 @@ public final class DataConfig {
         private int connectTimeoutMs = Config.getConnectTimeoutMs();
         private int fetchIntervalMs = Config.getFetchAtTime();
         private String apiKey = Config.getApiKey();
+        private int circuitBreakerThreshold = Config.getCircuitBreakerThreshold();
+        private long circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
+        private int rateLimitMs = Config.getRateLimitMs();
+
+        public Builder circuitBreakerThreshold(final int circuitBreakerThreshold) {
+            this.circuitBreakerThreshold = circuitBreakerThreshold;
+            return this;
+        }
+
+        public Builder circuitBreakerTimeoutMs(final long circuitBreakerTimeoutMs) {
+            this.circuitBreakerTimeoutMs = circuitBreakerTimeoutMs;
+            return this;
+        }
+
+        public Builder rateLimitMs(final int rateLimitMs) {
+            this.rateLimitMs = rateLimitMs;
+            return this;
+        }
 
         public Builder type(final Type type) {
             this.types.add(type);

@@ -27,8 +27,11 @@ package com.github.akarazhev.jcryptolib.cmc.config;
 import com.github.akarazhev.jcryptolib.config.AppConfig;
 
 import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.API_KEY;
+import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.CIRCUIT_BREAKER_THRESHOLD;
+import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.CIRCUIT_BREAKER_TIMEOUT_MS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.CONNECT_TIMEOUT_MS;
 import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.FETCH_INTERVAL_MS;
+import static com.github.akarazhev.jcryptolib.cmc.config.Constants.Config.RATE_LIMIT_MS;
 
 public final class Config {
     private Config() {
@@ -41,6 +44,18 @@ public final class Config {
 
     public static int getFetchAtTime() {
         return AppConfig.getAsInt(FETCH_INTERVAL_MS);
+    }
+
+    public static int getCircuitBreakerThreshold() {
+        return AppConfig.getAsInt(CIRCUIT_BREAKER_THRESHOLD);
+    }
+
+    public static long getCircuitBreakerTimeoutMs() {
+        return AppConfig.getAsLong(CIRCUIT_BREAKER_TIMEOUT_MS);
+    }
+
+    public static int getRateLimitMs() {
+        return AppConfig.getAsInt(RATE_LIMIT_MS);
     }
 
     public static String getApiKey() {

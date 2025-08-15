@@ -36,6 +36,9 @@ final class Constants {
 
         static final String CONNECT_TIMEOUT_MS = "cmc.connect.timeout.ms";
         static final String FETCH_INTERVAL_MS = "cmc.fetch.interval.ms";
+        static final String CIRCUIT_BREAKER_THRESHOLD = "cmc.circuit.breaker.threshold";
+        static final String CIRCUIT_BREAKER_TIMEOUT_MS = "cmc.circuit.breaker.timeout.ms";
+        static final String RATE_LIMIT_MS = "cmc.rate.limit.ms";
         static final String API_KEY = "cmc.api.key";
     }
 
