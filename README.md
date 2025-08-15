@@ -14,8 +14,9 @@ integration into Java-based trading, analytics, or data ingestion systems.
 - **JSON Serialization/Deserialization** with Jackson
 - **Logging** with SLF4J and Logback
 - **Bybit Exchange Streaming** support
+- **Resilience for Bybit and CoinMarketCap**: Both Bybit and CoinMarketCap (CMC) data fetchers use production-grade 
+  circuit breaker, rate limiter and health check logic
 - Java Platform Module System (JPMS) enabled (`module-info.java`)
-- Production-ready resilience (circuit breaker, rate limiting, health checks)
 - MIT License
 
 ---
@@ -95,9 +96,27 @@ You can provide application settings in `src/main/resources/application.properti
 
 The following properties are available for tuning connection resilience:
 ```properties
-bybit.circuit.breaker.threshold=5         # Number of consecutive failures before opening the circuit
-bybit.circuit.breaker.timeout.ms=30000    # Time (ms) to keep the circuit open before retrying
-bybit.reconnect.rate.limit.ms=1000        # Minimum interval (ms) between reconnect attempts
+# Bybit Connection settings
+bybit.connect.timeout.ms=10000
+bybit.initial.reconnect.interval.ms=100
+bybit.max.reconnect.interval.ms=30000
+bybit.max.reconnect.attempts=15
+bybit.backoff.multiplier=1.5
+bybit.ping.interval.ms=20000
+bybit.fetch.interval.ms=600000
+bybit.circuit.breaker.threshold=5
+bybit.circuit.breaker.timeout.ms=30000
+bybit.reconnect.rate.limit.ms=1000
+bybit.rest.rate.limit.ms=1000
+# Bybit API settings
+bybit.api.key=
+bybit.api.secret=
+# CoinMarketCap settings
+cmc.connect.timeout.ms=10000
+cmc.fetch.interval.ms=600000
+cmc.circuit.breaker.threshold=5
+cmc.circuit.breaker.timeout.ms=30000
+cmc.rate.limit.ms=2100
 ```
 These settings enable production-grade circuit breaking, rate limiting, and robust reconnection for Bybit data streams.
 
