@@ -26,6 +26,9 @@ package com.github.akarazhev.jcryptolib.bybit.stream;
 
 import com.github.akarazhev.jcryptolib.bybit.config.RequestKey;
 import com.github.akarazhev.jcryptolib.bybit.config.RequestValue;
+import com.github.akarazhev.jcryptolib.resilience.CircuitBreaker;
+import com.github.akarazhev.jcryptolib.resilience.HealthCheck;
+import com.github.akarazhev.jcryptolib.resilience.RateLimiter;
 import com.github.akarazhev.jcryptolib.stream.DataFetcher;
 import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
@@ -66,6 +69,9 @@ final class RestApiDataFetcher implements DataFetcher {
     private final HttpClient client;
     private final DataConfig config;
     private final FlowableEmitter<Payload<Map<String, Object>>> emitter;
+    private final CircuitBreaker circuitBreaker;
+    private final RateLimiter rateLimiter;
+    private final HealthCheck healthCheck;
 
     public static RestApiDataFetcher create(final HttpClient client, final DataConfig config,
                                             final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
@@ -77,6 +83,9 @@ final class RestApiDataFetcher implements DataFetcher {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
+        this.circuitBreaker = new CircuitBreaker(config.getCircuitBreakerThreshold(), config.getCircuitBreakerTimeoutMs());
+        this.rateLimiter = new RateLimiter(config.getRestRateLimitMs());
+        this.healthCheck = new HealthCheck(status -> LOGGER.info("RestApi Health: {}", status));
     }
 
     @Override
@@ -101,7 +110,7 @@ final class RestApiDataFetcher implements DataFetcher {
         if (!config.getParams().isEmpty()) {
             fetch(url, config.getParams());
         } else {
-            fetch(url);
+            fetchWithResilience(url);
         }
     }
 
@@ -141,8 +150,17 @@ final class RestApiDataFetcher implements DataFetcher {
         }
     }
 
-    private void fetch(final String url) {
+    private void fetchWithResilience(final String url) {
         if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for RestApi, skipping fetch");
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
+            }
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for RestApi, skipping fetch");
+                return;
+            }
             try {
                 final var response = client.send(createRequest(getUri(url)), HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
@@ -152,12 +170,18 @@ final class RestApiDataFetcher implements DataFetcher {
                             LOGGER.debug("Fetched message: {}", value);
                             emitter.onNext(Payload.of(Provider.BYBIT, Source.RAPI, value));
                         });
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                     }
                 } else {
                     LOGGER.error("Failed to fetch data by uri: HTTP {}", response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 }
             } catch (final Exception e) {
                 LOGGER.error("Failed to fetch data by uri", e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 emitter.onError(e);
             }
         }
