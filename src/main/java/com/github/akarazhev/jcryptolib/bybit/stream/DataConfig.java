@@ -57,6 +57,7 @@ public final class DataConfig {
     private final int circuitBreakerThreshold;
     private final long circuitBreakerTimeoutMs;
     private final int reconnectRateLimitMs;
+    private final int restRateLimitMs;
 
     private DataConfig(final Builder builder) {
         this.types = builder.types;
@@ -77,6 +78,7 @@ public final class DataConfig {
         this.circuitBreakerThreshold = builder.circuitBreakerThreshold;
         this.circuitBreakerTimeoutMs = builder.circuitBreakerTimeoutMs;
         this.reconnectRateLimitMs = builder.reconnectRateLimitMs;
+        this.restRateLimitMs = builder.restRateLimitMs;
     }
 
     public Set<Type> getTypes() {
@@ -151,6 +153,10 @@ public final class DataConfig {
         return reconnectRateLimitMs;
     }
 
+    public int getRestRateLimitMs() {
+        return restRateLimitMs;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -173,6 +179,7 @@ public final class DataConfig {
                 "\n\tcircuitBreakerThreshold=" + circuitBreakerThreshold +
                 "\n\tcircuitBreakerTimeoutMs=" + circuitBreakerTimeoutMs +
                 "\n\treconnectRateLimitMs=" + reconnectRateLimitMs +
+                "\n\trestRateLimitMs=" + restRateLimitMs +
                 "\n}";
     }
 
@@ -195,6 +202,7 @@ public final class DataConfig {
         private int circuitBreakerThreshold = Config.getCircuitBreakerThreshold();
         private long circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
         private int reconnectRateLimitMs = Config.getReconnectRateLimitMs();
+        private int restRateLimitMs = Config.getRestRateLimitMs();
 
         public Builder type(final Type type) {
             this.types.add(type);
@@ -283,6 +291,11 @@ public final class DataConfig {
 
         public Builder reconnectRateLimitMs(final int rateLimitMs) {
             this.reconnectRateLimitMs = rateLimitMs;
+            return this;
+        }
+
+        public Builder restRateLimitMs(final int ms) {
+            this.restRateLimitMs = ms;
             return this;
         }
 

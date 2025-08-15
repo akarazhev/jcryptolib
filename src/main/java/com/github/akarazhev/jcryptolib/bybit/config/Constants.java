@@ -44,6 +44,7 @@ final class Constants {
         static final String CIRCUIT_BREAKER_THRESHOLD = "bybit.circuit.breaker.threshold";
         static final String CIRCUIT_BREAKER_TIMEOUT_MS = "bybit.circuit.breaker.timeout.ms";
         static final String RECONNECT_RATE_LIMIT_MS = "bybit.reconnect.rate.limit.ms";
+        static final String REST_RATE_LIMIT_MS = "bybit.rest.rate.limit.ms";
         static final String API_KEY = "bybit.api.key";
         static final String API_SECRET = "bybit.api.secret";
     }

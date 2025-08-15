@@ -30,6 +30,9 @@ import com.github.akarazhev.jcryptolib.stream.Payload;
 import com.github.akarazhev.jcryptolib.stream.Provider;
 import com.github.akarazhev.jcryptolib.stream.Source;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
+import com.github.akarazhev.jcryptolib.resilience.CircuitBreaker;
+import com.github.akarazhev.jcryptolib.resilience.RateLimiter;
+import com.github.akarazhev.jcryptolib.resilience.HealthCheck;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -73,6 +76,9 @@ final class BybitDataFetcher implements DataFetcher {
     private final HttpClient client;
     private final DataConfig config;
     private final FlowableEmitter<Payload<Map<String, Object>>> emitter;
+    private final CircuitBreaker circuitBreaker;
+    private final RateLimiter rateLimiter;
+    private final HealthCheck healthCheck;
 
     public static BybitDataFetcher create(final HttpClient client, final DataConfig config,
                                           final FlowableEmitter<Payload<Map<String, Object>>> emitter) {
@@ -84,6 +90,9 @@ final class BybitDataFetcher implements DataFetcher {
         this.client = Objects.requireNonNull(client, "Client must be not null");
         this.config = Objects.requireNonNull(config, "Config must be not null");
         this.emitter = Objects.requireNonNull(emitter, "Emitter must be not null");
+        this.circuitBreaker = new CircuitBreaker(config.getCircuitBreakerThreshold(), config.getCircuitBreakerTimeoutMs());
+        this.rateLimiter = new RateLimiter(config.getRestRateLimitMs());
+        this.healthCheck = new HealthCheck(status -> LOGGER.info("Bybit Health: {}", status));
     }
 
     @Override
@@ -106,23 +115,34 @@ final class BybitDataFetcher implements DataFetcher {
     private void fetchData() {
         config.getTypes().forEach(type -> {
             if (LPD.equals(type)) {
-                fetchLaunchPads();
+                fetchLaunchPadsWithResilience();
             } else if (MD.equals(type)) {
-                fetchAsList(BybitRequestBuilder.buildMegaDropRequest(), type, Source.MD);
+                fetchAsListWithResilience(BybitRequestBuilder.buildMegaDropRequest(), type, Source.MD);
             } else if (LPL.equals(type)) {
-                fetchLaunchPools();
+                fetchLaunchPoolsWithResilience();
             } else if (BYV.equals(type) || BYVP.equals(type)) {
-                fetchAsList(BybitRequestBuilder.buildByVotesRequest(type), type, Source.BYV);
+                fetchAsListWithResilience(BybitRequestBuilder.buildByVotesRequest(type), type, Source.BYV);
             } else if (BYS.equals(type) || BYSP.equals(type)) {
-                fetchByStarter(type);
+                fetchByStarterWithResilience(type);
             } else if (ADH.equals(type) || ADHP.equals(type)) {
-                fetchAirdropHunt(type);
+                fetchAirdropHuntWithResilience(type);
             }
         });
     }
 
-    private void fetchLaunchPads() {
+    private void fetchLaunchPadsWithResilience() {
         if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", Type.LPD.getType());
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
+            }
+
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.LPD.getType());
+                return;
+            }
+
             try {
                 final var response = client.send(BybitRequestBuilder.buildLaunchPadRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -130,20 +150,38 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchAsMap(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Type.LPD, Source.LPD);
+                        fetchAsMapWithResilience(BybitRequestBuilder.buildLaunchPadRequest(totalProjects), Type.LPD,
+                                Source.LPD);
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                     }
                 } else {
                     LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.LPD.getType(), response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 }
             } catch (final Exception e) {
                 LOGGER.error("Failed to fetch '{}' data", Type.LPD.getType(), e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 emitter.onError(e);
             }
         }
     }
 
-    private void fetchLaunchPools() {
+    private void fetchLaunchPoolsWithResilience() {
         if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", Type.LPL.getType());
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
+            }
+
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.LPL.getType());
+                return;
+            }
+
             try {
                 final var response = client.send(BybitRequestBuilder.buildLaunchPoolRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -151,42 +189,80 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var totalProjects = (Integer) result.get(TOTAL_PROJECTS);
-                        fetchAsMap(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Type.LPL, Source.LPL);
+                        fetchAsMapWithResilience(BybitRequestBuilder.buildLaunchPoolRequest(totalProjects), Type.LPL,
+                                Source.LPL);
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                     }
                 } else {
                     LOGGER.error("Failed to fetch '{}' data: HTTP {}", Type.LPL.getType(), response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 }
             } catch (final Exception e) {
                 LOGGER.error("Failed to fetch '{}' data", Type.LPL.getType(), e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 emitter.onError(e);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void fetchAsMap(final HttpRequest request, final Type type, final Source source) {
-        try {
-            final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == STATUS_CODE_OK) {
-                final var result = getResultAsMap(response.uri(), response.body());
-                if (result != null && !result.isEmpty()) {
-                    final var data = ((List<Map<String, Object>>) result.get(LIST));
-                    if (data != null && !data.isEmpty()) {
-                        LOGGER.debug("Fetched '{}' message: {}", type.getType(), data);
-                        data.forEach(d -> emitter.onNext(Payload.of(Provider.BYBIT, source, d)));
-                    }
-                }
-            } else {
-                LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
+    private void fetchAsMapWithResilience(final HttpRequest request, final Type type, final Source source) {
+        if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", type.getType());
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
             }
-        } catch (final Exception e) {
-            LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
-            emitter.onError(e);
+
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
+                return;
+            }
+
+            try {
+                final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == STATUS_CODE_OK) {
+                    final var result = getResultAsMap(response.uri(), response.body());
+                    if (result != null && !result.isEmpty()) {
+                        final var data = ((List<Map<String, Object>>) result.get(LIST));
+                        if (data != null && !data.isEmpty()) {
+                            LOGGER.debug("Fetched '{}' message: {}", type.getType(), data);
+                            data.forEach(d -> emitter.onNext(Payload.of(Provider.BYBIT, source, d)));
+                        }
+
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
+                    }
+                } else {
+                    LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                }
+            } catch (final Exception e) {
+                LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                emitter.onError(e);
+            }
         }
     }
 
-    private void fetchAsList(final HttpRequest request, final Type type, final Source source) {
+    private void fetchAsListWithResilience(final HttpRequest request, final Type type, final Source source) {
         if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", type.getType());
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
+            }
+
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
+                return;
+            }
+
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
@@ -194,19 +270,36 @@ final class BybitDataFetcher implements DataFetcher {
                     if (data != null && !data.isEmpty()) {
                         LOGGER.debug("Fetched '{}' message: {}", type.getType(), data);
                         data.forEach(d -> emitter.onNext(Payload.of(Provider.BYBIT, source, d)));
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                     }
                 } else {
                     LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 }
             } catch (final Exception e) {
                 LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 emitter.onError(e);
             }
         }
     }
 
-    private void fetchByStarter(final Type type) {
+    private void fetchByStarterWithResilience(final Type type) {
         if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", type.getType());
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
+            }
+
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
+                return;
+            }
+
             try {
                 final var response = client.send(BybitRequestBuilder.buildByStarterRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -214,20 +307,38 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var projectCount = (Integer) result.get(PROJECT_COUNT);
-                        fetchAsList(BybitRequestBuilder.buildByStarterRequest(type, projectCount), type, Source.BYS);
+                        fetchAsListWithResilience(BybitRequestBuilder.buildByStarterRequest(type, projectCount), type,
+                                Source.BYS);
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                     }
                 } else {
                     LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 }
             } catch (final Exception e) {
                 LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 emitter.onError(e);
             }
         }
     }
 
-    private void fetchAirdropHunt(final Type type) {
+    private void fetchAirdropHuntWithResilience(final Type type) {
         if (!emitter.isCancelled()) {
+            if (!circuitBreaker.allowRequest()) {
+                LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", type.getType());
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                return;
+            }
+
+            if (!rateLimiter.tryAcquire()) {
+                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
+                return;
+            }
+
             try {
                 final var response = client.send(BybitRequestBuilder.buildAirdropHuntRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -235,13 +346,20 @@ final class BybitDataFetcher implements DataFetcher {
                     final var result = getResultAsMap(response.uri(), response.body());
                     if (result != null && !result.isEmpty()) {
                         final var projects = (Integer) result.get(PROJECTS);
-                        fetchAsMap(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), type, Source.ADH);
+                        fetchAsMapWithResilience(BybitRequestBuilder.buildAirdropHuntRequest(type, projects), type,
+                                Source.ADH);
+                        circuitBreaker.recordSuccess();
+                        healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                     }
                 } else {
                     LOGGER.error("Failed to fetch '{}' data: HTTP {}", type.getType(), response.statusCode());
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 }
             } catch (final Exception e) {
                 LOGGER.error("Failed to fetch '{}' data", type.getType(), e);
+                circuitBreaker.recordFailure();
+                healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 emitter.onError(e);
             }
         }

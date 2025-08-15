@@ -38,6 +38,7 @@ import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.MAX_
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.MAX_RECONNECT_INTERVAL_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.PING_INTERVAL_MS;
 import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.RECONNECT_RATE_LIMIT_MS;
+import static com.github.akarazhev.jcryptolib.bybit.config.Constants.Config.REST_RATE_LIMIT_MS;
 
 public final class Config {
     private Config() {
@@ -82,6 +83,10 @@ public final class Config {
 
     public static int getReconnectRateLimitMs() {
         return AppConfig.getAsInt(RECONNECT_RATE_LIMIT_MS);
+    }
+
+    public static int getRestRateLimitMs() {
+        return AppConfig.getAsInt(REST_RATE_LIMIT_MS);
     }
 
     public static String getApiKey() {
