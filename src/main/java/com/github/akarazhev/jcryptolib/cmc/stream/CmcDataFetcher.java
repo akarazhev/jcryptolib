@@ -185,13 +185,13 @@ final class CmcDataFetcher implements DataFetcher {
             var timeEnd = todayInUtc();
             while (isMoreAvailable && !emitter.isCancelled()) {
                 if (!circuitBreaker.allowRequest()) {
-                    LOGGER.warn("Circuit breaker OPEN for CMC100_API_PRO_H, skipping fetch");
+                    LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", Type.CMC100_API_PRO_H.getType());
                     healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                     break;
                 }
 
                 if (!rateLimiter.tryAcquire()) {
-                    LOGGER.warn("Rate limit exceeded for CMC100_API_PRO_H, skipping fetch");
+                    LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.CMC100_API_PRO_H.getType());
                     break;
                 }
 
@@ -239,13 +239,13 @@ final class CmcDataFetcher implements DataFetcher {
             var isMoreAvailable = true;
             while (isMoreAvailable && !emitter.isCancelled()) {
                 if (!circuitBreaker.allowRequest()) {
-                    LOGGER.warn("Circuit breaker OPEN for FGI_API_PRO_H, skipping fetch");
+                    LOGGER.warn("Circuit breaker OPEN for '{}', skipping fetch", Type.FGI_API_PRO_H.getType());
                     healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                     break;
                 }
 
                 if (!rateLimiter.tryAcquire()) {
-                    LOGGER.warn("Rate limit exceeded for FGI_API_PRO_H, skipping fetch");
+                    LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.FGI_API_PRO_H.getType());
                     break;
                 }
 
