@@ -150,7 +150,7 @@ final class CmcRequestBuilder {
     }
 
     public static HttpRequest buildCoinMarketCap100IndexApiProHistoricalRequest(final String apiKey, final long timeEnd,
-                                                                          final int count) {
+                                                                                final int count) {
         final var url = String.format("?" + INTERVAL + "=" + DAILY + "&" + TIME_END + "=%d&" + COUNT + "=%d", timeEnd,
                 count);
         return buildRequest(URI.create(Type.CMC100_API_PRO_H.getUrl() + url), apiKey);
