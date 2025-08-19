@@ -35,7 +35,7 @@ public final class DataConfig {
     private final int connectTimeoutMs;
     private final int fetchIntervalMs;
     private final int circuitBreakerThreshold;
-    private final long circuitBreakerTimeoutMs;
+    private final int circuitBreakerTimeoutMs;
     private final int rateLimitMs;
     private final String apiKey;
 
@@ -69,7 +69,7 @@ public final class DataConfig {
         return circuitBreakerThreshold;
     }
 
-    public long getCircuitBreakerTimeoutMs() {
+    public int getCircuitBreakerTimeoutMs() {
         return circuitBreakerTimeoutMs;
     }
 
@@ -98,7 +98,7 @@ public final class DataConfig {
         private int fetchIntervalMs = Config.getFetchAtTime();
         private String apiKey = Config.getApiKey();
         private int circuitBreakerThreshold = Config.getCircuitBreakerThreshold();
-        private long circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
+        private int circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
         private int rateLimitMs = Config.getRateLimitMs();
 
         public Builder circuitBreakerThreshold(final int circuitBreakerThreshold) {
@@ -106,7 +106,7 @@ public final class DataConfig {
             return this;
         }
 
-        public Builder circuitBreakerTimeoutMs(final long circuitBreakerTimeoutMs) {
+        public Builder circuitBreakerTimeoutMs(final int circuitBreakerTimeoutMs) {
             this.circuitBreakerTimeoutMs = circuitBreakerTimeoutMs;
             return this;
         }

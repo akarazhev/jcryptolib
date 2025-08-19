@@ -47,7 +47,7 @@ final class Requests {
         return JsonUtils.objectToJson(new Ping(PING));
     }
 
-    public static String ofAuth(final String apiKey, final long expires, final String secret) throws Exception {
+    public static String ofAuth(final String apiKey, final int expires, final String secret) throws Exception {
         final var expiresAt = Instant.now().toEpochMilli() + expires;
         final var args = new String[]{apiKey, String.valueOf(expiresAt), SecUtils.getSignature(secret, expiresAt)};
         return JsonUtils.objectToJson(new Request(UUID.randomUUID().toString(), AUTH, args));

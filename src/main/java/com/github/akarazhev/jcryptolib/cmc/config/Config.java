@@ -50,8 +50,8 @@ public final class Config {
         return AppConfig.getAsInt(CIRCUIT_BREAKER_THRESHOLD);
     }
 
-    public static long getCircuitBreakerTimeoutMs() {
-        return AppConfig.getAsLong(CIRCUIT_BREAKER_TIMEOUT_MS);
+    public static int getCircuitBreakerTimeoutMs() {
+        return AppConfig.getAsInt(CIRCUIT_BREAKER_TIMEOUT_MS);
     }
 
     public static int getRateLimitMs() {

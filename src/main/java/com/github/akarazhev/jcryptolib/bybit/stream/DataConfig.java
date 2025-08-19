@@ -55,7 +55,7 @@ public final class DataConfig {
     private final int pingIntervalMs;
     private final int fetchIntervalMs;
     private final int circuitBreakerThreshold;
-    private final long circuitBreakerTimeoutMs;
+    private final int circuitBreakerTimeoutMs;
     private final int reconnectRateLimitMs;
     private final int restRateLimitMs;
 
@@ -145,7 +145,7 @@ public final class DataConfig {
         return circuitBreakerThreshold;
     }
 
-    public long getCircuitBreakerTimeoutMs() {
+    public int getCircuitBreakerTimeoutMs() {
         return circuitBreakerTimeoutMs;
     }
 
@@ -200,7 +200,7 @@ public final class DataConfig {
         private int pingIntervalMs = Config.getPingIntervalMs();
         private int fetchIntervalMs = Config.getFetchIntervalMs();
         private int circuitBreakerThreshold = Config.getCircuitBreakerThreshold();
-        private long circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
+        private int circuitBreakerTimeoutMs = Config.getCircuitBreakerTimeoutMs();
         private int reconnectRateLimitMs = Config.getReconnectRateLimitMs();
         private int restRateLimitMs = Config.getRestRateLimitMs();
 
@@ -284,7 +284,7 @@ public final class DataConfig {
             return this;
         }
 
-        public Builder circuitBreakerTimeoutMs(final long timeoutMs) {
+        public Builder circuitBreakerTimeoutMs(final int timeoutMs) {
             this.circuitBreakerTimeoutMs = timeoutMs;
             return this;
         }

@@ -31,12 +31,12 @@ public final class CircuitBreaker {
     public enum State {CLOSED, OPEN, HALF_OPEN}
 
     private final int failureThreshold;
-    private final long openTimeoutMs;
+    private final int openTimeoutMs;
     private final AtomicInteger failureCount = new AtomicInteger(0);
     private final AtomicLong lastFailureTime = new AtomicLong(0);
     private volatile State state = State.CLOSED;
 
-    public CircuitBreaker(final int failureThreshold, final long openTimeoutMs) {
+    public CircuitBreaker(final int failureThreshold, final int openTimeoutMs) {
         this.failureThreshold = failureThreshold;
         this.openTimeoutMs = openTimeoutMs;
     }

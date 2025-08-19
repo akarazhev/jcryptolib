@@ -27,10 +27,10 @@ package com.github.akarazhev.jcryptolib.resilience;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class RateLimiter {
-    private final long intervalMs;
+    private final int intervalMs;
     private final AtomicLong lastAcquired = new AtomicLong(0);
 
-    public RateLimiter(final long intervalMs) {
+    public RateLimiter(final int intervalMs) {
         this.intervalMs = intervalMs;
     }
 
