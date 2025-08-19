@@ -24,25 +24,16 @@
 
 package com.github.akarazhev.jcryptolib;
 
-import com.github.akarazhev.jcryptolib.config.AppConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.net.http.HttpClient;
-import java.time.Duration;
-
-public final class Clients {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Clients.class);
-
-    private Clients() {
+public final class Constants {
+    private Constants() {
         throw new UnsupportedOperationException();
     }
 
-    public static HttpClient newHttpClient() {
-        final var connectTimeout = AppConfig.getAsInt(Constants.Config.CONNECT_TIMEOUT_MS);
-        LOGGER.info("Connect timeout: {} ms", connectTimeout);
-        return HttpClient.newBuilder()
-                .connectTimeout(Duration.ofMillis(connectTimeout))
-                .build();
+    final static class Config {
+        private Config() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String CONNECT_TIMEOUT_MS = "client.connect.timeout.ms";
     }
 }
