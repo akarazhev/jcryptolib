@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.concurrent.Executor;
 
 public final class Clients {
     private static final Logger LOGGER = LoggerFactory.getLogger(Clients.class);
@@ -43,6 +44,15 @@ public final class Clients {
         LOGGER.info("Connect timeout: {} ms", connectTimeout);
         return HttpClient.newBuilder()
                 .connectTimeout(Duration.ofMillis(connectTimeout))
+                .build();
+    }
+
+    public static HttpClient newHttpClient(final Executor executor) {
+        final var connectTimeout = AppConfig.getAsInt(Constants.Config.CONNECT_TIMEOUT_MS);
+        LOGGER.info("Connect timeout: {} ms with custom executor", connectTimeout);
+        return HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(connectTimeout))
+                .executor(executor)
                 .build();
     }
 }
