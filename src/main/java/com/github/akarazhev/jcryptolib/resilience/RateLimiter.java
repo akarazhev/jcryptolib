@@ -35,10 +35,8 @@ public final class RateLimiter {
     }
 
     /**
-     * Acquires a permit if the time elapsed since the last acquired permit
-     * exceeds the specified interval. Otherwise, the method returns false.
-     *
-     * @return true if the permit was acquired, false otherwise
+     * Attempts to acquire a permit without blocking.
+     * Returns true if enough time has elapsed since the last acquisition.
      */
     public synchronized boolean tryAcquire() {
         final var now = System.currentTimeMillis();
@@ -48,5 +46,23 @@ public final class RateLimiter {
         }
 
         return false;
+    }
+
+    /**
+     * Blocks until a permit is available, then acquires it.
+     * Use this in blocking contexts (e.g., REST fetchers) to avoid starvation.
+     */
+    public synchronized void acquire() {
+        final var now = System.currentTimeMillis();
+        final var elapsed = now - lastAcquired.get();
+        if (elapsed < intervalMs) {
+            try {
+                Thread.sleep(intervalMs - elapsed);
+            } catch (final InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        lastAcquired.set(System.currentTimeMillis());
     }
 }
