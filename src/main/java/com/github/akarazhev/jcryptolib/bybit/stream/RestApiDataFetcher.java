@@ -37,6 +37,7 @@ import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +91,7 @@ final class RestApiDataFetcher implements DataFetcher {
 
     @Override
     public void fetch() {
-        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS)
+        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS, Schedulers.io())
                 .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
     }
 
@@ -119,6 +120,13 @@ final class RestApiDataFetcher implements DataFetcher {
             var page = 1;
             var isMoreAvailable = true;
             while (isMoreAvailable && !emitter.isCancelled()) {
+                if (!circuitBreaker.allowRequest()) {
+                    LOGGER.warn("Circuit breaker OPEN for RestApi (paginated), skipping fetch");
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
+                    break;
+                }
+
+                rateLimiter.acquire();
                 try {
                     final var request = createRequest(getUri(url, params, page));
                     final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -131,6 +139,8 @@ final class RestApiDataFetcher implements DataFetcher {
                                 LOGGER.debug("Fetched message: {}", value);
                                 emitter.onNext(Payload.of(Provider.BYBIT, Source.RAPI, value));
                             });
+                            circuitBreaker.recordSuccess();
+                            healthCheck.setStatus(HealthCheck.Status.HEALTHY);
                             if (result.size() < MAX_LIMIT) {
                                 isMoreAvailable = false;
                             } else {
@@ -139,10 +149,14 @@ final class RestApiDataFetcher implements DataFetcher {
                         }
                     } else {
                         LOGGER.error("Failed to fetch data by param: HTTP {}", response.statusCode());
+                        circuitBreaker.recordFailure();
+                        healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                         isMoreAvailable = false;
                     }
                 } catch (final Exception e) {
                     LOGGER.error("Failed to fetch data by param", e);
+                    circuitBreaker.recordFailure();
+                    healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                     emitter.onError(e);
                     isMoreAvailable = false;
                 }
@@ -157,10 +171,8 @@ final class RestApiDataFetcher implements DataFetcher {
                 healthCheck.setStatus(HealthCheck.Status.UNHEALTHY);
                 return;
             }
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for RestApi, skipping fetch");
-                return;
-            }
+
+            rateLimiter.acquire();
             try {
                 final var response = client.send(createRequest(getUri(url)), HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
