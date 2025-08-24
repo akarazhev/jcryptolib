@@ -36,6 +36,7 @@ import com.github.akarazhev.jcryptolib.resilience.HealthCheck;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,7 @@ final class BybitDataFetcher implements DataFetcher {
 
     @Override
     public void fetch() {
-        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS)
+        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS, Schedulers.io())
                 .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
     }
 
@@ -138,11 +139,7 @@ final class BybitDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.LPD.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(BybitRequestBuilder.buildLaunchPadRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -177,11 +174,7 @@ final class BybitDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.LPL.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(BybitRequestBuilder.buildLaunchPoolRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -217,11 +210,7 @@ final class BybitDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
@@ -258,11 +247,7 @@ final class BybitDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
@@ -295,11 +280,7 @@ final class BybitDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(BybitRequestBuilder.buildByStarterRequest(),
                         HttpResponse.BodyHandlers.ofString());
@@ -334,11 +315,7 @@ final class BybitDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(BybitRequestBuilder.buildAirdropHuntRequest(),
                         HttpResponse.BodyHandlers.ofString());
