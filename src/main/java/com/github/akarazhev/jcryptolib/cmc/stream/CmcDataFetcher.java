@@ -36,6 +36,7 @@ import com.github.akarazhev.jcryptolib.resilience.HealthCheck;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +101,7 @@ final class CmcDataFetcher implements DataFetcher {
 
     @Override
     public void fetch() {
-        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS)
+        fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS, Schedulers.io())
                 .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
     }
 
@@ -190,11 +191,7 @@ final class CmcDataFetcher implements DataFetcher {
                     break;
                 }
 
-                if (!rateLimiter.tryAcquire()) {
-                    LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.CMC100_API_PRO_H.getType());
-                    break;
-                }
-
+                rateLimiter.acquire();
                 try {
                     final var request = CmcRequestBuilder.buildCoinMarketCap100IndexApiProHistoricalRequest(config.getApiKey(),
                             timeEnd, MAX_CMC_100_INDEX_ITEMS);
@@ -244,11 +241,7 @@ final class CmcDataFetcher implements DataFetcher {
                     break;
                 }
 
-                if (!rateLimiter.tryAcquire()) {
-                    LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", Type.FGI_API_PRO_H.getType());
-                    break;
-                }
-
+                rateLimiter.acquire();
                 try {
                     final var request = CmcRequestBuilder.buildFearGreedIndexApiProHistoricalRequest(config.getApiKey(), start,
                             MAX_FEAR_GREED_ITEMS);
@@ -295,11 +288,7 @@ final class CmcDataFetcher implements DataFetcher {
                 return;
             }
 
-            if (!rateLimiter.tryAcquire()) {
-                LOGGER.warn("Rate limit exceeded for '{}', skipping fetch", type.getType());
-                return;
-            }
-
+            rateLimiter.acquire();
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == STATUS_CODE_OK) {
