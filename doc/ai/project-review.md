@@ -1,4 +1,4 @@
-# Code review of the jcryptolib project
+# Review of the jcryptolib project
 
 ## Role
 
