@@ -39,7 +39,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>23</maven.compiler.release>
+        <maven.compiler.release>24</maven.compiler.release>
         <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
@@ -47,7 +47,7 @@
         <jackson-databind.version>2.20.0-rc1</jackson-databind.version>
         <slf4j-api.version>2.1.0-alpha1</slf4j-api.version>
         <logback-classic.version>1.5.18</logback-classic.version>
-        <junit-jupiter.version>6.0.0-M2</junit-jupiter.version>
+        <junit-jupiter.version>6.0.0-RC1</junit-jupiter.version>
     </properties>
 
     <dependencies>
