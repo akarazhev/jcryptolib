@@ -1,12 +1,12 @@
 # Context: Project Review
 
-The first implementation of the jcryptolib project is done. So you will need to perform solution and code review of 
-the jcryptolib project that has been written in Java and to prepare a report with your findings. 
+The first implementation of the jcryptolib project is done. So you will need to perform solution review of 
+the jcryptolib project that has been written in Java and to prepare a report with your findings and suggestions. 
 
 ## Roles
 
 Take the following roles:
-- Export java developer. 
+- Java solution architect. 
 
 ## Conditions
 
@@ -17,8 +17,8 @@ Take the following roles:
 
 ## Tasks
 
-- As the export java developer perform solution review and code review of the complete project and give suggestions 
-  for improvements to make the project production ready. 
+- As the java solution architect perform solution review of the complete project and give suggestions for improvements 
+  to make the project production ready. 
 - Recheck your suggestions and make sure that they are correct and haven't missed any important points.
-- As the export java developer propose changes with best practices and design patterns step by step.
+- As the java solution architect propose changes with best practices and design patterns step by step.
 - Write a report with your findings and suggestions into `doc/dev/project-review-report.md` and `doc/dev/project-review-summary.md`.
