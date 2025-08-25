@@ -21,3 +21,4 @@ Take the following roles:
   for improvements to make the project production ready. 
 - Recheck your suggestions and make sure that they are correct and haven't missed any important points.
 - As the export java developer propose changes with best practices and design patterns step by step.
+- Write a report with your findings and suggestions into `doc/dev/project-review-report.md` and `doc/dev/project-review-summary.md`.
