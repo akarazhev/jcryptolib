@@ -25,8 +25,8 @@ integration into Java-based trading, analytics, or data ingestion systems.
 
 ### Requirements
 
-- Java 23+ (or update `pom.xml` for Java 21 LTS)
-- Maven 3.8+
+- Java 21+
+- Maven 3.9+
 
 ### Installation
 
