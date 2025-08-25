@@ -69,12 +69,12 @@ The project implements several production-grade resilience patterns:
 
 ### 1. Java Version Compatibility (Critical)
 
-**Issue**: The project uses Java 21 in pom.xml but is referenced as Java 24 in documentation.
+**Issue**: The project is consistently using Java 21 in pom.xml, which matches the actual implementation.
 
 **Recommendation**:
 
-- Standardize on Java 21 (LTS) for better long-term support and wider adoption.
-- Update all documentation to reflect the correct Java version.
+- Ensure all documentation consistently references Java 21.
+- Maintain compatibility with Java 21 (LTS) for better long-term support and wider adoption.
 
 ### 2. Test Coverage (High)
 
@@ -250,8 +250,8 @@ configuration management, and documentation.
 
 The most critical issues to address are:
 
-1. Java version standardization
-2. Comprehensive test coverage
-3. Consistent error handling strategy
+1. Comprehensive test coverage
+2. Consistent error handling strategy
+3. Robust configuration management
 
 By addressing these issues, the project will be significantly more robust and maintainable for production use.

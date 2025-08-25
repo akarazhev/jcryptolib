@@ -23,9 +23,9 @@ JCryptoLib is a Java cryptocurrency utility library with reactive programming su
 ### Critical Priority
 
 1. **Standardize Java Version**
-    - **Issue**: Java 21 specified in pom.xml but referenced as Java 24 in documentation
-    - **Solution**: Standardize on Java 21 (LTS) for better long-term support
-    - **Implementation**: Update all documentation and ensure compatibility with Java 21 features
+    - **Issue**: The project is consistently using Java 21 in pom.xml, which matches the actual implementation
+    - **Solution**: Ensure all documentation consistently references Java 21 (LTS)
+    - **Implementation**: Maintain compatibility with Java 21 features and update any outdated references
 
 ### High Priority
 
