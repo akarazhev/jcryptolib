@@ -361,7 +361,7 @@ final class DataConsumerListener implements WebSocket.Listener {
         stopPing();
         LOGGER.debug("Starting ping");
         pingRef.set(Flowable.interval(config.getPingIntervalMs(), TimeUnit.MILLISECONDS)
-                .subscribe(_ -> {
+                .subscribe(l -> {
                     if (!emitter.isCancelled()) {
                         final var webSocket = webSocketRef.get();
                         if (webSocket != null) {

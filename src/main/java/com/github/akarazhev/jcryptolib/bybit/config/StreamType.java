@@ -31,7 +31,7 @@ public enum StreamType {
     PTO(Constants.PublicTestnetOption.TYPE, Constants.PublicTestnetOption.URL),
     PTSD(Constants.PublicTestnetSpread.TYPE, Constants.PublicTestnetSpread.URL),
     PT(Constants.PrivateTestnet.TYPE, Constants.PrivateTestnet.URL),
-    TO(Constants.TestnetOrder.TYPE, Constants.TestnetOrder.URL),;
+    TO(Constants.TestnetOrder.TYPE, Constants.TestnetOrder.URL);
 
     private final String url;
 

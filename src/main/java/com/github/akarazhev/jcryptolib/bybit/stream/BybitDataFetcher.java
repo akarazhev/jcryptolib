@@ -99,7 +99,7 @@ final class BybitDataFetcher implements DataFetcher {
     @Override
     public void fetch() {
         fetcherRef.set(Flowable.interval(0, config.getFetchIntervalMs(), TimeUnit.MILLISECONDS, Schedulers.io())
-                .subscribe(_ -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
+                .subscribe(l -> fetchData(), t -> LOGGER.error("Fetcher error", t)));
     }
 
     @Override
